@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Slide Demo</title>
+        
+        <link rel="stylesheet" type="text/css" href="css/jquery.slide.css"/>
+        
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.js"></script>
+        <script src="js/jquery.slide.js"></script>
+        <script src="js/slide.timer.js"></script>
+        <script>
+            $(function() {
+                /*$.get('slides.xml', function(data) { 
+                    $('#slider').slide({ slides: data });
+                });*/
+                $('#slider').slide({ slides: '#slideInfo', transition: { type: 'fade' } });
+            });
+        </script>
+        
+        <style>
+            body { background:#DDD; }
+            #slider { 
+                background:#FFF;
+                width:845px;
+                margin:0 auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Slide Demo...</h1>
+        
+        <div id="slider"></div>
+        
+        <ul id="slideInfo">
+            <li>
+                <img class="slide-thumb" src="" alt="" />
+                <img class="slide-image" src="http://bqworks.com/products/advanced-slider/images/image1.jpg" alt="" />
+                <div class="slide-content"></div>
+                <div class="slide-overlay"></div>
+            </li>
+            <li>
+                <img class="slide-thumb" src="" alt="" />
+                <img class="slide-image" src="http://bqworks.com/products/advanced-slider/images/image2.jpg" alt="" />
+                <div class="slide-content"></div>
+                <div class="slide-overlay"></div>
+            </li>
+            <li>
+                <img class="slide-thumb" src="" alt="" />
+                <img class="slide-image" src="http://bqworks.com/products/advanced-slider/images/image3.jpg" alt="" />
+                <div class="slide-content"></div>
+                <div class="slide-overlay"></div>
+            </li>
+            <li>
+                <img class="slide-thumb" src="" alt="" />
+                <img class="slide-image" src="http://bqworks.com/products/advanced-slider/images/image4.jpg" alt="" />
+                <div class="slide-content"></div>
+                <div class="slide-overlay"></div>
+            </li>
+            <li>
+                <img class="slide-thumb" src="" alt="" />
+                <img class="slide-image" src="http://bqworks.com/products/advanced-slider/images/image5.jpg" alt="" />
+                <div class="slide-content"></div>
+                <div class="slide-overlay"></div>
+            </li>
+        </ul>
+    </body>
+</html>
