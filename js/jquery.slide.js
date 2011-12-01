@@ -9,14 +9,14 @@
             length: 500     //how long the transition animates
         },
         timer: {
-            height: 25, //height of the timer
-            width: 25,  //width of the timer
+            height: 35, //height of the timer
+            width: 35,  //width of the timer
             colors: {
                 empty: 'rgba(10, 10, 10, 0.4)',     //color to show on unfilled time
                 filled: 'rgba(150, 150, 150, 0.7)'  //color to show as ellapsed time
             },
             refreshRate: 50,//time in ms between redraws
-            ringWidth: 4,
+            ringWidth: 5,
             style: 'ring'   //style of the timer; circle, ring, bar
         },
         hoverPause: true    //pause when a user hovers into the current slide
@@ -40,20 +40,11 @@
         init: function(options) {
             return this.each(function() { //ensures chainability
                 //should be moved to slide.timer.js
-                switch(settings.timer.style) {
-                    case 'bar':
+                if(settings.timer.style === 'bar') {
                         settings.timer.height = 10;
                         settings.timer.width = 200;
-                        break;
-                    case 'circle':
-                    case 'bar':
-                        settings.timer.height = 30;
-                        settings.timer.width = 30;
-                        break;
                 }
                 if(options) $.extend(true, settings, options);
-                
-                
                 
                 var parse = parseSlides();
                 if(parse) {

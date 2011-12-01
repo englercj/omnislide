@@ -85,7 +85,7 @@
 
                     ctx.beginPath();
                     ctx.moveTo(midX, midY);
-                    ctx.arc(midX, midY, radius, lastRad, lastRad + rads, false);
+                    ctx.arc(midX, midY, radius - border, lastRad, lastRad + rads, false);
                     ctx.fill();
 
                     lastRad = lastRad + rads;
