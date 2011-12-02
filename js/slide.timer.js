@@ -141,6 +141,7 @@
             reset: function () {
                 timer.stop();
                 clearCanvas();
+                lastRad = 0;
                 timeEllapsed = 0;
                 bgPaint();
             },
