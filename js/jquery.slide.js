@@ -36,6 +36,7 @@
     },
 
     slideIndex, loopTransition,
+    forcePaused = false,
     $dataElm, dataElmVisible,
 
     methods = {
@@ -72,14 +73,54 @@
         //changes an option to the given value
         //and/or returns value given by that option
         option: function (option, value) {
-            if (value === undefined) settings[option] = value;
+            /*if (typeof (option) === 'string') {
+                if (value === undefined) {
+                    var opts = $.extend(true, {}, settings);
 
-            return settings[option];
+                    if (option.indexOf('.') === -1)
+                        return opts[option];
+                    else {
+                        var lvls = option.split('.');
+
+                        for (var i = 0, opt = opts; i < lvls.length; ++i)
+                            if (opt !== undefined) opt = opt[lvls[i]];
+
+                        return opt;
+                    }
+                } else {
+                    if (option.indexOf('.') === -1) {
+                        settings[option] = value;
+                    } else {
+                        var lvls = option.split('.'),
+                            opts = $.extend(true, {}, settings),
+                            opt = opts;
+
+                        for (var i = 0; i < lvls.length - 1; ++i) {
+                            /*if (i != lvls.length - 1)
+                            opt[lvls[i]] = value;
+                            else {
+                            opt[lvls[i]] = {};
+                            opt = opt[lvls[i]];
+                            }*/
+                            /*opt = opt[lvls[i]];
+                        }
+                        log(opt);
+                        opt[lvls.length -1] = value;
+
+                        log(opts);
+                        $.extend(true, settings, opts);
+                    }
+                }
+            }
+            return this;*/
         },
         //reverses everything the initialization did
         //should put a user back to the state they were in
         //before calling this plugin
         destroy: function () {
+            //remove this live event
+            $('div.slide-nav-control').die('click');
+
             //remove slider and show the dataElment if it was visible before
             slider.$wrapper.remove();
             if ($dataElm && dataElmVisible) $dataElm.show();
@@ -102,10 +143,12 @@
         }
     };
 
-    function doTransition() {
-        //reset timer element
+    function doTransition(backward) {
+        var nextSlide;
 
-        var nextSlide = (slideIndex + 1) % slider.$slides.length;
+        if (backward) nextSlide = (slideIndex - 1 <= 0) ? slider.$slides.length - 1 : slideIndex - 1;
+        else nextSlide = (slideIndex + 1) % slider.$slides.length;
+
         switch (settings.transition.type) {
             case 'cut':
                 slider.$slides.eq(slideIndex).hide();
@@ -118,7 +161,7 @@
             case 'fade':
             default:
                 slider.$slides.eq(nextSlide).show();
-                slider.$slides.eq(slideIndex).stop().fadeOut(settings.transition.length, function () {
+                slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
                     slider.$slides.eq(slideIndex).removeClass('active');
                     slider.$slides.eq(nextSlide).addClass('active');
                     slideIndex = nextSlide;
@@ -150,7 +193,7 @@
         //create navigation
         slider.$nav = $('<div class="slide-nav"/>').hover(navHover).appendTo(slider.$slider);
         slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
-        slider.$nav.append('<div class="slide-nav-control slide-nav-play">&nbsp;</div>');
+        slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
         slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
 
         //create timer
@@ -169,6 +212,30 @@
         });
         slider.$slides.appendTo(slider.$slider);
     }
+
+    $('div.slide-nav-control').live('click', function (e) {
+        var $this = $(this),
+            ctrl = $.trim(this.className.replace('slide-nav-control', ''));
+
+        switch (ctrl) {
+            case 'slide-nav-back':
+                doTransition(true);
+                break;
+            case 'slide-nav-forward':
+                doTransition();
+                break;
+            case 'slide-nav-play':
+                slider.timer.unlock();
+                slider.timer.start();
+                $this.removeClass('slide-nav-play').addClass('slide-nav-pause');
+                break;
+            case 'slide-nav-pause':
+                slider.timer.stop();
+                slider.timer.lock();
+                $this.removeClass('slide-nav-pause').addClass('slide-nav-play');
+                break;
+        }
+    });
 
     //handle hovering in/out of the slide box
     function slideHover(e) {

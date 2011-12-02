@@ -121,6 +121,7 @@
 
         timer = {
             setTimeLeft: function (time) {
+                if (timer.locked) return false;
                 if (time > animLen || time < 0) return false;
 
                 timeLeft = time;
@@ -128,24 +129,30 @@
                 return true;
             },
             start: function () {
-                //drawRing(midX, midY, canvas.width / 2, options.ringWidth, 40, 3 * Math.PI);
+                if (timer.locked) return false;
+
                 paintLoop = setInterval(fgPaint, options.refreshRate);
                 timeLoop = setInterval(trackTime, options.refreshRate);
                 timer.stopped = false;
             },
             stop: function () {
+                if (timer.locked) return false;
                 clearInterval(paintLoop);
                 clearInterval(timeLoop);
                 timer.stopped = true;
             },
             reset: function () {
+                if (timer.locked) return false;
                 timer.stop();
                 clearCanvas();
                 lastRad = 0;
                 timeEllapsed = 0;
                 bgPaint();
             },
+            lock: function () { timer.locked = true; },
+            unlock: function () { timer.locked = false; },
             stopped: true,
+            locked: false,
             canvas: canvas
         };
 
