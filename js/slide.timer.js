@@ -1,14 +1,15 @@
 /*
  * options variable
-   {
-        height: '45px', //height of the timer
-        width: '45px',  //width of the timer
+    {
+        height: 35, //height of the timer
+        width: 35,  //width of the timer
+        border: 2, //space between filled and empty colors on the timer
         colors: {
-            empty: 'rgba(10, 10, 10, 0.2)',     //color to show on unfilled time
-            filled: 'rgba(100, 100, 100, 0.3)'  //color to show as ellapsed time
+            empty: 'rgba(10, 10, 10, 0.4)',     //color to show on unfilled time
+            filled: 'rgb(150, 150, 150)'  //color to show as ellapsed time
         },
-        refreshRate: 50,
-        ringWidth: 10,
+        refreshRate: 10, //time in ms between redraws (lower is smoother), also effects accuracy of wait time
+        ringWidth: 5,
         style: 'ring'   //style of the timer; circle, ring, bar
     }
  */
@@ -35,7 +36,7 @@
         radius = canvas.width / 2,
         lastRad = 0,
 
-        border = 2,
+        border = options.border,
 
         paintLoop = null,
         timeLoop = null,
@@ -115,7 +116,7 @@
                 return;
             }
 
-            timeEllapsed += 10;
+            timeEllapsed += options.refreshRate;
         },
 
         timer = {
@@ -129,7 +130,7 @@
             start: function () {
                 //drawRing(midX, midY, canvas.width / 2, options.ringWidth, 40, 3 * Math.PI);
                 paintLoop = setInterval(fgPaint, options.refreshRate);
-                timeLoop = setInterval(trackTime, 10); //once a second
+                timeLoop = setInterval(trackTime, options.refreshRate);
                 timer.stopped = false;
             },
             stop: function () {

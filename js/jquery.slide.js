@@ -5,18 +5,19 @@
         transition: {
             type: 'cut',   //the type of transition to use
             easing: 'linear', //the type of easing to use on transitions
-            wait: 5000,     //the wait time to show each slide
+            wait: 5000,     //the wait time to show each slide 
             length: 500     //how long the transition animates
         },
         timer: {
             enabled: true, //enable timer?
             height: 35, //height of the timer
             width: 35,  //width of the timer
+            border: 2, //space between filled and empty colors on the timer
             colors: {
                 empty: 'rgba(10, 10, 10, 0.4)',     //color to show on unfilled time
                 filled: 'rgb(150, 150, 150)'  //color to show as ellapsed time
             },
-            refreshRate: 20, //time in ms between redraws (lower is smoother)
+            refreshRate: 10, //time in ms between redraws (lower is smoother, reccommend <50)
             ringWidth: 5,
             style: 'ring'   //style of the timer; circle, ring, bar
         },
@@ -35,15 +36,16 @@
     },
 
     slideIndex, loopTransition,
-    $dataElm,
+    $dataElm, dataElmVisible,
 
     methods = {
+        //initialize the slider plugin
         init: function (options) {
             return this.each(function () { //ensures chainability
                 if (options) $.extend(true, settings, options);
 
                 //disable timer if plugin not installed
-                if (!slideTimer) settings.timer.enabled = false; 
+                if (!slideTimer) settings.timer.enabled = false;
 
                 //parse out the slides into usable data
                 var parse = parseSlides();
@@ -67,10 +69,36 @@
                 return true;
             });
         },
+        //changes an option to the given value
+        //and/or returns value given by that option
+        option: function (option, value) {
+            if (value === undefined) settings[option] = value;
+
+            return settings[option];
+        },
+        //reverses everything the initialization did
+        //should put a user back to the state they were in
+        //before calling this plugin
         destroy: function () {
-            slides = [];
-            $dataElm && $dataElm.show();
+            //remove slider and show the dataElment if it was visible before
             slider.$wrapper.remove();
+            if ($dataElm && dataElmVisible) $dataElm.show();
+
+            //reset & delete timer, GC should then pick it up
+            slider.timer.reset();
+            delete slider.timer;
+
+            //reset core variables
+            slides = [];
+            slider = {
+                $container: {},
+                $wrapper: {},
+                $slider: {},
+                $nav: {},
+                $timer: {},
+                timer: null,
+                $slides: $()
+            };
         }
     };
 
@@ -139,6 +167,7 @@
         slider.$slides.appendTo(slider.$slider);
     }
 
+    //handle hovering in/out of the slide box
     function slideHover(e) {
         if (e.type == 'mouseenter' && settings.hoverPause) {
             slider.timer.stop();
@@ -147,11 +176,12 @@
         }
     }
 
+    //handle hovering in/out of the naviation box
     function navHover(e) {
         if (e.type == 'mouseenter') {
-            slider.timer.stop();
+            slider.$nav.stop().animate({ opacity: 1 });
         } else if (e.type == 'mouseleave') {
-            slider.timer.start();
+            slider.$nav.stop().animate({ opacity: 0 });
         }
     }
 
@@ -178,7 +208,8 @@
             $data = $(data);
         }
 
-        if ($data.is('ul')) { //parse as ul data
+        //parse as ul data
+        if ($data.is('ul')) {
             $data.find('li').each(function (i, slide) {
                 var $slide = $(slide);
                 slides.push({
@@ -189,8 +220,11 @@
                     overlay: $slide.find('div.slide-overlay').html()
                 });
             });
+            dataElmVisible = $data.is(':visible');
             $dataElm = $data.hide();
-        } else if ($data.find('slides > slide').length > 0) { //parse as xml data
+        }
+        //parse as xml data
+        else if ($data.find('slides > slide').length > 0) {
             $data.find('slides > slide').each(function (i, slide) {
                 var $slide = $(slide);
                 slides.push({
@@ -203,7 +237,8 @@
             });
         }
 
-        if (slides.length === 0) return 'settings.slides is either an invalid type or formatted incorrectly.';
+        if (slides.length === 0)
+            return 'settings.slides is either an invalid type or formatted incorrectly.';
 
         return false;
     }
