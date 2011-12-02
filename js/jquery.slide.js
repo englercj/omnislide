@@ -73,46 +73,13 @@
         //changes an option to the given value
         //and/or returns value given by that option
         option: function (option, value) {
-            /*if (typeof (option) === 'string') {
-                if (value === undefined) {
-                    var opts = $.extend(true, {}, settings);
+            if (typeof (option) === 'string') {
+                if (value === undefined) return settings[option];
 
-                    if (option.indexOf('.') === -1)
-                        return opts[option];
-                    else {
-                        var lvls = option.split('.');
-
-                        for (var i = 0, opt = opts; i < lvls.length; ++i)
-                            if (opt !== undefined) opt = opt[lvls[i]];
-
-                        return opt;
-                    }
-                } else {
-                    if (option.indexOf('.') === -1) {
-                        settings[option] = value;
-                    } else {
-                        var lvls = option.split('.'),
-                            opts = $.extend(true, {}, settings),
-                            opt = opts;
-
-                        for (var i = 0; i < lvls.length - 1; ++i) {
-                            /*if (i != lvls.length - 1)
-                            opt[lvls[i]] = value;
-                            else {
-                            opt[lvls[i]] = {};
-                            opt = opt[lvls[i]];
-                            }*/
-                            /*opt = opt[lvls[i]];
-                        }
-                        log(opt);
-                        opt[lvls.length -1] = value;
-
-                        log(opts);
-                        $.extend(true, settings, opts);
-                    }
-                }
+                settings[option] = value;
             }
-            return this;*/
+
+            return this;
         },
         //reverses everything the initialization did
         //should put a user back to the state they were in
