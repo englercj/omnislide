@@ -36,6 +36,7 @@ div.slide-nav {
 }
 div.slide-nav-control {
     background:left top url('../img/sprite.png') no-repeat;
+    
     width:48px; 
     height:48px; 
     float:left;
