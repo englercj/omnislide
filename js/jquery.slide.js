@@ -42,8 +42,10 @@
             return this.each(function () { //ensures chainability
                 if (options) $.extend(true, settings, options);
 
-                if (!slideTimer) settings.timer.enabled = false; //disable if plugin not installed
+                //disable timer if plugin not installed
+                if (!slideTimer) settings.timer.enabled = false; 
 
+                //parse out the slides into usable data
                 var parse = parseSlides();
                 if (parse) {
                     error('Error while parsing slides: ', parse);
@@ -52,8 +54,15 @@
                     return false;
                 }
 
+                //build out slider HTML
                 buildSlider(this);
-                initSlider();
+
+                //setup slide Index and start transition timer
+                slideIndex = (settings.startSlide > 0) ? settings.startSlide - 1 : 0;
+                doTransition();
+
+                //fade out the navigation
+                slider.$nav.animate({ opacity: 0 });
 
                 return true;
             });
@@ -64,16 +73,6 @@
             slider.$wrapper.remove();
         }
     };
-
-    //starts up the initial slider loops
-    function initSlider() {
-        slideIndex = (settings.startSlide > 0) ? settings.startSlide - 1 : 0;
-
-        //slider.$slides.eq(slideIndex).show();
-        //slider.$slides.eq(slideIndex).addClass('active');
-        //loopTransition = setInterval(doTransition, settings.transition.wait)
-        doTransition();
-    }
 
     function doTransition() {
         //reset timer element
@@ -91,13 +90,12 @@
             case 'fade':
             default:
                 slider.$slides.eq(nextSlide).show();
-                slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
+                slider.$slides.eq(slideIndex).stop().fadeOut(settings.transition.length, function () {
                     slider.$slides.eq(slideIndex).removeClass('active');
                     slider.$slides.eq(nextSlide).addClass('active');
                     slideIndex = nextSlide;
                 });
         }
-
 
         //create and manage timer if they have plugin installed
         if (settings.timer.enabled) {
