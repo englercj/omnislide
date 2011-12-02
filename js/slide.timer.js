@@ -130,16 +130,20 @@
                 //drawRing(midX, midY, canvas.width / 2, options.ringWidth, 40, 3 * Math.PI);
                 paintLoop = setInterval(fgPaint, options.refreshRate);
                 timeLoop = setInterval(trackTime, 10); //once a second
+                timer.stopped = false;
             },
             stop: function () {
                 clearInterval(paintLoop);
                 clearInterval(timeLoop);
+                timer.stopped = true;
             },
             reset: function () {
+                timer.stop();
                 clearCanvas();
                 timeEllapsed = 0;
                 bgPaint();
             },
+            stopped: true,
             canvas: canvas
         };
 
