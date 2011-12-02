@@ -9,17 +9,19 @@
         <script src="js/jquery.slide.js"></script>
         <script src="js/slide.timer.js"></script>
         <script>
-            $(function() {
-                /*$.get('slides.xml', function(data) { 
-                    $('#slider').slide({ slides: data });
-                });*/
-                $('#slider').slide({ slides: '#slideInfo', transition: { type: 'fade' } });
+            $(function () {
+                $('#slider').slide({ slides: '#slideInfo', transition: { type: 'fade'} });
+
+                $.get('slides.xml', function (data) {
+                    console.log(data);
+                    $('#slider2').slide({ slides: data });
+                });
             });
         </script>
         
         <style>
             body { background:#DDD; }
-            #slider { 
+            #slider, #slider2 { 
                 background:#FFF;
                 width:845px;
                 margin:0 auto;
@@ -29,6 +31,7 @@
     <body>
         <h1>Slide Demo...</h1>
         
+        <h2>From &lt;ul&gt; Element</h2>
         <div id="slider"></div>
         
         <ul id="slideInfo">
@@ -93,5 +96,8 @@
                 <div class="slide-overlay"></div>
             </li>
         </ul>
+
+        <h2>From xml Ajaxed in</h2>
+        <div id="slider2"></div>
     </body>
 </html>

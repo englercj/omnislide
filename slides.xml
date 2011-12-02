@@ -1,6 +1,43 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <slides>
-    <slide title="" image="" thumb="">
-        <content></content>
-    </slide>
+  <slide title="" image="img/slides/1.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/2.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/3.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/4.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/5.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/6.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/7.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/8.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/9.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
+  <slide title="" image="img/slides/10.jpg" thumb="">
+    <content></content>
+    <overlay></overlay>
+  </slide>
 </slides>
