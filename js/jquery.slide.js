@@ -149,6 +149,9 @@
 
         //create navigation
         slider.$nav = $('<div class="slide-nav"/>').hover(navHover).appendTo(slider.$slider);
+        slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
+        slider.$nav.append('<div class="slide-nav-control slide-nav-play">&nbsp;</div>');
+        slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
 
         //create timer
         if (settings.timer.enabled)

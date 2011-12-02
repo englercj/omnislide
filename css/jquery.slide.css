@@ -19,11 +19,11 @@ div.slide.active { }
 
 div.slide-nav {
     bottom:20px;
-    left: 263px;
-    width:300px;
+    left: 288px;
     height:65px;
     
     border-radius:20px;
+    padding:0 35px;
     
     background: rgb(81,81,81);
     background: -moz-linear-gradient(top,  rgba(81,81,81,0.75) 0%, rgba(13,13,13,0.75) 45%, rgba(1,1,1,0.75) 50%, rgba(10,10,10,0.75) 55%, rgba(27,27,27,0.75) 100%); /* FF3.6+ */
@@ -34,6 +34,20 @@ div.slide-nav {
     background: linear-gradient(top,  rgba(81,81,81,0.75) 0%,rgba(13,13,13,0.75) 45%,rgba(1,1,1,0.75) 50%,rgba(10,10,10,0.75) 55%,rgba(27,27,27,0.75) 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bf515151', endColorstr='#bf1b1b1b',GradientType=0 ); /* IE6-9 */
 }
+div.slide-nav-control {
+    background:left top url('../img/sprite.png') no-repeat;
+    width:48px; 
+    height:48px; 
+    float:left;
+    
+    cursor:pointer;
+    margin:5px;
+}
+div.slide-nav-back { background-position:0 -144px; }
+div.slide-nav-forward { background-position:0 -96px; }
+div.slide-nav-pause { background-position:0 -48px; }
+div.slide-nav-play { background-position:0 0; }
+
 div.slide-thumb {  }
 div.slide-thumb img {  }
 div.slide-content {  }
