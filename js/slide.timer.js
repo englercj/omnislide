@@ -38,8 +38,7 @@
 
         border = options.border,
 
-        paintLoop = null,
-        timeLoop = null,
+        tickLoop = null,
 
         //paint background
         bgPaint = function () {
@@ -109,7 +108,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         },
 
-        trackTime = function () {
+        tick = function () {
             if (timeEllapsed == animLen) {
                 timer.stop();
                 callback();
@@ -117,6 +116,7 @@
             }
 
             timeEllapsed += options.refreshRate;
+            fgPaint();
         },
 
         timer = {
@@ -131,18 +131,18 @@
             start: function () {
                 if (timer.locked) return false;
 
-                paintLoop = setInterval(fgPaint, options.refreshRate);
-                timeLoop = setInterval(trackTime, options.refreshRate);
+                tickLoop = setInterval(tick, options.refreshRate);
                 timer.stopped = false;
             },
             stop: function () {
                 if (timer.locked) return false;
-                clearInterval(paintLoop);
-                clearInterval(timeLoop);
+
+                clearInterval(tickLoop);
                 timer.stopped = true;
             },
             reset: function () {
                 if (timer.locked) return false;
+
                 timer.stop();
                 clearCanvas();
                 lastRad = 0;
