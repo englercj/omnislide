@@ -206,10 +206,16 @@
 
                 //create slides
                 $.each(slides, function (i, slide) {
-                    var $slide = $('<div class="slide">');
+                    var $slide = $('<div class="slide"/>');
 
-                    $slide.css('background-image', 'url(' + slide.image + ')');
-                    $slide.append(slide.content);
+                    if (slide.image)
+                        $slide.css('background-image', 'url(' + slide.image + ')');
+                    if (slide.content)
+                        $slide.append(slide.content);
+                    if (slide.overlay)
+                        $slide.append('<div class="slide-overlay">' + slide.overlay + '</div>');
+                    if (slide.title)
+                        $slide.append('<h1 class="slide-title">' + slide.title + '</h1>');
 
                     slider.$slides = slider.$slides.add($slide.hide());
                     //$slide.hover(slideHoverIn, slideHoverOut);
