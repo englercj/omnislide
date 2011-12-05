@@ -21,6 +21,16 @@
             ringWidth: 4,
             style: 'ring'   //style of the timer; circle, ring, bar
         },
+        navigation: {
+            opacity: {
+                focused: 1, //the opacity to set on controls when focused
+                blurred: 0.1//the opacity to set on controls when blurred
+            }
+        },
+        thumbs: {
+            tooltip: true,  //show as tooltip
+            trigger: 'hover'//event to trigger showing tooltip (if true)
+        }
         hoverPause: true    //pause when a user hovers into the current slide
     };
 
@@ -71,7 +81,7 @@
                         doTransition();
 
                         //fade out the navigation
-                        slider.$nav.animate({ opacity: 0 });
+                        slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
 
                         //bind click, etc events
                         bindEvents();
@@ -209,7 +219,7 @@
                 if (settings.timer.enabled)
                     slider.$timer = $('<canvas class="slide-timer"/>').appendTo(slider.$slider);
 
-                //create slides
+                //create slides and thumbs
                 $.each(slides, function (i, slide) {
                     var $slide = $('<div class="slide"/>');
 
@@ -223,7 +233,8 @@
                         $slide.append('<h1 class="slide-title">' + slide.title + '</h1>');
 
                     slider.$slides = slider.$slides.add($slide.hide());
-                    //$slide.hover(slideHoverIn, slideHoverOut);
+
+
                 });
                 slider.$slides.appendTo(slider.$slider);
             }
@@ -240,9 +251,9 @@
             //handle hovering in/out of the naviation box
             function navHover(e) {
                 if (e.type == 'mouseenter') {
-                    slider.$nav.stop().animate({ opacity: 1 });
+                    slider.$nav.stop().animate({ opacity: settings.navigation.opacity.focused });
                 } else if (e.type == 'mouseleave') {
-                    slider.$nav.stop().animate({ opacity: 0 });
+                    slider.$nav.stop().animate({ opacity: settings.navigation.opacity.blurred });
                 }
             }
 
