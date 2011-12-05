@@ -18,7 +18,7 @@
                 filled: '#FFF'//color to show as ellapsed time
             },
             refreshRate: 10, //time in ms between redraws (lower is smoother, reccommend <50)
-            ringWidth: 4,
+            ringWidth: 3,
             style: 'ring'   //style of the timer; circle, ring, bar
         },
         navigation: {
@@ -78,7 +78,7 @@
                         buildSlider(this);
 
                         //setup slide Index and start transition timer
-                        slideIndex = (settings.startSlide > 0) ? settings.startSlide - 1 : 0;
+                        slideIndex = (settings.startSlide > 1) ? settings.startSlide - 2 : -1;
                         doTransition();
 
                         //fade out the navigation

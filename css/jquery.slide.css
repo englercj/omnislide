@@ -3,21 +3,23 @@
 /*THEMING CLASSES
  * ---
  * Please Modify these to change the theme of the slider
+ * NOTE: 
+ *  div.slide-wrapper's width/height should match div.slide-box's width/height
  */
 div.slide-wrapper { 
     font-family: Arial,Helvetica,sans-serif;
     
-    width:825px; 
-    height:425px;
+    width:835px; 
+    height:435px;
     
-    padding:10px;
+    padding:5px;
     background:#FFF;
     
     margin:0 auto;
     box-shadow:0 0 10px #BBB;
 }
 div.slide-wrapper * { font-family: Arial,Helvetica,sans-serif; margin:0; padding:0; }
-div.slide-box { width:825px; height:425px; }
+div.slide-box { width:835px; height:435px; }
 
 div.slide { }
 div.slide.active { }
