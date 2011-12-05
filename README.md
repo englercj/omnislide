@@ -22,9 +22,11 @@ Usage
 -----
 
 The slider uses the format of:
+
 ~~~~~ javascript
 	$(input_Element).slide({ slides: slide_Content_Input });
 ~~~~~
+
 Using the slider can be as simple or as complex as you wish. The slider has the ability to intelligently
 determine the type of input you give it. Meaning, you can pass in XML string data, an XML document, 
 a DOM element, jQuery object, or jQuery selector (*Note:* if you pass a DOM or jQuery Object, it must be
