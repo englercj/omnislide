@@ -110,7 +110,7 @@
 
         tick = function () {
             if (timeEllapsed == animLen) {
-                timer.reset();
+                timer.stop();
                 callback();
                 return;
             }
