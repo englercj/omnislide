@@ -35,11 +35,6 @@ a `<ul/>` element in the proper format). Here is an example of the basic usage u
 ### HTML:
 
 ~~~~~ html
-	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-	<script src="js/jquery.slide.js"></script>
-	<script src="js/slide.timer.js"></script>
-
 	<div id="sliderUl"></div>
     <ul id="slides">
         <li>
@@ -75,11 +70,6 @@ Here is another example using some XML that is pulled in using AJAX:
 ### HTML
 
 ~~~~~ html
-	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-	<script src="js/jquery.slide.js"></script>
-	<script src="js/slide.timer.js"></script>
-
 	<div id="sliderXml"></div>
 ~~~~~
 
