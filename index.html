@@ -13,7 +13,7 @@
                 $('#sliderUl').slide({
                     slides: '#slideInfo',
                     startSlide: 3,
-                    transition: { 
+                    transition: {
                         type: 'fade',
                         easing: 'swing',
                         length: 1000, 
@@ -33,12 +33,14 @@
                         style: 'bar'
                     },
                     navigation: {
+                        enabled: true,
                         opacity: {
                             focused: 0.9,
                             blurred: 0.1
                         }
                     },
                     thumbs: {
+                        enabled: true,
                         tooltip: false,
                         triggerTooltip: 'hover',
                         triggerSlide: 'dblclick'

@@ -22,14 +22,16 @@
             style: 'ring'   //style of the timer; circle, ring, bar
         },
         navigation: {
+            enabled: true,
             opacity: {
                 focused: 1, //the opacity to set on controls when focused
                 blurred: 0.1//the opacity to set on controls when blurred
             }
         },
         thumbs: {
-            tooltip: true,  //show as tooltip
-            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
+            enabled: false,         //enable thumbnails?
+            tooltip: true,          //show as tooltip
+            triggerTooltip: 'hover',//event to trigger showing tooltip (if true)
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
         hoverPause: true    //pause when a user hovers into the current slide
@@ -180,19 +182,21 @@
                 slider.$slider = $('<div class="slide-box"/>').hover(slideHover).appendTo(slider.$wrapper);
 
                 //create navigation
-                slider.$nav = $('<div class="slide-nav"/>').hover(navHover).appendTo(slider.$slider);
-                slider.$nav.append(
-                    $('<div class="slide-nav-control slide-nav-back">&nbsp;</div>')
-                        .hover(navControlHover).click(navControlClick)
-                );
-                slider.$nav.append(
-                    $('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>')
-                        .hover(navControlHover).click(navControlClick)
-                );
-                slider.$nav.append(
-                    $('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>')
-                        .hover(navControlHover).click(navControlClick)
-                );
+                if (settings.navigation.enabled) {
+                    slider.$nav = $('<div class="slide-nav"/>').hover(navHover).appendTo(slider.$slider);
+                    slider.$nav.append(
+                        $('<div class="slide-nav-control slide-nav-back">&nbsp;</div>')
+                            .hover(navControlHover).click(navControlClick)
+                    );
+                    slider.$nav.append(
+                        $('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>')
+                            .hover(navControlHover).click(navControlClick)
+                    );
+                    slider.$nav.append(
+                        $('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>')
+                            .hover(navControlHover).click(navControlClick)
+                    );
+                }
 
                 //create timer
                 if (settings.timer.enabled)
@@ -213,7 +217,9 @@
 
                     slider.$slides = slider.$slides.add($slide.hide());
 
+                    if (settings.thumbs.enabled) {
 
+                    }
                 });
                 slider.$slides.appendTo(slider.$slider);
             }
