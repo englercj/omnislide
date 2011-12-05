@@ -14,7 +14,7 @@
     }
  */
 
-(function (win, undefined) {
+(function ($, win, undefined) {
     win.slideTimer = function (animLen, options, callback, canvas) {
         if (!canvas)
             canvas = document.createElement('canvas');
@@ -103,6 +103,28 @@
             }
         },
 
+        fadeOut = function () {
+            var opacity = canvas.style.opacity - 0.01;
+
+            canvas.style.opacity = opacity;
+            canvas.style.filter = 'alpha(opacity=' + opacity * 100 + ')';
+
+            if (opacity <= 0) { return false; }
+
+            setTimeout(fadeOut);
+        },
+
+        fadeIn = function () {
+            var opacity = canvas.style.opacity + 0.01;
+
+            canvas.style.opacity = opacity;
+            canvas.style.filter = 'alpha(opacity=' + opacity * 100 + ')';
+
+            if (opacity >= 1) { return false; }
+
+            setTimeout(fadeIn);
+        },
+
         //clear canvas
         clearCanvas = function () {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -111,6 +133,7 @@
         tick = function () {
             if (timeEllapsed == animLen) {
                 timer.stop();
+                $(canvas).stop().fadeOut();
                 callback();
                 return;
             }
@@ -145,9 +168,11 @@
 
                 timer.stop();
                 clearCanvas();
+                bgPaint();
+                $(canvas).stop().fadeIn();
+
                 lastRad = 0;
                 timeEllapsed = 0;
-                bgPaint();
             },
             lock: function () { timer.locked = true; },
             unlock: function () { timer.locked = false; },
@@ -161,4 +186,4 @@
         //Public Interface
         return timer;
     }
-})(window);
+})(jQuery, window);
