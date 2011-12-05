@@ -116,10 +116,14 @@ as well. Also, `img/sprite.png` provides a simple control button sprite for use 
 
 For a minimal install, include the following in your HTML:
 
+~~~~~ html
 	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script src="js/jquery.slide.js"></script>
+~~~~~
 
 To use the timer you will need to include that as well:
 
+~~~~~ html
 	<script src="js/slide.timer.js"></script>
+~~~~~
