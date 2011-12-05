@@ -94,7 +94,7 @@ classes that allow you to theme the slider to your preference. All CSS sprites c
 This slider was designed to provide functionality, without forcing you into a style. That way you
 can take the slider and brand it to your website, quickly and easily.
 
-If you open `css/jquery.slide.css` you will find 2 sections. The Theming section and Functional section.
+If you open `css/jquery.omnislide.css` you will find 2 sections. The Theming section and Functional section.
 I recommend you do not change styles in the Function section as it may break the operation of the slider,
 however you can modify the base theme in the first section without fear, or extract it to your own stylesheets
 if you think that is more appropriate.
@@ -103,7 +103,7 @@ Installation
 ------------
 
 The slide requires [`jQuery 1.6+`](http://jquery.com/). For a minimal install, the only *required* files are
-`js/jquery.slide.js` and `css/jquery.slide.css`. However for the canvas timer you will need `js/slide.timer.js`
+`js/jquery.omnislide.js` and `css/jquery.omnislide.css`. However for the canvas timer you will need `js/omnislide.timer.js`
 as well. Also, `img/sprite.png` provides a simple control button sprite for use in the slide navigation.
 
 For a minimal install, include the following in your HTML:
@@ -117,5 +117,5 @@ For a minimal install, include the following in your HTML:
 To use the timer you will need to include that as well:
 
 ~~~~~ html
-	<script src="js/slide.timer.js"></script>
+	<script src="js/omnislide.timer.js"></script>
 ~~~~~
