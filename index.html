@@ -15,10 +15,15 @@
                     slides: '#slideInfo',
                     startSlide: 3,
                     transition: {
-                        type: 'fade',
+                        type: 'cut',
+                        effect: 'full',
                         easing: 'swing',
-                        length: 1000, 
-                        wait: 3000 
+                        length: 1000,
+                        wait: 3000,
+                        direction: 'down',
+                        position: 'top',
+                        animatorNum: 20,
+                        animatorDelay: 50
                     },
                     timer: {
                         enabled: true,

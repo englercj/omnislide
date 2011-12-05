@@ -8,11 +8,10 @@
             easing: 'linear',   //the type of easing to use on transitions
             wait: 5000,         //the wait time to show each slide 
             length: 500,        //how long the transition animates
-            direction: '',      //direction the animation goes (like 'down' or 'right')
-            position: '',       //start position of the animation (like 'top' or 'topleft')
-
-            animatorNum = 20,   //applies to strips/boxes; is the number of strips/boxes
-            animatorDelay = 50  //applies ot strips/boxes; delay between each strip/box
+            direction: 'down',      //direction the animation goes (like 'down' or 'right')
+            position: 'top',       //start position of the animation (like 'top' or 'topleft')
+            animatorNum: 20,    //applies to strips/boxes; is the number of strips/boxes
+            animatorDelay: 50   //applies ot strips/boxes; delay between each strip/box
         },
         timer: {
             enabled: true,      //enable timer?
@@ -43,6 +42,8 @@
         hoverPause: true    //pause when a user hovers into the current slide
     };
 
+    win.slide = {};
+
     $.fn.extend({
         slide: function (method) {
             //variables
@@ -71,13 +72,13 @@
                         if (options) $.extend(true, settings, defaults, options);
 
                         //disable timer if plugin not installed
-                        if (!slideTimer) settings.timer.enabled = false;
+                        if (!slide.timer) settings.timer.enabled = false;
 
                         //parse out the slides into usable data
                         var parse = parseSlides();
                         if (parse) {
-                            error('Error while parsing slides: ', parse);
-                            error('settings.slides: ', settings.slides);
+                            slide.error('Error while parsing slides: ', parse);
+                            slide.error('settings.slides: ', settings.slides);
 
                             return false;
                         }
@@ -168,6 +169,7 @@
                                 resetTimer();
                             });
                     }
+                }
             }
 
             function resetTimer() {
@@ -349,10 +351,6 @@
             }
 
             //Log overrides for safety
-            win.slide.log = function () { _log('log', arguments); }
-            win.slide.error = function () { _log('error', arguments); }
-            win.slide.warn = function () { _log('warn', arguments); }
-
             win.slide._log = function (type, args) {
                 if (win.console && console[type]) {
                     console[type].apply(this, args);
@@ -361,6 +359,9 @@
 
                 return {};
             }
+            win.slide.log = function () { slide._log('log', arguments); }
+            win.slide.error = function () { slide._log('error', arguments); }
+            win.slide.warn = function () { slide._log('warn', arguments); }
 
             //guid for this instance
             function getGuid() {
