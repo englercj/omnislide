@@ -18,8 +18,6 @@
 */
 
 (function ($, win, undefined) {
-    if (!win.slide) win.slide = {};
-
     win.slide.transition = function (options, $slides, index, next, callback) {
         //setup some reasonable defaults
         options.easing = options.easing || 'linear';
