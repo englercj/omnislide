@@ -1,37 +1,43 @@
 (function ($, win, undefined) {
     var defaults = {
-        slides: undefined,  //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
-        startSlide: 1,      //initial slide for the plugin to start displaying
+        slides: undefined,      //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
+        startSlide: 1,          //initial slide for the plugin to start displaying
         transition: {
-            type: 'cut',    //the type of transition to use
-            easing: 'linear', //the type of easing to use on transitions
-            wait: 5000,     //the wait time to show each slide 
-            length: 500     //how long the transition animates
+            type: 'fade',       //the type of transition to use
+            effect: 'full',     //specific transition effect
+            easing: 'linear',   //the type of easing to use on transitions
+            wait: 5000,         //the wait time to show each slide 
+            length: 500,        //how long the transition animates
+            direction: '',      //direction the animation goes (like 'down' or 'right')
+            position: '',       //start position of the animation (like 'top' or 'topleft')
+
+            animatorNum = 20,   //applies to strips/boxes; is the number of strips/boxes
+            animatorDelay = 50  //applies ot strips/boxes; delay between each strip/box
         },
         timer: {
-            enabled: true,  //enable timer?
-            height: 40,     //height of the timer
-            width: 40,      //width of the timer
-            border: 2,      //space between filled and empty colors on the timer
+            enabled: true,      //enable timer?
+            height: 40,         //height of the timer
+            width: 40,          //width of the timer
+            border: 2,          //space between filled and empty colors on the timer
             colors: {
                 empty: 'rgba(30, 30, 30, 0.5)', //color to show on unfilled time
-                filled: '#FFF'//color to show as ellapsed time
+                filled: '#FFF'  //color to show as ellapsed time
             },
-            refreshRate: 10, //time in ms between redraws (lower is smoother, reccommend <50)
+            refreshRate: 10,    //time in ms between redraws (lower is smoother, reccommend <50)
             ringWidth: 3,
-            style: 'ring'   //style of the timer; circle, ring, bar
+            style: 'ring'       //style of the timer; circle, ring, bar
         },
         navigation: {
             enabled: true,
             opacity: {
-                focused: 1, //the opacity to set on controls when focused
-                blurred: 0.1//the opacity to set on controls when blurred
+                focused: 1,     //the opacity to set on controls when focused
+                blurred: 0.1    //the opacity to set on controls when blurred
             }
         },
         thumbs: {
             enabled: false,         //enable thumbnails?
             tooltip: true,          //show as tooltip
-            triggerTooltip: 'hover',//event to trigger showing tooltip (if true)
+            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
         hoverPause: true    //pause when a user hovers into the current slide
@@ -135,34 +141,40 @@
                 if (backward) nextSlide = (slideIndex - 1 <= 0) ? slider.$slides.length - 1 : slideIndex - 1;
                 else nextSlide = (slideIndex + 1) % slider.$slides.length;
 
-                switch (settings.transition.type) {
-                    case 'cut':
-                        slider.$slides.eq(slideIndex).hide();
-                        slider.$slides.eq(slideIndex).removeClass('active');
-                        slider.$slides.eq(nextSlide).show();
-                        slider.$slides.eq(nextSlide).addClass('active');
-
+                if (slide.transition) { //attempt to use advanced transitions
+                    slide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
                         slideIndex = nextSlide;
                         resetTimer();
-                        break;
-                    case 'fade':
-                    default:
-                        slider.$slides.eq(nextSlide).show();
-                        slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
+                    });
+                } else { //otherwise default to built ins
+                    switch (settings.transition.type) {
+                        case 'cut':
+                            slider.$slides.eq(slideIndex).hide();
                             slider.$slides.eq(slideIndex).removeClass('active');
+                            slider.$slides.eq(nextSlide).show();
                             slider.$slides.eq(nextSlide).addClass('active');
-                            slideIndex = nextSlide;
 
+                            slideIndex = nextSlide;
                             resetTimer();
-                        });
-                }
+                            break;
+                        case 'fade':
+                        default:
+                            slider.$slides.eq(nextSlide).show();
+                            slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
+                                slider.$slides.eq(slideIndex).removeClass('active');
+                                slider.$slides.eq(nextSlide).addClass('active');
+                                slideIndex = nextSlide;
+
+                                resetTimer();
+                            });
+                    }
             }
 
             function resetTimer() {
                 //create and manage timer if they have plugin installed
                 if (settings.timer.enabled) {
                     if (!slider.timer)
-                        slider.timer = new slideTimer(settings.transition.wait, settings.timer,
+                        slider.timer = new slide.timer(settings.transition.wait, settings.timer,
                                                         doTransition, slider.$timer[0]);
 
                     slider.timer.reset();
@@ -218,7 +230,7 @@
                     slider.$slides = slider.$slides.add($slide.hide());
 
                     if (settings.thumbs.enabled) {
-
+                        //TODO: Create thumbnails
                     }
                 });
                 slider.$slides.appendTo(slider.$slider);
@@ -337,11 +349,11 @@
             }
 
             //Log overrides for safety
-            function log() { _log('log', arguments); }
-            function error() { _log('error', arguments); }
-            function warn() { _log('warn', arguments); }
+            win.slide.log = function () { _log('log', arguments); }
+            win.slide.error = function () { _log('error', arguments); }
+            win.slide.warn = function () { _log('warn', arguments); }
 
-            function _log(type, args) {
+            win.slide._log = function (type, args) {
                 if (win.console && console[type]) {
                     console[type].apply(this, args);
                     return win.console;

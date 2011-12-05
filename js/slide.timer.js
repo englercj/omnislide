@@ -15,7 +15,8 @@
  */
 
 (function ($, win, undefined) {
-    win.slideTimer = function (animLen, options, callback, canvas) {
+    if (!win.slide) win.slide = {};
+    win.slide.timer = function (animLen, options, callback, canvas) {
         if (!canvas)
             canvas = document.createElement('canvas');
 
