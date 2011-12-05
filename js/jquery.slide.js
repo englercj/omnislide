@@ -73,13 +73,13 @@
                     if (options) $.extend(true, settings, defaults, options);
 
                     //disable timer if plugin not installed
-                    if (!slide.timer) settings.timer.enabled = false;
+                    if (!OmniSlide.timer) settings.timer.enabled = false;
 
                     //parse out the slides into usable data
                     var parse = parseSlides();
                     if (parse) {
-                        slide.error('Error while parsing slides: ', parse);
-                        slide.error('settings.slides: ', settings.slides);
+                        OmniSlide.error('Error while parsing slides: ', parse);
+                        OmniSlide.error('settings.slides: ', settings.slides);
 
                         return false;
                     }
@@ -143,8 +143,8 @@
             if (backward) nextSlide = (slideIndex - 1 <= 0) ? slider.$slides.length - 1 : slideIndex - 1;
             else nextSlide = (slideIndex + 1) % slider.$slides.length;
 
-            if (slide.transition) { //attempt to use advanced transitions
-                slide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
+            if (OmniSlide.transition) { //attempt to use advanced transitions
+                OmniSlide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
                     slideIndex = nextSlide;
                     resetTimer();
                 });
@@ -177,7 +177,7 @@
             //create and manage timer if they have plugin installed
             if (settings.timer.enabled) {
                 if (!slider.timer)
-                    slider.timer = new slide.timer(settings.transition.wait, settings.timer,
+                    slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer,
                                                     doTransition, slider.$timer[0]);
 
                 slider.timer.reset();
@@ -374,7 +374,7 @@
         omnislide: electricSlide 
     });
 
-    win.slide = {
+    win.OmniSlide = {
         version: 0.1,
         _log: function (type, args) {
             if (win.console && console[type]) {
@@ -384,9 +384,9 @@
 
             return {};
         },
-        log: function () { slide._log('log', arguments); },
-        error: function () { slide._log('error', arguments); },
-        warn: function () { slide._log('warn', arguments); }
+        log: function () { OmniSlide._log('log', arguments); },
+        error: function () { OmniSlide._log('error', arguments); },
+        warn: function () { OmniSlide_log('warn', arguments); }
     };
-    slide.versionString = 'v' + slide.version + ' BETA';
+    OmniSlide.versionString = 'v' + OmniSlide.version + ' BETA';
 })(jQuery, window);

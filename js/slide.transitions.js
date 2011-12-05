@@ -1,6 +1,6 @@
 ﻿/*
  * Each transition has its own options, but they follow the format:
- * slide.transition(options);
+ * OmniSlide.transition(options);
  * WHERE options contains ATLEAST
     {
         type: 'fade',       //the type of transition to use
@@ -18,7 +18,7 @@
 */
 
 (function ($, win, undefined) {
-    win.slide.transition = function (options, $slides, index, next, callback) {
+    win.OmniSlide.transition = function (options, $slides, index, next, callback) {
         //setup some reasonable defaults
         options.easing = options.easing || 'linear';
         options.wait = options.wait || 5000;
@@ -27,14 +27,14 @@
         options.position = options.position || 'top';
 
         //error catching and calling and such
-        var transitions = slide.transitions,
-            defaults = slide.transitions.defaults;
+        var transitions = OmniSlide.transitions,
+            defaults = OmniSlide.transitions.defaults;
 
         if (transitions[options.type]) {
             if (transitions[options.type][options.effect]) {
                 return transitions[options.type][options.effect]($slides, index, next, options, callback);
             } else {
-                slide.warn('Unable to find effect %s in transition %s, using default effect %s', options.effect, options.type, options.type);
+                OmniSlide.warn('Unable to find effect %s in transition %s, using default effect %s', options.effect, options.type, options.type);
                 return transitions[options.type][defaults[options.type]]($slides, index, next, options, callback);
             }
         } else {
@@ -46,7 +46,7 @@
     //definition of all transition functions
     //in the global object so they can be extended
     //externally
-    win.slide.transitions = {
+    win.OmniSlide.transitions = {
         strips: {
             wave: function ($slides, index, next, options, callback) { },
             zipper: function ($slides, index, next, options, callback) { },
@@ -81,7 +81,7 @@
         }
     };
 
-    win.slide.transitions.defaults = {
+    win.OmniSlide.transitions.defaults = {
         strips: 'wave',
         boxes: 'random',
         fade: 'full',
@@ -91,10 +91,10 @@
     /*
      * Transition extension example
      *
-        $.extend(true, slide.transitions, {
+        $.extend(true, OmniSlide.transitions, {
             hey: {
                 there: function ($slides, index, next, options, callback) {
-                    slide.log('Hey There!');
+                    OmniSlide.log('Hey There!');
 
                     if(callback) callback();
                 }

@@ -15,7 +15,7 @@
  */
 
 (function ($, win, undefined) {
-    win.slide.timer = function (animLen, options, callback, canvas) {
+    win.OmniSlide.timer = function (animLen, options, callback, canvas) {
         if (!canvas)
             canvas = document.createElement('canvas');
 
