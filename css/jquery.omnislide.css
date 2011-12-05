@@ -10,16 +10,16 @@ div.slide-wrapper {
     font-family: Arial,Helvetica,sans-serif;
     
     width:835px; 
-    height:435px;
+    height:425px;
     
     padding:5px;
     background:#FFF;
     
     margin:0 auto;
-    box-shadow:0 0 10px #BBB;
+    box-shadow:0 0 20px #BBB;
 }
 div.slide-wrapper * { font-family: Arial,Helvetica,sans-serif; margin:0; padding:0; }
-div.slide-box { width:835px; height:435px; }
+div.slide-box { width:835px; height:425px; }
 
 div.slide { }
 div.slide.active { }
@@ -88,3 +88,5 @@ div.slide-content {  }
 div.slide-overlay {  }
 
 canvas.slide-timer { position:absolute; top:10px; right:10px; z-index:10; }
+
+slider-transition-bar { float: left; position: absolute; }

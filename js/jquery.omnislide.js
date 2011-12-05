@@ -49,7 +49,7 @@
     function electricSlide(method) {
         //variables
         var settings = {},
-        guid = getGuid(),
+        guid = OmniSlide.generateGuid(),
         slides = [],
         slider = {
             $container: {},
@@ -74,6 +74,10 @@
 
                     //disable timer if plugin not installed
                     if (!OmniSlide.timer) settings.timer.enabled = false;
+
+                    //place guid where plugins can get at it
+                    settings.timer.guid = guid;
+                    settings.transition.guid = guid;
 
                     //parse out the slides into usable data
                     var parse = parseSlides();
@@ -351,14 +355,6 @@
             return false;
         }
 
-        //guid for this instance
-        function getGuid() {
-            var S4 = function () {
-                return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-            };
-            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-        }
-
         //method calling
         if (methods[method]) {
             return methods[method].apply(this, [].slice.call(arguments, 1));
@@ -371,7 +367,7 @@
 
     $.fn.extend({
         OmniSlide: electricSlide,
-        omnislide: electricSlide 
+        omnislide: electricSlide
     });
 
     win.OmniSlide = {
@@ -386,7 +382,13 @@
         },
         log: function () { OmniSlide._log('log', arguments); },
         error: function () { OmniSlide._log('error', arguments); },
-        warn: function () { OmniSlide_log('warn', arguments); }
+        warn: function () { OmniSlide_log('warn', arguments); },
+        generateGuid: function() {
+            var S4 = function () {
+                return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+            };
+            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+        }
     };
     OmniSlide.versionString = 'v' + OmniSlide.version + ' BETA';
 })(jQuery, window);
