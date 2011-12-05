@@ -4,7 +4,7 @@
         startSlide: 1,      //initial slide for the plugin to start displaying
         transition: {
             type: 'cut',    //the type of transition to use
-            easing: 'linear',//the type of easing to use on transitions
+            easing: 'linear', //the type of easing to use on transitions
             wait: 5000,     //the wait time to show each slide 
             length: 500     //how long the transition animates
         },
@@ -17,7 +17,7 @@
                 empty: 'rgba(15, 15, 15, 0.5)', //color to show on unfilled time
                 filled: 'rgb(210, 210, 210)'    //color to show as ellapsed time
             },
-            refreshRate: 10,//time in ms between redraws (lower is smoother, reccommend <50)
+            refreshRate: 10, //time in ms between redraws (lower is smoother, reccommend <50)
             ringWidth: 4,
             style: 'ring'   //style of the timer; circle, ring, bar
         },
@@ -30,7 +30,7 @@
         thumbs: {
             tooltip: true,  //show as tooltip
             trigger: 'hover'//event to trigger showing tooltip (if true)
-        }
+        },
         hoverPause: true    //pause when a user hovers into the current slide
     };
 
@@ -83,9 +83,6 @@
                         //fade out the navigation
                         slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
 
-                        //bind click, etc events
-                        bindEvents();
-
                         return true;
                     });
                 },
@@ -128,34 +125,6 @@
                     };
                 }
             };
-
-            function bindEvents() {
-                $('#' + guid + ' div.slide-nav-control').bind('click', function (e) {
-                    if (!slider.$slider.has(this)) return;
-
-                    var $this = $(this),
-                        ctrl = $.trim(this.className.replace('slide-nav-control', ''));
-
-                    switch (ctrl) {
-                        case 'slide-nav-back':
-                            doTransition(true);
-                            break;
-                        case 'slide-nav-forward':
-                            doTransition();
-                            break;
-                        case 'slide-nav-play':
-                            slider.timer.unlock();
-                            slider.timer.start();
-                            $this.removeClass('slide-nav-play').addClass('slide-nav-pause');
-                            break;
-                        case 'slide-nav-pause':
-                            slider.timer.stop();
-                            slider.timer.lock();
-                            $this.removeClass('slide-nav-pause').addClass('slide-nav-play');
-                            break;
-                    }
-                });
-            }
 
             function doTransition(backward) {
                 var nextSlide;
@@ -211,9 +180,18 @@
 
                 //create navigation
                 slider.$nav = $('<div class="slide-nav"/>').hover(navHover).appendTo(slider.$slider);
-                slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
-                slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
-                slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
+                slider.$nav.append(
+                    $('<div class="slide-nav-control slide-nav-back">&nbsp;</div>')
+                        .hover(navControlHover).click(navControlClick)
+                );
+                slider.$nav.append(
+                    $('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>')
+                        .hover(navControlHover).click(navControlClick)
+                );
+                slider.$nav.append(
+                    $('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>')
+                        .hover(navControlHover).click(navControlClick)
+                );
 
                 //create timer
                 if (settings.timer.enabled)
@@ -254,6 +232,42 @@
                     slider.$nav.stop().animate({ opacity: settings.navigation.opacity.focused });
                 } else if (e.type == 'mouseleave') {
                     slider.$nav.stop().animate({ opacity: settings.navigation.opacity.blurred });
+                }
+            }
+
+            //handle hovering in/out of a navigation control
+            function navControlHover(e) {
+                if (e.type == 'mouseenter') {
+                    $(this).addClass('active');
+                } else if (e.type == 'mouseleave') {
+                    $(this).removeClass('active');
+                }
+            }
+
+            //handle nav control button click
+            function navControlClick(e) {
+                var $this = $(this),
+                    ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
+
+                switch (ctrl) {
+                    case 'slide-nav-back':
+                        slider.timer.stop();
+                        doTransition(true);
+                        break;
+                    case 'slide-nav-forward':
+                        slider.timer.stop();
+                        doTransition();
+                        break;
+                    case 'slide-nav-play':
+                        slider.timer.unlock();
+                        slider.timer.start();
+                        $this.removeClass('slide-nav-play').addClass('slide-nav-pause');
+                        break;
+                    case 'slide-nav-pause':
+                        slider.timer.stop();
+                        slider.timer.lock();
+                        $this.removeClass('slide-nav-pause').addClass('slide-nav-play');
+                        break;
                 }
             }
 

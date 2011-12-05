@@ -130,11 +130,19 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
         },
 
+        fadeOut = function (cb) {
+            $(canvas).fadeOut(cb);
+        },
+
+        fadeIn = function (cb) {
+            $(canvas).fadeIn(cb);
+        },
+
         tick = function () {
-            if (timeEllapsed == animLen) {
+            if (timeEllapsed >= animLen) {
                 timer.stop();
-                $(canvas).stop().fadeOut();
-                callback();
+                fadeOut(callback);
+
                 return;
             }
 
@@ -147,8 +155,7 @@
                 if (timer.locked) return false;
                 if (time > animLen || time < 0) return false;
 
-                timeLeft = time;
-                paint();
+                timeEllapsed = (animLen - time);
                 return true;
             },
             start: function () {
@@ -164,12 +171,11 @@
                 timer.stopped = true;
             },
             reset: function () {
-                if (timer.locked) return false;
-
+                timer.unlock();
                 timer.stop();
                 clearCanvas();
                 bgPaint();
-                $(canvas).stop().fadeIn();
+                fadeIn();
 
                 lastRad = 0;
                 timeEllapsed = 0;
