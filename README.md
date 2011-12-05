@@ -30,7 +30,7 @@ determine the type of input you give it. Meaning, you can pass in XML string dat
 a DOM element, jQuery object, or jQuery selector (*Note:* if you pass a DOM or jQuery Object, it must be
 a `<ul/>` element in the proper format). Here is an example of the basic usage using defaults:
 
-## HTML:
+#### HTML:
 
 	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
@@ -53,7 +53,7 @@ a `<ul/>` element in the proper format). Here is an example of the basic usage u
         </li>
 	</ul>
 
-## Javascript
+#### Javascript
 
 	$(function () {
 		$('#sliderUl').slide({ slides: '#slides' });
@@ -66,7 +66,7 @@ theming API can change without changing the input API and visa versa.
 
 Here is another example using some XML that is pulled in using AJAX:
 
-## HTML
+#### HTML
 
 	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
@@ -75,7 +75,7 @@ Here is another example using some XML that is pulled in using AJAX:
 
 	<div id="sliderXml"></div>
 
-## Javascript
+#### Javascript
 
 	$(function () {
 		$.get('slides.xml', function (data) {
