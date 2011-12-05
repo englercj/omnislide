@@ -3,22 +3,22 @@
         slides: undefined,  //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 1,      //initial slide for the plugin to start displaying
         transition: {
-            type: 'cut',   //the type of transition to use
-            easing: 'linear', //the type of easing to use on transitions
+            type: 'cut',    //the type of transition to use
+            easing: 'linear',//the type of easing to use on transitions
             wait: 5000,     //the wait time to show each slide 
             length: 500     //how long the transition animates
         },
         timer: {
-            enabled: true, //enable timer?
-            height: 35, //height of the timer
-            width: 35,  //width of the timer
-            border: 2, //space between filled and empty colors on the timer
+            enabled: true,  //enable timer?
+            height: 40,     //height of the timer
+            width: 40,      //width of the timer
+            border: 2,      //space between filled and empty colors on the timer
             colors: {
-                empty: 'rgba(10, 10, 10, 0.4)',     //color to show on unfilled time
-                filled: 'rgb(150, 150, 150)'  //color to show as ellapsed time
+                empty: 'rgba(15, 15, 15, 0.5)', //color to show on unfilled time
+                filled: 'rgb(210, 210, 210)'    //color to show as ellapsed time
             },
-            refreshRate: 10, //time in ms between redraws (lower is smoother, reccommend <50)
-            ringWidth: 5,
+            refreshRate: 10,//time in ms between redraws (lower is smoother, reccommend <50)
+            ringWidth: 4,
             style: 'ring'   //style of the timer; circle, ring, bar
         },
         hoverPause: true    //pause when a user hovers into the current slide
