@@ -32,6 +32,7 @@ a `<ul/>` element in the proper format). Here is an example of the basic usage u
 
 ### HTML:
 
+~~~~~ html
 	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script src="js/jquery.slide.js"></script>
@@ -52,12 +53,15 @@ a `<ul/>` element in the proper format). Here is an example of the basic usage u
             <div class="slide-overlay"></div>
         </li>
 	</ul>
+~~~~~
 
 ### Javascript
 
+~~~~~ javascript
 	$(function () {
 		$('#sliderUl').slide({ slides: '#slides' });
 	});
+~~~~~
 
 The plugin will use the `<ul/>` passed in to create the slider. It does *NOT* use the `<ul/>` markup
 as the actual slider. It will hide that element, and create its own HTML. This method was chosen so that
@@ -68,15 +72,18 @@ Here is another example using some XML that is pulled in using AJAX:
 
 ### HTML
 
+~~~~~ html
 	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
 	<script src="js/jquery.slide.js"></script>
 	<script src="js/slide.timer.js"></script>
 
 	<div id="sliderXml"></div>
+~~~~~
 
 ### Javascript
 
+~~~~~ javascript
 	$(function () {
 		$.get('slides.xml', function (data) {
 			//passes in xml as an XML Document
@@ -84,7 +91,7 @@ Here is another example using some XML that is pulled in using AJAX:
             $('#sliderXml').slide({ slides: data });
         });
 	});
-
+~~~~~
 Theming
 -------
 
