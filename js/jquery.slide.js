@@ -369,11 +369,13 @@
         }
     }
 
-    $.fn.extend({ slide: electricSlide });
+    $.fn.extend({
+        OmniSlide: electricSlide,
+        omnislide: electricSlide 
+    });
 
     win.slide = {
         version: 0.1,
-        slide: electricSlide,
         _log: function (type, args) {
             if (win.console && console[type]) {
                 console[type].apply(this, args);

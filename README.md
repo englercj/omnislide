@@ -1,14 +1,14 @@
-jQuery-Slider
+OmniSlide
 =============
-Despite the (currently) borring name, jQuery-Slider is an amazing new slider being built to be a one-stop-shop 
-for your slider needs. This slider is meant to replace your need for any other slider by combining all the best
-features found in all sliders out there; while also adding some new things like theming and custom transitions
-to the mix as well.
+OmniSlide is an amazing new slider being built to be a one-stop-shop for your slider needs. 
+This slider is meant to replace your need for any other slider by combining all the best
+features found in all sliders out there. It also adds some new features like theming and
+custom transitions to the mix as well.
 
 Features
 --------
 
-Here are some of the features that jQuery-Slider supports:
+Here are some of the features that OmniSlide supports:
 
 * Image slideshows
 * HTML Content
@@ -89,7 +89,7 @@ Here is another example using some XML that is pulled in using AJAX:
 Theming
 -------
 
-Something unique to jQuery-Slider is the theming API. All controls and components are assigned 
+Something unique to OmniSlide is the theming API. All controls and components are assigned 
 classes that allow you to theme the slider to your preference. All CSS sprites can be easily replaced.
 This slider was designed to provide functionality, without forcing you into a style. That way you
 can take the slider and brand it to your website, quickly and easily.

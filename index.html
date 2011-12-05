@@ -11,7 +11,7 @@
         <script src="js/slide.transitions.js"></script>
         <script>
             $(function () {
-                $('#sliderUl').slide({
+                $('#sliderUl').OmniSlide({
                     slides: '#slideInfo',
                     startSlide: 3,
                     transition: {
@@ -55,7 +55,7 @@
                 });
 
                 $.get('slides.xml', function (data) {
-                    $('#sliderXml').slide({ slides: data });
+                    $('#sliderXml').omnislide({ slides: data });
                 });
             });
         </script>
