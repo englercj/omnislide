@@ -32,7 +32,7 @@ determine the type of input you give it. Meaning, you can pass in XML string dat
 a DOM element, jQuery object, or jQuery selector (*Note:* if you pass a DOM or jQuery Object, it must be
 a `<ul/>` element in the proper format). Here is an example of the basic usage using defaults:
 
-### HTML:
+### HTML
 
 ~~~~~ html
 	<div id="sliderUl"></div>
