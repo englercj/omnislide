@@ -1,7 +1,9 @@
 jQuery-Slider
 =============
-Despite the (currently) borring name, jQuery-Slider is a new slider being built to be a one-stop-shop 
-for your slider needs. This slider incorporates the best features of other sliders on the market.
+Despite the (currently) borring name, jQuery-Slider is an amazing new slider being built to be a one-stop-shop 
+for your slider needs. This slider is meant to replace your need for any other slider by combining all the best
+features found in all sliders out there; while also adding some new things like theming and custom transitions
+to the mix as well.
 
 Features
 --------
