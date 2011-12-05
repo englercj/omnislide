@@ -10,10 +10,9 @@
         <script src="js/slide.timer.js"></script>
         <script>
             $(function () {
-                $('#slider').slide({ slides: '#slideInfo', transition: { type: 'fade'} });
+                $('#slider').slide({ slides: '#slideInfo', transition: { type: 'fade', length:1000, wait: 3000 } });
 
                 $.get('slides.xml', function (data) {
-                    console.log(data);
                     $('#slider2').slide({ slides: data });
                 });
             });

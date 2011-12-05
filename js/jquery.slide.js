@@ -161,6 +161,7 @@
                         slider.$slides.eq(nextSlide).addClass('active');
 
                         slideIndex = nextSlide;
+                        resetTimer();
                         break;
                     case 'fade':
                     default:
@@ -169,9 +170,13 @@
                             slider.$slides.eq(slideIndex).removeClass('active');
                             slider.$slides.eq(nextSlide).addClass('active');
                             slideIndex = nextSlide;
+
+                            resetTimer();
                         });
                 }
+            }
 
+            function resetTimer() {
                 //create and manage timer if they have plugin installed
                 if (settings.timer.enabled) {
                     if (!slider.timer)
