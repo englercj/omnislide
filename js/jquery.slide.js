@@ -14,8 +14,8 @@
             width: 40,      //width of the timer
             border: 2,      //space between filled and empty colors on the timer
             colors: {
-                empty: 'rgba(15, 15, 15, 0.5)', //color to show on unfilled time
-                filled: 'rgb(210, 210, 210)'    //color to show as ellapsed time
+                empty: 'rgba(30, 30, 30, 0.5)', //color to show on unfilled time
+                filled: '#FFF'//color to show as ellapsed time
             },
             refreshRate: 10, //time in ms between redraws (lower is smoother, reccommend <50)
             ringWidth: 4,
@@ -29,7 +29,8 @@
         },
         thumbs: {
             tooltip: true,  //show as tooltip
-            trigger: 'hover'//event to trigger showing tooltip (if true)
+            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
+            triggerSlide: 'click'   //event to trigger changing to that slide
         },
         hoverPause: true    //pause when a user hovers into the current slide
     };
@@ -251,12 +252,12 @@
 
                 switch (ctrl) {
                     case 'slide-nav-back':
-                        slider.timer.stop();
-                        doTransition(true);
+                        slider.timer.finish(function () {
+                            doTransition(true);
+                        });
                         break;
                     case 'slide-nav-forward':
-                        slider.timer.stop();
-                        doTransition();
+                        slider.timer.finish(doTransition);
                         break;
                     case 'slide-nav-play':
                         slider.timer.unlock();

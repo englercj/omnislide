@@ -180,6 +180,12 @@
                 lastRad = 0;
                 timeEllapsed = 0;
             },
+            finish: function (cb) {
+                if (timer.locked) return false;
+
+                timer.stop();
+                fadeOut(cb);
+            },
             lock: function () { timer.locked = true; },
             unlock: function () { timer.locked = false; },
             stopped: true,

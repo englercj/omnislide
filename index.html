@@ -10,10 +10,44 @@
         <script src="js/slide.timer.js"></script>
         <script>
             $(function () {
-                $('#slider').slide({ slides: '#slideInfo', transition: { type: 'fade', length:1000, wait: 3000 } });
+                $('#sliderUl').slide({
+                    slides: '#slideInfo',
+                    startSlide: 3,
+                    transition: { 
+                        type: 'fade',
+                        easing: 'swing',
+                        length: 1000, 
+                        wait: 3000 
+                    },
+                    timer: {
+                        enabled: true,
+                        height: 8,
+                        width: 200,
+                        border: 2,
+                        colors: {
+                            empty: 'rgba(30, 30, 30, 0.5)',
+                            filled: 'rgba(255, 255, 255, 0.9)'
+                        },
+                        refreshRate: 5,
+                        ringWidth: 4,
+                        style: 'bar'
+                    },
+                    navigation: {
+                        opacity: {
+                            focused: 0.9,
+                            blurred: 0.1
+                        }
+                    },
+                    thumbs: {
+                        tooltip: false,
+                        triggerTooltip: 'hover',
+                        triggerSlide: 'dblclick'
+                    },
+                    hoverPause: false
+                });
 
                 $.get('slides.xml', function (data) {
-                    $('#slider2').slide({ slides: data });
+                    $('#sliderXml').slide({ slides: data });
                 });
             });
         </script>
@@ -25,8 +59,8 @@
     <body>
         <h1>Slide Demo...</h1>
         
-        <h2>From &lt;ul&gt; Element</h2>
-        <div id="slider"></div>
+        <h2>From &lt;ul&gt; Element (Using custom options)</h2>
+        <div id="sliderUl"></div>
         
         <ul id="slideInfo">
             <li>
@@ -91,7 +125,7 @@
             </li>
         </ul>
 
-        <h2>From xml Ajaxed in</h2>
-        <div id="slider2"></div>
+        <h2>From xml Ajaxed in (Default Options)</h2>
+        <div id="sliderXml"></div>
     </body>
 </html>
