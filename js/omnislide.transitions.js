@@ -33,10 +33,10 @@
 
         if (transitions[options.type] && options.type.charAt(0) != '_') {
             //check if we did init for this transition yet
-            if (!transitions[options.type]['_init_done']) {
-                transitions[options.type]['_init']();
-                OmniSlide.transitions[options.type]['_init_done'] = true;
-            }
+            /*if (!transitions[options.type]['_init_done']) {
+            transitions[options.type]['_init']();
+            OmniSlide.transitions[options.type]['_init_done'] = true;
+            }*/
 
             //attempt to call transition effect, or default
             if (transitions[options.type][options.effect] && options.effect.charAt(0) != '_') {
@@ -56,43 +56,147 @@
     //in the global object so they can be extended
     //externally
     win.OmniSlide.transitions = {
-        strips: {
-            _init: function ($slides, index, next, options, callback) {
-                /*var slideWidth = $slides.width(),
-                    stripWidth = parseInt(slideWidth / options.animatorNum),
-                    gap = slideWidth - stripWidth * options.animatorNum,
-                    stipLeft = 0;
+        _orientation: { HORIZONTAL_STRIP: 0, VERTICLE_STRIP: 1, SQUARE: 2 },
+        _boxify: function ($slide, num, guid, orientation) {
+            var slideW = $slide.width(), slideH = $slide.height(),
+                boxW, boxH, xNum, yNum,
+                $boxes = $(), gap, sumLeft, sumTop;
 
-                //create bars and set locations
-                for (var i = 1; i < options.animatorNum + 1; ++i) {
-                    var tstripWidth, $strip;
+            switch (orientation) {
+                case OmniSlide.transitions._orientation.HORIZONTAL_STRIP:
+                    boxW = slideW;
+                    boxH = parseInt(slideH / num);
+                    gap = slideH - (boxH * num);
+                    xNum = 1;
+                    yNum = num;
+                    break;
+                case OmniSlide.transitions._orientation.VERTICLE_STRIP:
+                    boxW = parseInt(slideW / num);
+                    boxH = slideH;
+                    gap = slideW - (boxW * num);
+                    yNum = 1;
+                    xNum = num;
+                    break;
+                case OmniSlide.transitions._orientation.SQUARE:
+                default:
+                    var area = slideW * slideH,
+                        boxArea = parseInt(area / num),
+                        sideLen = parseInt(Math.sqrt(boxArea));
+
+                    boxW = boxH = sideLen;
+                    xNum = parseInt(slideW / sideLen);
+                    yNum = parseInt(slideH / sideLen);
+                    //gap = area - (boxArea * num); //theoretical gap
+                    gap = area - ((xNum * yNum) * boxArea); //actual gap
+                    break;
+            }
+
+            //create boxes and set them up
+            sumLeft = sumTop = 0;
+            for (var y = 0; y < yNum; ++y) {
+                for (var x = 0; x < xNum; ++x) {
+                    var w, h, $box, $contents;
 
                     if (gap > 0) {
-                        tstripWidth = stripWidth + 1;
-                        gap--;
-                    } else { tstripWidth = stripWidth; }
+                        switch (orientation) {
+                            case OmniSlide.transitions._orientation.HORIZONTAL_STRIP:
+                                w = boxW;
+                                h = boxH + 1;
+                                gap--;
+                                break;
+                            case OmniSlide.transitions._orientation.VERTICLE_STRIP:
+                                w = boxW + 1;
+                                h = boxH;
+                                gap--;
+                                break;
+                            case OmniSlide.transitions._orientation.SQUARE:
+                            default:
+                                w = boxW + 1;
+                                h = boxH + 1;
+                                gap -= 2;
+                                break;
+                        }
+                    } else {
+                        w = boxW;
+                        h = boxH;
+                    }
 
-                    $strip = $('<div class="slider-transition-bar" id="slider-' + options.guid + '-' + i + '" style="width:' +
-                        tstripWidth + 'px; height:' + $slides.height() + 'px;"></div>';
-                    
-                    _$theStrips.add($strip);
-                }*/
+                    /*$contents = $('<div class="slider-transition-box-contents" id="slider-transition-box-contents-' + guid + '_' + x + '-' + y + '"></div>')
+                    .html($slide.html())
+                    .css({
+                    width: w,
+                    height: h,
+                    left: x * w,
+                    top: y * h,
+                    marginLeft: -(x * w),
+                    marginTop: -(y * h),
+                    backgroundPosition: (-(x * w)) + 'px ' + (-(y * h)) + 'px',
+                    backgroundImage: $slide.css('backgroundImage')
+                    });*/
+                    console.log(sumLeft, w, sumTop);
+                    $box = $('<div class="slider-transition-box" id="slider-transition-box-' + guid + '_' + x + '-' + y + '"></div>')
+                        .css({
+                            width: w,
+                            height: h,
+                            left: sumLeft,
+                            top: sumTop,
+                            backgroundImage: $slide.css('backgroundImage'),
+                            backgroundPosition: (-sumLeft) + 'px ' + (-sumTop) + 'px'
+                        }).html($slide.html());
+                    //.append($contents);
+
+                    $boxes = $boxes.add($box);
+
+                    switch (orientation) {
+                        case OmniSlide.transitions._orientation.HORIZONTAL_STRIP:
+                            sumTop += h;
+                            break;
+                        case OmniSlide.transitions._orientation.VERTICLE_STRIP:
+                            sumLeft += w;
+                            break;
+                        case OmniSlide.transitions._orientation.SQUARE:
+                        default:
+                            sumLeft = (x === 0) ? 0 : sumLeft + w;
+                            sumTop  = (y === 0) ? 0 : sumTop + h;
+                            break;
+                    }
+                }
+            }
+
+            return $boxes;
+        },
+        strips: {
+            wave: function ($slides, index, next, options, callback) {
+                var $boxes = OmniSlide.transitions._boxify($slides.eq(index), options.animatorNum, options.guid,
+                    OmniSlide.transitions._orientation.VERTICLE_STRIP);
+
+                $slides.parent().append($boxes);
+                $slides.eq(index).hide();
+                $slides.eq(next).show();
+
+                function fadeWave(i) {
+                    if (i >= $boxes.length) {
+                        $boxes.remove();
+                        callback();
+                        return;
+                    }
+
+                    $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing);
+
+                    setTimeout(function () { fadeWave(++i); }, (options.length / $boxes.length));
+                }
+
+                fadeWave(0);
             },
-            _$theStrips: $(),
-            wave: function ($slides, index, next, options, callback) { },
             zipper: function ($slides, index, next, options, callback) { },
             curtain: function ($slides, index, next, options, callback) { }
         },
         boxes: {
-            init: function ($slides, index, next, options, callback) { },
-            _cloneSlide: function ($slides, next) {},
-            _$boxes: $(),
             diagonal: function ($slides, index, next, options, callback) { },
             row: function ($slides, index, next, options, callback) { },
             random: function ($slides, index, next, options, callback) { }
         },
         fade: {
-            init: function () { },
             full: function ($slides, index, next, options, callback) {
                 $slides.eq(next).show();
                 $slides.eq(index).fadeOut(options.length, options.easing, function () {
@@ -105,7 +209,6 @@
             directional: function ($slides, index, next, options, callback) { }
         },
         cut: {
-            init: function () { },
             full: function ($slides, index, next, options, callback) {
                 $slides.eq(index).hide();
                 $slides.eq(index).removeClass('active');

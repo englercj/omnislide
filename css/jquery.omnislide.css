@@ -75,6 +75,7 @@ canvas.slide-timer {  }
  */
 div.slide-wrapper { display:block;  overflow:visible; position:relative; }
 div.slide-wrapper * {  }
+div.slider-transition-box { position:absolute; z-index:4; background:0 0 no-repeat; }
 
 div.slide-box { overflow:visible; position:absolute;  z-index:2; }
 
