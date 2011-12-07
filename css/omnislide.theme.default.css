@@ -1,8 +1,8 @@
-/*THEMING CLASSES
+/* THEMING CLASSES
  * ---
  * Please Modify these to change the theme of the slider
  * NOTE: 
- *  div.slide-wrapper's width/height should match div.slide-box's width/height
+ *  div.slide-wrapper's width/height should usually match div.slide-box's width/height
  */
 div.slide-wrapper { 
     font-family: Arial,Helvetica,sans-serif;
@@ -63,29 +63,4 @@ div.slide-thumb img {  }
 div.slide-content {  }
 div.slide-overlay {  }
 
-canvas.slide-timer {  }
-
-
-/* NECESSARY LAYOUTS
- * ---
- * Changes below this point may break functionality
- * Of the slider, it is not recommended
- */
-div.slide-wrapper { display:block;  overflow:visible; position:relative; }
-div.slide-wrapper * {  }
-div.slider-transition-box { position:absolute; z-index:4; background:0 0 no-repeat; }
-
-div.slide-box { overflow:visible; position:absolute;  z-index:2; }
-
-div.slide {  width:100%;  height:100%;  position:absolute; z-index:3; background:0 0 no-repeat; }
-div.slide.active { z-index:4; }
-
-div.slide-nav { position:absolute; z-index:5; }
-div.slide-thumb {  }
-div.slide-thumb img {  }
-div.slide-content {  }
-div.slide-overlay {  }
-
-canvas.slide-timer { position:absolute; top:10px; right:10px; z-index:10; }
-
-slider-transition-bar { float: left; position: absolute; }
+canvas.slide-timer { top:10px; right:10px; }
