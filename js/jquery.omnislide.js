@@ -141,10 +141,21 @@
             //changes an option to the given value
             //and/or returns value given by that option
             option: function (option, value) {
+                guid = this.data('guid');
+                settings = sets[guid];
+
+                if(!guid) {
+                    OmniSlide.error('Cannot update option, element is not a slider', this);
+                    return;
+                }
+
                 if (typeof (option) === 'string') {
                     if (value === undefined) return settings[option];
 
-                    settings[option] = value;
+                    if(typeof(value) === 'object')
+                        $.extend(true, settings[option], value);
+                    else
+                        settings[option] = value;
                 }
 
                 return this;
