@@ -27,7 +27,7 @@ Usage
 The slider uses the format of:
 
 ~~~~~ javascript
-	$(output_Element).slide({ slides: slide_Content_Input });
+	$(output_Element).omnislide({ slides: slide_Content_Input });
 ~~~~~
 
 Using the slider can be as simple or as complex as you wish. The slider has the ability to intelligently
@@ -59,7 +59,7 @@ a `<ul/>` element in the proper format). Here is an example of the basic usage u
 
 ~~~~~ javascript
 	$(function () {
-		$('#sliderUl').slide({ slides: '#slides' });
+		$('#sliderUl').omnislide({ slides: '#slides' });
 	});
 ~~~~~
 
@@ -93,7 +93,7 @@ that you initialized earlier. So for the `<ul/>` example I would make the follow
 page to the state it was in before I initialized the slider:
 
 ~~~~~ javascript
-	$('#sliderUl').slide('destroy');
+	$('#sliderUl').omnislide('destroy');
 ~~~~~~
 
 Theming
