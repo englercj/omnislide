@@ -5,12 +5,12 @@
         slides: undefined,      //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 1,          //initial slide for the plugin to start displaying
         transition: {
-            type: 'fade',       //the type of transition to use
-            effect: 'full',     //specific transition effect
-            easing: 'linear',   //the type of easing to use on transitions
+            type: '',           //the type of transition to use
+            effect: '',         //specific transition effect
+            easing: '',         //the type of easing to use on transitions
+            direction: '',      //affects only certain effects direction
             wait: 5000,         //the wait time to show each slide 
-            length: 1000,        //how long the transition animates
-            direction: 'down',      //direction the animation goes (like 'down' or 'right')
+            length: 1000,       //how long the transition animates
             animatorNum: 15,    //applies to strips/boxes; is the number of strips/boxes
         },
         timer: {
@@ -425,6 +425,14 @@
             }
 
             return {};
+        },
+        _getKeys: function(obj, showPrivate){
+            var keys = [];
+            for(var key in obj) {
+                if(showPrivate || key.charAt(0) != '_')
+                    keys.push(key);
+            }
+            return keys;
         },
         log: function () { OmniSlide._log('log', arguments); },
         error: function () { OmniSlide._log('error', arguments); },

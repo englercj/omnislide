@@ -4,9 +4,9 @@
  * WHERE options contains ATLEAST
     {
         type: 'fade',       //the type of transition to use
-        effect: 'full',     //specific transition effect (like 'wave' or 'zipper' for 'strips')
-        easing: 'linear',   //the type of easing to use on transitions
-        direction: '',      //direction the animation goes (like 'down' or 'right')
+        effect: 'full',     //specific transition effect (like 'wave' or 'zipper', for type 'strips')
+        easing: 'linear',   //the type of easing to use on animations
+        direction: '',      //affects only certain effects direction (like 'down', 'up', 'left', 'right', or 'random')
 
         wait: 5000,         //the wait time to show each slide 
         length: 1000,       //how long the transition animates
@@ -15,19 +15,38 @@
 */
 
 (function ($, win, undefined) {
-    win.OmniSlide.transition = function (options, $slides, index, next, callback) {
+    win.OmniSlide.transition = function (opts, $slides, index, next, callback) {
+        //store vars locally for easier access and to lose references
+        var trans = OmniSlide.transitions,
+            directions = ['down', 'left', 'up', 'right'],
+            options = $.extend(true, {}, opts),
+            def;
+
         //setup some reasonable defaults
         options.easing = options.easing || 'linear';
-        options.direction = options.direction || 'down';
         options.wait = options.wait || 5000;
         options.length = options.length || 500;
         options.animatorNum = options.animatorNum || 15;
 
+        if (!options.type || options.type == 'random') {
+            var types = OmniSlide._getKeys(trans);
+            options.type = types[parseInt((Math.random() * types.length) % types.length)];
+        }
+        
+        if (!options.effect || options.effect == 'random') {
+            var effects = OmniSlide._getKeys(trans[options.type]);
+            options.effect = effects[parseInt((Math.random() * effects.length) % effects.length)];
+        }
 
-        //store vars locally for easier access
-        var trans = OmniSlide.transitions,
-            def = trans._defaults[options.type];
+        if (!options.easing || options.easing == 'random') {
+            var easings = OmniSlide._getKeys($.easing);
+            options.easing = easings[parseInt((Math.random() * easings.length) % easings.length)];
+        }
 
+        if (!options.direction || options.direction == 'random')
+            options.direction = directions[parseInt((Math.random() * directions.length) % directions.length)];
+
+        def = trans._defaults[options.type];
         if (trans[options.type] && options.type.charAt(0) != '_') {
             //attempt to call transition effect, or default
             if (trans[options.type][options.effect] && options.effect.charAt(0) != '_') {
@@ -177,17 +196,28 @@
             return $boxes;
         },
         strips: {
+            _getStripOrient: function(dir) {
+                if (dir == 'right' || dir == 'left')
+                    return OmniSlide.transitions._orientation.VERTICLE_STRIP;
+                else
+                    return OmniSlide.transitions._orientation.HORIZONTAL_STRIP
+            },
             wave: function ($slides, index, next, options, callback) {
                 var trans = OmniSlide.transitions,
                     $boxes = trans._boxify($slides.eq(index), options.animatorNum, 
-                        options.guid, trans._orientation.VERTICLE_STRIP);
-                
+                        options.guid, trans.strips._getStripOrient(options._dir));
+
                 $boxes.show();
                 $slides.eq(index).hide();
                 $slides.eq(next).show();
 
-                function fadeWave(i) {
-                    if (i >= $boxes.length) {
+                if(options._dir == 'left' || options._dir == 'up')
+                    fadeWave($boxes.length - 1, function(i) { return --i; });
+                else
+                    fadeWave(0, function(i) { return ++i; });
+
+                function fadeWave(i, modify) {
+                    if (i >= $boxes.length || i < 0) {
                         $boxes.remove();
                         callback();
                         return;
@@ -195,12 +225,12 @@
 
                     $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing);
 
-                    setTimeout(function () { fadeWave(++i); }, (options.length / $boxes.length));
+                    setTimeout(function () { fadeWave(modify(i), modify); }, (options.length / $boxes.length));
                 }
-
-                fadeWave(0);
             },
-            zipper: function ($slides, index, next, options, callback) { },
+            zipper: function ($slides, index, next, options, callback) {
+            
+            },
             curtain: function ($slides, index, next, options, callback) { }
         },
         boxes: {
