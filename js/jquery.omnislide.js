@@ -150,12 +150,17 @@
                 }
 
                 if (typeof (option) === 'string') {
-                    if (value === undefined) return settings[option];
+                    var levels = option.split('.'),
+                        last = levels[levels.length - 1];
+
+                    levels.length -= 1;
+
+                    if (value === undefined) return eval('settings.' + levels.join('.'))[last];
 
                     if(typeof(value) === 'object')
-                        $.extend(true, settings[option], value);
-                    else
-                        settings[option] = value;
+                        $.extend(true, eval('settings.' + levels.join('.'))[last], value);
+                    else 
+                        eval('settings.' + levels.join('.'))[last] = value;
                 }
 
                 return this;
