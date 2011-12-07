@@ -32,7 +32,7 @@ The slider uses the format of:
 
 Using the slider can be as simple or as complex as you wish. The slider has the ability to intelligently
 determine the type of input you give it. Meaning, you can pass in XML string data, an XML document, 
-a DOM element, jQuery object, or jQuery selector (*Note:* if you pass a DOM or jQuery Object, it must be
+a DOM element, jQuery object, or jQuery selector (__Note:__ if you pass a DOM or jQuery Object, it must be
 a `<ul/>` element in the proper format). Here is an example of the basic usage using defaults:
 
 ### HTML
@@ -63,7 +63,7 @@ a `<ul/>` element in the proper format). Here is an example of the basic usage u
 	});
 ~~~~~
 
-The plugin will use the `<ul/>` passed in to create the slider. It does *NOT* use the `<ul/>` markup
+The plugin will use the `<ul/>` passed in to create the slider. It does __NOT__ use the `<ul/>` markup
 as the actual slider. It will hide that element, and create its own HTML. This method was chosen so that
 the API for passing the plugin data, and the actual implementation of the slider are decoupled. So the
 theming API can change without changing the input API and visa versa.
