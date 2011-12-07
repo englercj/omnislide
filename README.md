@@ -18,6 +18,8 @@ Here are some of the features that OmniSlide supports:
 * Slide Navigation Controls
 * Dynamic Thumbnails
 * XML input support
+* Extensible Advanced Transitions
+* Flexible Theming Classes
 * And More!
 
 Usage
@@ -86,36 +88,42 @@ Here is another example using some XML that is pulled in using AJAX:
         });
 	});
 ~~~~~
+
 Theming
 -------
 
-Something unique to OmniSlide is the theming API. All controls and components are assigned 
+Something unique to OmniSlide is the theming classes. All controls and components are assigned 
 classes that allow you to theme the slider to your preference. All CSS sprites can be easily replaced.
 This slider was designed to provide functionality, without forcing you into a style. That way you
 can take the slider and brand it to your website, quickly and easily.
 
-If you open `css/jquery.omnislide.css` you will find 2 sections. The Theming section and Functional section.
-I recommend you do not change styles in the Function section as it may break the operation of the slider,
-however you can modify the base theme in the first section without fear, or extract it to your own stylesheets
-if you think that is more appropriate.
+If you open `css/omnislide.theme.base.css` you will find a skeleton theme. You can modify the base 
+theme to make the slide conform to any look and feel.
 
 Installation
 ------------
 
-The slide requires [`jQuery 1.6+`](http://jquery.com/). For a minimal install, the only *required* files are
-`js/jquery.omnislide.js` and `css/jquery.omnislide.css`. However for the canvas timer you will need `js/omnislide.timer.js`
-as well. Also, `img/sprite.png` provides a simple control button sprite for use in the slide navigation.
+The slide requires [`jQuery 1.6+`](http://jquery.com/). For a minimal install, the only *required* file is
+`js/jquery.omnislide.js`. However, there are many features left out with only that implementation. Most notably
+the slider will look like crap. In order to bring some style to the slide include atleast the base theme found
+in `css/omnislide.theme.base.css`. Other features such as advanced transitions and the canvas timer require the
+files `js/omnislide.transitions.js` and `js/omnislide.timer.js` respectively. Also, `img/sprite.png` provides a 
+simple control button sprite for use in the slide navigation.
 
 For a minimal install, include the following in your HTML:
 
 ~~~~~ html
 	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<script src="js/jquery.slide.js"></script>
+	<script src="js/jquery.omnislide.js"></script>
 ~~~~~
 
-To use the timer you will need to include that as well:
+To use the advanced themes, and timer you will need to include those as well:
 
 ~~~~~ html
+	<script src="js/omnislide.transitions.js"></script>
 	<script src="js/omnislide.timer.js"></script>
 ~~~~~
+
+**Note:** To use custom themes, or to extend the built-in themes you need to include `js/omnislide.transitions.js`
+as that defined the transition API.
