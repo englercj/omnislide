@@ -118,9 +118,9 @@
                             height: h,
                             left: sumLeft,
                             top: sumTop,
-                            marginLeft: -(x * w),
-                            marginTop: -(y * h),
-                            backgroundPosition: (-(x * w)) + 'px ' + (-(y * h)) + 'px',
+                            //marginLeft: -sumLeft,
+                            //marginTop: -sumTop,
+                            backgroundPosition: (-(sumLeft)) + 'px ' + (-(sumTop)) + 'px',
                             backgroundImage: $slide.css('backgroundImage')
                         }).html($slide.html());
 
@@ -174,7 +174,7 @@
 
                     $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing);
 
-                    setTimeout(function () { fadeWave(++i); }, 10000/*(options.length / $boxes.length)*/);
+                    setTimeout(function () { fadeWave(++i); }, (options.length / $boxes.length));
                 }
 
                 fadeWave(0);
