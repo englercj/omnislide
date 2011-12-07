@@ -51,11 +51,17 @@
                     },
                     hoverPause: false
                 });
+            });
 
+            function createXmlSlider() {
                 $.get('slides.xml', function (data) {
                     $('#sliderXml').omnislide({ slides: data });
                 });
-            });
+            }
+
+            function destroyXmlSlider() {
+                $('#sliderXml').omnislide('destroy');
+            }
         </script>
         
         <style>
@@ -133,5 +139,7 @@
 
         <h2>From xml loaded through ajax (Using default Options)</h2>
         <div id="sliderXml"></div>
+        <button onclick="createXmlSlider();">Create Slider from XML</button>
+        <button onclick="destroyXmlSlider();">Destroy Slider from XML</button>
     </body>
 </html>

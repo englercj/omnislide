@@ -71,7 +71,9 @@
             position: 'absolute',
             zIndex: 10
         }
-    }
+    },
+    sets = [],
+    sliders = []
 
     //Main functionality
     //////////////////////
@@ -87,12 +89,13 @@
             $nav: {},
             $timer: {},
             timer: null,
-            $slides: $()
+            $slides: $(),
+            $dataElm: $(),
+            dataElmVisible: false
         },
 
         slideIndex, loopTransition,
         forcePaused = false,
-        $dataElm, dataElmVisible,
 
         //plugin methods
         methods = {
@@ -127,6 +130,11 @@
                     //fade out the navigation
                     slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
 
+                    //store for retreival by methods
+                    $(this).data('guid', guid);
+                    sets[guid] = settings;
+                    sliders[guid] = slider;
+
                     return true;
                 });
             },
@@ -145,28 +153,26 @@
             //should put a user back to the state they were in
             //before calling this plugin
             destroy: function () {
-                //remove this live event
-                //$('div.slide-nav-control').die('click');
+                guid = this.data('guid');
+                slider = sliders[guid];
+                if(!guid) {
+                    OmniSlide.error('Cannot destroy, element is not a slider', this);
+                    return;
+                }
 
                 //remove slider and show the dataElment if it was visible before
                 slider.$wrapper.remove();
-                if ($dataElm && dataElmVisible) $dataElm.show();
+                if (slider.$dataElm.length > 0 && slider.dataElmVisible) slider.$dataElm.show();
 
                 //reset & delete timer, GC should then pick it up
                 slider.timer.reset();
                 delete slider.timer;
 
                 //reset core variables
-                slides = [];
-                slider = {
-                    $container: {},
-                    $wrapper: {},
-                    $slider: {},
-                    $nav: {},
-                    $timer: {},
-                    timer: null,
-                    $slides: $()
-                };
+                sets[guid] = {};
+                sliders[guid] = {};
+
+                return this;
             }
         };
 
@@ -225,7 +231,7 @@
 
             //create wrapper
             slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>').css(css.wrapper).appendTo(slider.$container);
-             
+
             //create slider box
             slider.$slider = $('<div class="slide-box"/>').hover(slideHover).css(css.box).appendTo(slider.$wrapper);
 
@@ -361,8 +367,8 @@
                         overlay: $slide.find('div.slide-overlay').html()
                     });
                 });
-                dataElmVisible = $data.is(':visible');
-                $dataElm = $data.hide();
+                slider.dataElmVisible = $data.is(':visible');
+                slider.$dataElm = $data.hide();
             }
             //parse as xml data
             else if ($data.find('slides > slide').length > 0) {
