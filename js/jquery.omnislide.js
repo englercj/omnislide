@@ -151,16 +151,21 @@
 
                 if (typeof (option) === 'string') {
                     var levels = option.split('.'),
-                        last = levels[levels.length - 1];
+                        opt = settings,
+                        i = levels.length - 1,
+                        key;
 
-                    levels.length -= 1;
+                    while(i--) {
+                        opt = opt[levels.shift()];
+                    }
+                    key = levels.shift();
 
-                    if (value === undefined) return eval('settings.' + levels.join('.'))[last];
+                    if (value === undefined) return opt[key];
 
                     if(typeof(value) === 'object')
-                        $.extend(true, eval('settings.' + levels.join('.'))[last], value);
+                        $.extend(true, opt[key], value);
                     else 
-                        eval('settings.' + levels.join('.'))[last] = value;
+                        opt[key] = value;
                 }
 
                 return this;
