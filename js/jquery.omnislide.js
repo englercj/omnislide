@@ -9,11 +9,9 @@
             effect: 'full',     //specific transition effect
             easing: 'linear',   //the type of easing to use on transitions
             wait: 5000,         //the wait time to show each slide 
-            length: 500,        //how long the transition animates
+            length: 1000,        //how long the transition animates
             direction: 'down',      //direction the animation goes (like 'down' or 'right')
-            position: 'top',       //start position of the animation (like 'top' or 'topleft')
-            animatorNum: 20,    //applies to strips/boxes; is the number of strips/boxes
-            animatorDelay: 50   //applies ot strips/boxes; delay between each strip/box
+            animatorNum: 15,    //applies to strips/boxes; is the number of strips/boxes
         },
         timer: {
             enabled: true,      //enable timer?

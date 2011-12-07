@@ -7,14 +7,11 @@
         effect: 'full',     //specific transition effect (like 'wave' or 'zipper' for 'strips')
         easing: 'linear',   //the type of easing to use on transitions
         wait: 5000,         //the wait time to show each slide 
-        length: 500,        //how long the transition animates
-        guid: '',           //the guid used for the ID of the slider
+        length: 1000,       //how long the transition animates
 
         direction: '',      //direction the animation goes (like 'down' or 'right')
-        position: '',       //start position of the animation (like 'top' or 'topleft')
 
-        animatorNum = 20,   //applies to strips/boxes; is the number of strips/boxes
-        animatorDelay = 50  //applies ot strips/boxes; delay between each strip/box
+        animatorNum = 10,   //applies to strips/boxes; is the number of strips/boxes
     }
 */
 
@@ -32,12 +29,6 @@
             defaults = OmniSlide.transitions.defaults;
 
         if (transitions[options.type] && options.type.charAt(0) != '_') {
-            //check if we did init for this transition yet
-            /*if (!transitions[options.type]['_init_done']) {
-            transitions[options.type]['_init']();
-            OmniSlide.transitions[options.type]['_init_done'] = true;
-            }*/
-
             //attempt to call transition effect, or default
             if (transitions[options.type][options.effect] && options.effect.charAt(0) != '_') {
                 return transitions[options.type][options.effect]($slides, index, next, options, callback);
@@ -121,29 +112,29 @@
                         h = boxH;
                     }
 
-                    /*$contents = $('<div class="slider-transition-box-contents" id="slider-transition-box-contents-' + guid + '_' + x + '-' + y + '"></div>')
-                    .html($slide.html())
-                    .css({
-                    width: w,
-                    height: h,
-                    left: x * w,
-                    top: y * h,
-                    marginLeft: -(x * w),
-                    marginTop: -(y * h),
-                    backgroundPosition: (-(x * w)) + 'px ' + (-(y * h)) + 'px',
-                    backgroundImage: $slide.css('backgroundImage')
-                    });*/
-                    console.log(sumLeft, w, sumTop);
+                    $contents = $('<div class="slider-transition-box-contents" id="slider-transition-box-contents-' + guid + '_' + x + '-' + y + '"></div>')
+                        .css({
+                            width: w,
+                            height: h,
+                            left: sumLeft,
+                            top: sumTop,
+                            marginLeft: -(x * w),
+                            marginTop: -(y * h),
+                            backgroundPosition: (-(x * w)) + 'px ' + (-(y * h)) + 'px',
+                            backgroundImage: $slide.css('backgroundImage')
+                        }).html($slide.html());
+
                     $box = $('<div class="slider-transition-box" id="slider-transition-box-' + guid + '_' + x + '-' + y + '"></div>')
                         .css({
                             width: w,
                             height: h,
                             left: sumLeft,
                             top: sumTop,
-                            backgroundImage: $slide.css('backgroundImage'),
-                            backgroundPosition: (-sumLeft) + 'px ' + (-sumTop) + 'px'
-                        }).html($slide.html());
-                    //.append($contents);
+                            overflow: 'hidden'
+                            //backgroundImage: $slide.css('backgroundImage'),
+                            //backgroundPosition: (-sumLeft) + 'px ' + (-sumTop) + 'px'
+                        })//.html($slide.html());
+                    .append($contents);
 
                     $boxes = $boxes.add($box);
 
@@ -183,7 +174,7 @@
 
                     $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing);
 
-                    setTimeout(function () { fadeWave(++i); }, (options.length / $boxes.length));
+                    setTimeout(function () { fadeWave(++i); }, 10000/*(options.length / $boxes.length)*/);
                 }
 
                 fadeWave(0);
