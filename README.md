@@ -11,13 +11,13 @@ Features
 Here are some of the features that OmniSlide supports:
 
 * Image slideshows
-* HTML Content (_WIP_)
-* HTML Titles and Overlays (_WIP_)
+* HTML Content (__WIP__)
+* HTML Titles and Overlays (__WIP__)
 * Canvas timer (bar, circle, or ring styles)
 * Slide Navigation Controls
-* Dynamic Thumbnails (_WIP_)
+* Dynamic Thumbnails (__WIP__)
 * XML input support
-* Extensible Advanced Transitions (_WIP_)
+* Extensible Advanced Transitions (__WIP__)
 * Flexible Theming Classes
 * And More!
 
