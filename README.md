@@ -132,5 +132,8 @@ To use the advanced themes, and timer you will need to include those as well:
 	<script src="js/omnislide.timer.js"></script>
 ~~~~~
 
-**Note:** To use custom themes, or to extend the built-in themes you need to include `js/omnislide.transitions.js`
-as that defined the transition API.
+Notes
+-----
+
+* To use custom transitions, or to extend the built-in transitions you must include `js/omnislide.transitions.js`
+* Currently only image slideshows work with advanced transitions (working on HTML support)
