@@ -52,7 +52,7 @@
         _css: {
             box: { 
                 position: 'absolute',
-                zIndex: 6,
+                zIndex: 7,
                 overflow: 'hidden',
                 background: '0 0 no-repeat'
             },
@@ -173,6 +173,7 @@
                 }
             }
 
+            $slide.parent().append($boxes.hide());
             return $boxes;
         },
         strips: {
@@ -180,8 +181,8 @@
                 var trans = OmniSlide.transitions,
                     $boxes = trans._boxify($slides.eq(index), options.animatorNum, 
                         options.guid, trans._orientation.VERTICLE_STRIP);
-
-                $slides.parent().append($boxes);
+                
+                $boxes.show();
                 $slides.eq(index).hide();
                 $slides.eq(next).show();
 

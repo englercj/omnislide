@@ -65,7 +65,7 @@
         },
         navigation: {
             position: 'absolute',
-            zIndex: 5
+            zIndex: 10
         },
         timer: { 
             position: 'absolute',
