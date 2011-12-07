@@ -54,13 +54,13 @@
             }
 
             if(trans[options.type][def]) {
-                OmniSlide.warn('Unable to find effect %s in transition %s, using default effect %s', options.effect, options.type, def);
+                OmniSlide.warn('Unable to find effect "%s" in transition "%s", using default effect "%s"', options.effect, options.type, def);
                 return trans[options.type][def]($slides, index, next, options, callback);
             }
         }
 
         //no transition found, or no default found
-        OmniSlide.error('Unable to find transition %s or its default effect, using transition fade:full', options.type);
+        OmniSlide.warn('Unable to find transition "%s" or its default effect, using transition fade:full', options.type);
         return trans.fade.full($slides, index, next, options, callback);
     };
 
@@ -78,12 +78,12 @@
             slide: { zIndex: 3 },
             activeSlide: { zIndex: 4 }
         },
-        _orientation: { HORIZONTAL_STRIP: 0, VERTICLE_STRIP: 1, SQUARE: 2 },
+        _orientation: { HORIZONTAL_STRIP: 0, VERTICAL_STRIP: 1, SQUARE: 2 },
         _activate: function($slide) {
-            $slide.addClass('active').css(OmniSlide.transitions._css.activeSlide);
+            $slide.show().addClass('active').css(OmniSlide.transitions._css.activeSlide);
         },
         _deactivate: function($slide) {
-            $slide.removeClass('active').css(OmniSlide.transitions._css.slide);
+            $slide.hide().removeClass('active').css(OmniSlide.transitions._css.slide);
         },
         _boxify: function ($slide, num, guid, orientation) {
             var slideW = $slide.width(), slideH = $slide.height(),
@@ -99,7 +99,7 @@
                     xNum = 1;
                     yNum = num;
                     break;
-                case trans._orientation.VERTICLE_STRIP:
+                case trans._orientation.VERTICAL_STRIP:
                     boxW = parseInt(slideW / num);
                     boxH = slideH;
                     gap = slideW - (boxW * num);
@@ -133,7 +133,7 @@
                                 h = boxH + 1;
                                 gap--;
                                 break;
-                            case trans._orientation.VERTICLE_STRIP:
+                            case trans._orientation.VERTICAL_STRIP:
                                 w = boxW + 1;
                                 h = boxH;
                                 gap--;
@@ -180,7 +180,7 @@
                         case trans._orientation.HORIZONTAL_STRIP:
                             sumTop += h;
                             break;
-                        case trans._orientation.VERTICLE_STRIP:
+                        case trans._orientation.VERTICAL_STRIP:
                             sumLeft += w;
                             break;
                         case trans._orientation.SQUARE:
@@ -196,20 +196,20 @@
             return $boxes;
         },
         strips: {
-            _getStripOrient: function(dir) {
-                if (dir == 'right' || dir == 'left')
-                    return OmniSlide.transitions._orientation.VERTICLE_STRIP;
-                else
-                    return OmniSlide.transitions._orientation.HORIZONTAL_STRIP
-            },
-            wave: function ($slides, index, next, options, callback) {
+            wipe: function ($slides, index, next, options, callback) {
                 var trans = OmniSlide.transitions,
-                    $boxes = trans._boxify($slides.eq(index), options.animatorNum, 
-                        options.guid, trans.strips._getStripOrient(options._dir));
+                    orient, $boxes, done = 0;
+
+                if (options.direction == 'right' || options.direction == 'left')
+                    orient = OmniSlide.transitions._orientation.VERTICAL_STRIP;
+                else
+                    orient = OmniSlide.transitions._orientation.HORIZONTAL_STRIP;
+
+                $boxes = trans._boxify($slides.eq(index), options.animatorNum, options.guid, orient);
 
                 $boxes.show();
-                $slides.eq(index).hide();
-                $slides.eq(next).show();
+                trans._deactivate($slides.eq(index));
+                trans._activate($slides.eq(next));
 
                 if(options._dir == 'left' || options._dir == 'up')
                     fadeWave($boxes.length - 1, function(i) { return --i; });
@@ -217,19 +217,73 @@
                     fadeWave(0, function(i) { return ++i; });
 
                 function fadeWave(i, modify) {
-                    if (i >= $boxes.length || i < 0) {
-                        $boxes.remove();
-                        callback();
-                        return;
-                    }
-
-                    $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing);
+                    $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing, animDone);
 
                     setTimeout(function () { fadeWave(modify(i), modify); }, (options.length / $boxes.length));
                 }
+
+                function animDone() {
+                    if (i >= ($boxes.length - 1) || i < 0) {
+                        $boxes.remove();
+
+                        if(callback) callback();
+                        return;
+                    }
+                }
+            },
+            waveIn: function ($slides, index, next, options, callback) {
+            },
+            waveOut: function ($slides, index, next, options, callback) {
             },
             zipper: function ($slides, index, next, options, callback) {
-            
+                var trans = OmniSlide.transitions,
+                    orient, boxes;
+
+                if (options.direction == 'right' || options.direction == 'left')
+                    orient = OmniSlide.transitions._orientation.HORIZONTAL_STRIP;
+                else
+                    orient = OmniSlide.transitions._orientation.VERTICAL_STRIP;
+
+                $boxes = trans._boxify($slides.eq(next), options.animatorNum, options.guid, orient);
+
+                var attr = (options.direction == 'up' || options.direction == 'down') ? 'height' : 'width',
+                    atch =  (options.direction == 'up' || options.direction == 'down') ? ['top', 'bottom'] : ['left', 'right'],
+                    done = 0;
+
+                $boxes.each(function(i, elm) {
+                    var $box = $(elm);//,
+                        //amt = ((i % 2) == 0) ? '+=' + $slides.eq(next).css(attr) : '-=' + $slides.eq(next).css(attr);
+
+                    //$box.data('original-attr', $box.css(attr));
+                    $box.css(attr, 0);
+                    $box.css(atch[(i % 2) ^ 1], 'auto');
+                    $box.css(atch[i % 2], 0);
+                }).show();
+
+                function zipperWave(i, modify) {
+                    var css = {};
+                    css[attr] = $slides.eq(next).css(attr);
+
+                    $boxes.eq(i).animate(css, (options.length / $boxes.length) * 4, options.easing, animDone);
+                    $boxes.eq(i+1).animate(css, (options.length / $boxes.length) * 4, options.easing, animDone);
+
+                    setTimeout(function () { zipperWave(modify(i), modify); }, (options.length / $boxes.length));
+                }
+
+                function animDone() {
+                    ++done;
+
+                    if (done >= ($boxes.length - 1) || done < 0) {
+                        trans._deactivate($slides.eq(index));
+                        trans._activate($slides.eq(next));
+                        $boxes.remove();
+
+                        if(callback) callback();
+                        return;
+                    }
+                }
+
+                zipperWave(0, function(i) { return i+=2; });
             },
             curtain: function ($slides, index, next, options, callback) { }
         },
@@ -256,9 +310,7 @@
             full: function ($slides, index, next, options, callback) {
                 var trans = OmniSlide.transitions;
 
-                $slides.eq(index).hide();
                 trans._deactivate($slides.eq(index));
-                $slides.eq(next).show();
                 trans._activate($slides.eq(next));
 
                 if (callback) callback();
@@ -267,7 +319,7 @@
     };
 
     win.OmniSlide.transitions._defaults = {
-        strips: 'wave',
+        strips: 'wipe',
         boxes: 'random',
         fade: 'full',
         cut: 'full'

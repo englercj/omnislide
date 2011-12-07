@@ -436,7 +436,7 @@
         },
         log: function () { OmniSlide._log('log', arguments); },
         error: function () { OmniSlide._log('error', arguments); },
-        warn: function () { OmniSlide_log('warn', arguments); },
+        warn: function () { OmniSlide._log('warn', arguments); },
         generateGuid: function() {
             var S4 = function () {
                 return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
