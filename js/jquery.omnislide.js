@@ -436,13 +436,16 @@
 
             return {};
         },
-        _getKeys: function(obj, showPrivate){
+        _getKeys: function(obj, showPrivate) {
             var keys = [];
             for(var key in obj) {
                 if(showPrivate || key.charAt(0) != '_')
                     keys.push(key);
             }
             return keys;
+        },
+        _rand: function(max) {
+            return ((Math.random()  * 0x10000) | 0) % max;
         },
         log: function () { OmniSlide._log('log', arguments); },
         error: function () { OmniSlide._log('error', arguments); },

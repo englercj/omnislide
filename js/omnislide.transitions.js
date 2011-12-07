@@ -28,23 +28,31 @@
         options.length = options.length || 500;
         options.animatorNum = options.animatorNum || 15;
 
-        if (!options.type || options.type == 'random') {
+        if (!options.type) {
             var types = OmniSlide._getKeys(trans);
-            options.type = types[parseInt((Math.random() * types.length) % types.length)];
+            options.type = types[OmniSlide._rand(types.length)];
         }
         
-        if (!options.effect || options.effect == 'random') {
+        if (!options.effect) {
             var effects = OmniSlide._getKeys(trans[options.type]);
-            options.effect = effects[parseInt((Math.random() * effects.length) % effects.length)];
+            options.effect = effects[OmniSlide._rand(effects.length)];
         }
 
-        if (!options.easing || options.easing == 'random') {
+        if (!options.easing) {
             var easings = OmniSlide._getKeys($.easing);
-            options.easing = easings[parseInt((Math.random() * easings.length) % easings.length)];
+            options.easing = easings[OmniSlide._rand(easings.length)];
         }
 
-        if (!options.direction || options.direction == 'random')
-            options.direction = directions[parseInt((Math.random() * directions.length) % directions.length)];
+        if (!options.direction) {
+            var r = OmniSlide._rand(directions.length);
+            options.direction = directions[r];
+            console.log(options.direction, r);
+        }
+
+        //special case that type is custom
+        if (options.type == 'custom' && typeof(options.effect) === 'function') {
+            return options.effect($slides, index, next, options, callback);
+        }
 
         def = trans._defaults[options.type];
         if (trans[options.type] && options.type.charAt(0) != '_') {
@@ -295,9 +303,9 @@
             curtain: function ($slides, index, next, options, callback) { }
         },
         boxes: {
-            diagonal: function ($slides, index, next, options, callback) { },
-            row: function ($slides, index, next, options, callback) { },
-            random: function ($slides, index, next, options, callback) { }
+            fade: function ($slides, index, next, options, callback) { },
+            fly: function ($slides, index, next, options, callback) { },
+            shrink: function ($slides, index, next, options, callback) { },
         },
         fade: {
             full: function ($slides, index, next, options, callback) {
@@ -310,8 +318,8 @@
 
                     if (callback) callback();
                 });
-            },
-            directional: function ($slides, index, next, options, callback) { }
+            }//,
+            //directional: function ($slides, index, next, options, callback) { }
         },
         cut: {
             full: function ($slides, index, next, options, callback) {
@@ -336,12 +344,10 @@
 //    (function($, window, undefined) {
 //        var trans = OmniSlide.transitions;
 
-//        $.extend(true, trans, {
+//        $.extend(trans, {
 //            cut: {
 //                full: function ($slides, index, next, options, callback) {
-//                    $slides.eq(index).hide();
 //                    trans._deactivate($slides.eq(index));
-//                    $slides.eq(next).show();
 //                    trans._activate($slides.eq(next));
 
 //                    if (callback) callback();
