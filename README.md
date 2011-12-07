@@ -13,7 +13,6 @@ Here are some of the features that OmniSlide supports:
 * Image slideshows
 * HTML Content
 * HTML Titles and Overlays
-* Multiple transitions
 * Canvas timer (bar, circle, or ring styles)
 * Slide Navigation Controls
 * Dynamic Thumbnails
@@ -28,7 +27,7 @@ Usage
 The slider uses the format of:
 
 ~~~~~ javascript
-	$(input_Element).slide({ slides: slide_Content_Input });
+	$(output_Element).slide({ slides: slide_Content_Input });
 ~~~~~
 
 Using the slider can be as simple or as complex as you wish. The slider has the ability to intelligently
@@ -88,6 +87,14 @@ Here is another example using some XML that is pulled in using AJAX:
         });
 	});
 ~~~~~
+
+Finally, if you decide to remove the slider from the page simply call a destroy on the `output_Element`
+that you initialized earlier. So for the `<ul/>` example I would make the following call to return my
+page to the state it was in before I initialized the slider:
+
+~~~~~ javascript
+	$('#sliderUl').slide('destroy');
+~~~~~~
 
 Theming
 -------
