@@ -85,6 +85,19 @@
         _deactivate: function($slide) {
             $slide.hide().removeClass('active').css(OmniSlide.transitions._css.slide);
         },
+        _animCallback: function(i, end, $boxes, callback) {
+            if (i == end) {
+                $boxes.remove();
+
+                if(callback) callback();
+                return;
+            }
+        },
+        _animMoveIndex: function(i, end) {
+            if(i < end) ++i; else if(i > end) --i; else return false;
+
+            return i;
+        },
         _boxify: function ($slide, num, guid, orientation) {
             var slideW = $slide.width(), slideH = $slide.height(),
                 boxW, boxH, xNum, yNum,
@@ -198,9 +211,9 @@
         strips: {
             wipe: function ($slides, index, next, options, callback) {
                 var trans = OmniSlide.transitions,
-                    orient, $boxes, done = 0;
+                    orient, $boxes, done = 0, dir = options.direction;
 
-                if (options.direction == 'right' || options.direction == 'left')
+                if (dir == 'right' || dir == 'left')
                     orient = OmniSlide.transitions._orientation.VERTICAL_STRIP;
                 else
                     orient = OmniSlide.transitions._orientation.HORIZONTAL_STRIP;
@@ -211,79 +224,73 @@
                 trans._deactivate($slides.eq(index));
                 trans._activate($slides.eq(next));
 
-                if(options._dir == 'left' || options._dir == 'up')
-                    fadeWave($boxes.length - 1, function(i) { return --i; });
-                else
-                    fadeWave(0, function(i) { return ++i; });
+                if(dir == 'left' || dir == 'up') fadeWave($boxes.length - 1, 0);
+                else fadeWave(0, $boxes.length - 1);
 
-                function fadeWave(i, modify) {
-                    $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing, animDone);
+                function fadeWave(i, end) {
+                    if(i === false) return;
 
-                    setTimeout(function () { fadeWave(modify(i), modify); }, (options.length / $boxes.length));
-                }
+                    $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing, 
+                    function() {
+                        trans._animCallback(i, end, $boxes, callback);
+                    });
 
-                function animDone() {
-                    if (i >= ($boxes.length - 1) || i < 0) {
-                        $boxes.remove();
-
-                        if(callback) callback();
-                        return;
-                    }
+                    setTimeout(function () { fadeWave(trans._animMoveIndex(i, end), end); }, (options.length / $boxes.length));
                 }
             },
-            waveIn: function ($slides, index, next, options, callback) {
-            },
-            waveOut: function ($slides, index, next, options, callback) {
+            wave: function ($slides, index, next, options, callback) {
             },
             zipper: function ($slides, index, next, options, callback) {
-                var trans = OmniSlide.transitions,
-                    orient, boxes;
+                var trans = OmniSlide.transitions, orient, boxes, attr, atch,
+                    dir = options.direction;
 
-                if (options.direction == 'right' || options.direction == 'left')
-                    orient = OmniSlide.transitions._orientation.HORIZONTAL_STRIP;
-                else
+                if (dir == 'right' || dir == 'left') {
+                    attr = 'height';
+                    atch = ['top', 'bottom'];
                     orient = OmniSlide.transitions._orientation.VERTICAL_STRIP;
+                }
+                else {
+                    attr = 'width';
+                    atch = ['left', 'right'];
+                    orient = OmniSlide.transitions._orientation.HORIZONTAL_STRIP;
+                }
 
-                $boxes = trans._boxify($slides.eq(next), options.animatorNum, options.guid, orient);
+                $boxes = trans._boxify($slides.eq(next), options.animatorNum, options.guid, orient)
+                    .each(function(i, elm) {
+                        var $box = $(elm);
 
-                var attr = (options.direction == 'up' || options.direction == 'down') ? 'height' : 'width',
-                    atch =  (options.direction == 'up' || options.direction == 'down') ? ['top', 'bottom'] : ['left', 'right'],
-                    done = 0;
+                        $box.css(attr, 0);
+                        $box.css(atch[(i % 2) ^ 1], 'auto');
+                        $box.css(atch[i % 2], 0);
+                    }).show();
+                
+                if (dir == 'left' || dir == 'up') zipperWave($boxes.length - 1, 0);
+                else zipperWave(0, $boxes.length - 1);
 
-                $boxes.each(function(i, elm) {
-                    var $box = $(elm);//,
-                        //amt = ((i % 2) == 0) ? '+=' + $slides.eq(next).css(attr) : '-=' + $slides.eq(next).css(attr);
+                function zipperWave(i, end) {
+                    if(i === false) return;
 
-                    //$box.data('original-attr', $box.css(attr));
-                    $box.css(attr, 0);
-                    $box.css(atch[(i % 2) ^ 1], 'auto');
-                    $box.css(atch[i % 2], 0);
-                }).show();
-
-                function zipperWave(i, modify) {
                     var css = {};
-                    css[attr] = $slides.eq(next).css(attr);
+                    css[attr] = $slides.eq(next)[attr]();
 
-                    $boxes.eq(i).animate(css, (options.length / $boxes.length) * 4, options.easing, animDone);
-                    $boxes.eq(i+1).animate(css, (options.length / $boxes.length) * 4, options.easing, animDone);
+                    $boxes.eq(i).animate(css, (options.length / $boxes.length) * 4, options.easing, function() {
+                        trans._animCallback(i, end, $boxes, animDone);
+                    });
+                    i = trans._animMoveIndex(i, end)
+                    $boxes.eq(i).animate(css, (options.length / $boxes.length) * 4, options.easing, function() {
+                        trans._animCallback(i, end, $boxes, animDone);
+                    });
 
-                    setTimeout(function () { zipperWave(modify(i), modify); }, (options.length / $boxes.length));
+                    setTimeout(function () { zipperWave(trans._animMoveIndex(i, end), end); }, (options.length / $boxes.length));
                 }
 
                 function animDone() {
-                    ++done;
+                    trans._deactivate($slides.eq(index));
+                    trans._activate($slides.eq(next));
 
-                    if (done >= ($boxes.length - 1) || done < 0) {
-                        trans._deactivate($slides.eq(index));
-                        trans._activate($slides.eq(next));
-                        $boxes.remove();
-
-                        if(callback) callback();
-                        return;
-                    }
+                    if(callback) callback();
+                    return;
                 }
-
-                zipperWave(0, function(i) { return i+=2; });
             },
             curtain: function ($slides, index, next, options, callback) { }
         },
