@@ -40,7 +40,38 @@
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
         hoverPause: true    //pause when a user hovers into the current slide
-    };
+    },
+    //This was in the CSS theme file as classes, but moved to inline
+    //to reduce chance of human error in and to reduce size of, the theme file.
+    css = {
+        wrapper: {
+            overflow: 'visible',
+            position: 'relative'
+        },
+        box: { 
+            overflow: 'visible',
+            position: 'absolute',
+            zIndex: 2 
+        },
+        slide: {
+            width: '100%',
+            height: '100%',
+            position: 'absolute',
+            zIndex: 3,
+            background: '0 0 no-repeat'
+        },
+        activeSlide: {
+            zIndex: 4
+        },
+        navigation: {
+            position: 'absolute',
+            zIndex: 5
+        },
+        timer: { 
+            position: 'absolute',
+            zIndex: 10
+        }
+    }
 
     //Main functionality
     //////////////////////
@@ -193,14 +224,14 @@
             slider.$container = $(container);
 
             //create wrapper
-            slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>').appendTo(slider.$container);
-
+            slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>').css(css.wrapper).appendTo(slider.$container);
+             
             //create slider box
-            slider.$slider = $('<div class="slide-box"/>').hover(slideHover).appendTo(slider.$wrapper);
+            slider.$slider = $('<div class="slide-box"/>').hover(slideHover).css(css.box).appendTo(slider.$wrapper);
 
             //create navigation
             if (settings.navigation.enabled) {
-                slider.$nav = $('<div class="slide-nav"/>').hover(navHover).appendTo(slider.$slider);
+                slider.$nav = $('<div class="slide-nav"/>').hover(navHover).css(css.navigation).appendTo(slider.$slider);
                 slider.$nav.append(
                     $('<div class="slide-nav-control slide-nav-back">&nbsp;</div>')
                         .hover(navControlHover).click(navControlClick)
@@ -217,11 +248,11 @@
 
             //create timer
             if (settings.timer.enabled)
-                slider.$timer = $('<canvas class="slide-timer"/>').appendTo(slider.$slider);
+                slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).appendTo(slider.$slider);
 
             //create slides and thumbs
             $.each(slides, function (i, slide) {
-                var $slide = $('<div class="slide"/>');
+                var $slide = $('<div class="slide"/>').css(css.slide);
 
                 if (slide.image)
                     $slide.css('background-image', 'url(' + slide.image + ')');
