@@ -46,7 +46,6 @@
         if (!options.direction) {
             var r = OmniSlide._rand(directions.length);
             options.direction = directions[r];
-            console.log(options.direction, r);
         }
 
         //special case that type is custom
@@ -238,12 +237,15 @@
                 function fadeWave(i, end) {
                     if(i === false) return;
 
-                    $boxes.eq(i).animate({ opacity: 0 }, ((options.length / $boxes.length) * 2), options.easing, 
-                    function() {
+                    var css = { opacity: 0 }, 
+                        len = ((options.length / $boxes.length) * 1.8),
+                        delay = len / 2;
+
+                    $boxes.eq(i).animate(css, len, options.easing, function() {
                         trans._animCallback(i, end, $boxes, callback);
                     });
 
-                    setTimeout(function () { fadeWave(trans._animMoveIndex(i, end), end); }, (options.length / $boxes.length));
+                    setTimeout(function () { fadeWave(trans._animMoveIndex(i, end), end); }, delay);
                 }
             },
             wave: function ($slides, index, next, options, callback) {
@@ -281,14 +283,17 @@
                 function wave(i, end) {
                     if(i === false) return;
 
-                    var css = {};
+                    var css = {}, 
+                        len = (options.length / $boxes.length) * ($boxes.length / 2),
+                        delay = len / $boxes.length;
+
                     css[attr] = $slides.eq(next)[attr]();
 
-                    $boxes.eq(i).animate(css, options.length, options.easing, function() {
+                    $boxes.eq(i).animate(css, len, options.easing, function() {
                         trans._animCallback(i, end, $boxes, animDone);
                     });
 
-                    setTimeout(function () { wave(trans._animMoveIndex(i, end), end); }, 50);
+                    setTimeout(function () { wave(trans._animMoveIndex(i, end), end); }, delay);
                 }
 
                 function animDone() {
@@ -327,18 +332,21 @@
                 function zipperWave(i, end) {
                     if(i === false) return;
 
-                    var css = {};
+                    var css = {}, 
+                        len = (options.length / $boxes.length) * (($boxes.length / 2) + 1),
+                        delay = (options.length / $boxes.length);
+
                     css[attr] = $slides.eq(next)[attr]();
 
-                    $boxes.eq(i).animate(css, (options.length / $boxes.length) * 4, options.easing, function() {
+                    $boxes.eq(i).animate(css, len, options.easing, function() {
                         trans._animCallback(i, end, $boxes, animDone);
                     });
                     i = trans._animMoveIndex(i, end)
-                    $boxes.eq(i).animate(css, (options.length / $boxes.length) * 4, options.easing, function() {
+                    $boxes.eq(i).animate(css, len, options.easing, function() {
                         trans._animCallback(i, end, $boxes, animDone);
                     });
 
-                    setTimeout(function () { zipperWave(trans._animMoveIndex(i, end), end); }, (options.length / $boxes.length));
+                    setTimeout(function () { zipperWave(trans._animMoveIndex(i, end), end); }, delay);
                 }
 
                 function animDone() {
