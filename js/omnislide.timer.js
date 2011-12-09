@@ -10,7 +10,7 @@
         },
         refreshRate: 10, //time in ms between redraws (lower is smoother), also effects accuracy of wait time
         ringWidth: 5,
-        style: 'ring'   //style of the timer; circle, ring, bar
+        type: 'ring'   //style of the timer; circle, ring, bar
     }
  */
 
