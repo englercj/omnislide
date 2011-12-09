@@ -1,4 +1,4 @@
-OmniSlide
+OmniSlide (v0.1 BETA)
 =============
 OmniSlide is an amazing new slider being built to be a one-stop-shop for your slider needs. 
 This slider is meant to replace your need for any other slider by combining all the best
@@ -11,11 +11,11 @@ Features
 Here are some of the features that OmniSlide supports:
 
 * Image slideshows
-* HTML Content (__WIP__)
+* HTML Content (__Coming Soon__)
 * HTML Titles and Overlays
 * Canvas timer (bar, circle, or ring styles)
 * Slide Navigation Controls
-* Dynamic Thumbnails (__WIP__)
+* Dynamic Thumbnails (__Coming Soon__)
 * XML input support
 * Extensible Advanced Transitions (__WIP__)
 * Flexible Theming Classes
@@ -136,3 +136,5 @@ Notes
 * To use custom transitions, or to extend the built-in transitions you must include `js/omnislide.transitions.js`
 * Currently only image slideshows work with advanced transitions (working on HTML support)
 * The nav controlls are _really_ buggy right now. Need to rewrite their functionality.
+* HTML Content is completely untested.
+* Slider has only been tested _minimally_ in FF 8.0 and Chrome 15.0
