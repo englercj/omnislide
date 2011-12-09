@@ -213,7 +213,6 @@
             if (backward) nextSlide = (slideIndex - 1 <= 0) ? slider.$slides.length - 1 : slideIndex - 1;
             else nextSlide = (slideIndex + 1) % slider.$slides.length;
 
-            OmniSlide.log('lol wut?');
             hideOverlays(slideIndex, function () {
                 if (OmniSlide.transition) { //attempt to use advanced transitions
                     OmniSlide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
