@@ -353,6 +353,18 @@
             if (resetTimer()) slider.timer.start();
         }
 
+        function pauseTimer(hard) {
+            slider.timer.stop();
+            if (hard) slider.timer.lock();
+            slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
+        }
+
+        function playTimer(hard) {
+            if (hard) slider.timer.unlock();
+            slider.timer.start();
+            slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
+        }
+
         //builds out the slider
         function buildSlider(container) {
             //initialize container
@@ -411,9 +423,9 @@
         function slideHover(e) {
             if (slider.timer && settings.timer.enabled) {
                 if (e.type == 'mouseenter' && settings.hoverPause) {
-                    slider.timer.stop();
+                    pauseTimer();
                 } else if (e.type == 'mouseleave' && slider.timer.stopped) {
-                    slider.timer.start();
+                    playTimer();
                 }
             }
         }
@@ -449,14 +461,10 @@
                     moveSlide();
                     break;
                 case 'slide-nav-play':
-                    slider.timer.unlock();
-                    slider.timer.start();
-                    $this.removeClass('slide-nav-play').addClass('slide-nav-pause');
+                    playTimer(true);
                     break;
                 case 'slide-nav-pause':
-                    slider.timer.stop();
-                    slider.timer.lock();
-                    $this.removeClass('slide-nav-pause').addClass('slide-nav-play');
+                    pauseTimer(true);
                     break;
             }
         }
