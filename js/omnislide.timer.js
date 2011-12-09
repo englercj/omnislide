@@ -68,7 +68,7 @@
 
         //paint forground based on % done
         fgPaint = function () {
-            var prct = timeEllapsed / animLen;
+            var prct = timeEllapsed / animLen, rads;
             ctx.fillStyle = options.colors.filled;
             ctx.strokeStyle = options.colors.filled;
 
@@ -81,7 +81,7 @@
                     ctx.fillRect(border, border, w, canvas.height - (border * 2));
                     break;
                 case 'circle':
-                    var rads = (radianMax * prct) - lastRad;
+                    rads = (radianMax * prct) - lastRad;
 
                     ctx.beginPath();
                     ctx.moveTo(midX, midY);
@@ -91,7 +91,7 @@
                     lastRad = lastRad + rads;
                     break;
                 default:
-                    var rads = (radianMax * prct) - lastRad;
+                    rads = (radianMax * prct) - lastRad;
 
                     ctx.beginPath();
                     ctx.arc(midX, midY, radius - (options.ringWidth / 2) - border, lastRad, lastRad + rads, false);

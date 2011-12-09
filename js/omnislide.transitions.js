@@ -187,7 +187,7 @@
                             width: w,
                             height: h,
                             left: sumLeft,
-                            top: sumTop,
+                            top: sumTop
                             //backgroundImage: $slide.css('backgroundImage'),
                             //backgroundPosition: (-sumLeft) + 'px ' + (-sumTop) + 'px'
                         })//.html($slide.html());
@@ -361,7 +361,7 @@
         boxes: {
             fade: function ($slides, index, next, options, callback) { },
             fly: function ($slides, index, next, options, callback) { },
-            shrink: function ($slides, index, next, options, callback) { },
+            shrink: function ($slides, index, next, options, callback) { }
         },
         fade: {
             full: function ($slides, index, next, options, callback) {
