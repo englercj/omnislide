@@ -184,6 +184,16 @@
 
                 return this;
             },
+            pause: function () {
+                pauseTimer();
+
+                return this;
+            },
+            play: function () {
+                playTimer();
+
+                return this;
+            },
             //public wrapper for animating the overlays
             animateOverlays: function (show) {
                 if (!loadStorage(this)) return;
