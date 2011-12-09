@@ -11,7 +11,8 @@
             direction: '',      //affects only certain effects direction (empty string defaults to 'right')
             wait: 5000,         //the wait time to show each slide 
             length: 1000,       //how long the transition animates
-            animatorNum: 10     //the number of strips/boxes to use for creating advanced transitions
+            rows: 10,     //the number of strips/boxes to use for creating advanced transitions
+            cols: 1
         },
         timer: {
             enabled: true,      //enable timer?
@@ -421,7 +422,7 @@
                 if (slide.image)
                     $slide.css('background-image', 'url(' + slide.image + ')');
                 if (slide.content)
-                    $slide.append('<div class="slide-content" style="display:none;">' + slide.content + '</div>');
+                    $slide.append('<div class="slide-content">' + slide.content + '</div>');
                 if (slide.overlay)
                     $slide.append('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>');
                 if (slide.title)
