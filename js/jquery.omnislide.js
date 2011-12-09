@@ -11,7 +11,7 @@
             direction: '',      //affects only certain effects direction
             wait: 5000,         //the wait time to show each slide 
             length: 1000,       //how long the transition animates
-            animatorNum: 15,    //applies to strips/boxes; is the number of strips/boxes
+            animatorNum: 15     //applies to strips/boxes; is the number of strips/boxes
         },
         timer: {
             enabled: true,      //enable timer?
@@ -24,7 +24,9 @@
             },
             refreshRate: 10,    //time in ms between redraws (lower is smoother, reccommend <50)
             ringWidth: 3,
-            style: 'ring'       //style of the timer; circle, ring, bar
+            style: 'ring',      //style of the timer; circle, ring, bar
+            animationIn: null,
+            animationOut: null
         },
         navigation: {
             enabled: true,
@@ -39,6 +41,14 @@
             triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
+        title: {
+            animationIn: null,
+            animationOut: null
+        },
+        overlay: {
+            animationIn: null,
+            animationOut: null
+        },
         hoverPause: true    //pause when a user hovers into the current slide
     },
     //This was in the CSS theme file as classes, but moved to inline
@@ -48,10 +58,10 @@
             overflow: 'visible',
             position: 'relative'
         },
-        box: { 
+        box: {
             overflow: 'visible',
             position: 'absolute',
-            zIndex: 2 
+            zIndex: 2
         },
         slide: {
             width: '100%',
@@ -67,7 +77,7 @@
             position: 'absolute',
             zIndex: 10
         },
-        timer: { 
+        timer: {
             position: 'absolute',
             zIndex: 10
         }
@@ -125,7 +135,7 @@
 
                     //setup slide Index and start transition timer
                     slideIndex = (settings.startSlide > 1) ? settings.startSlide - 2 : -1;
-                    doTransition();
+                    moveSlide();
 
                     //fade out the navigation
                     slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
@@ -144,7 +154,7 @@
                 guid = this.data('guid');
                 settings = sets[guid];
 
-                if(!guid) {
+                if (!guid) {
                     OmniSlide.error('Cannot update option, element is not a slider', this);
                     return;
                 }
@@ -155,16 +165,16 @@
                         i = levels.length - 1,
                         key;
 
-                    while(i--) {
+                    while (i--) {
                         opt = opt[levels.shift()];
                     }
                     key = levels.shift();
 
                     if (value === undefined) return opt[key];
 
-                    if(typeof(value) === 'object')
+                    if (typeof (value) === 'object')
                         $.extend(true, opt[key], value);
-                    else 
+                    else
                         opt[key] = value;
                 }
 
@@ -176,7 +186,7 @@
             destroy: function () {
                 guid = this.data('guid');
                 slider = sliders[guid];
-                if(!guid) {
+                if (!guid) {
                     OmniSlide.error('Cannot destroy, element is not a slider', this);
                     return;
                 }
@@ -197,48 +207,95 @@
             }
         };
 
-        function doTransition(backward) {
+        function moveSlide(backward) {
             var nextSlide;
 
             if (backward) nextSlide = (slideIndex - 1 <= 0) ? slider.$slides.length - 1 : slideIndex - 1;
             else nextSlide = (slideIndex + 1) % slider.$slides.length;
 
-            if (OmniSlide.transition) { //attempt to use advanced transitions
-                OmniSlide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
-                    slideIndex = nextSlide;
-                    resetTimer();
-                });
-            } else { //otherwise default to built ins
-                switch (settings.transition.type) {
-                    case 'cut':
-                        slider.$slides.eq(slideIndex).hide();
-                        slider.$slides.eq(slideIndex).removeClass('active');
-                        slider.$slides.eq(nextSlide).show();
-                        slider.$slides.eq(nextSlide).addClass('active');
-
+            OmniSlide.log('lol wut?');
+            hideOverlays(slideIndex, function () {
+                if (OmniSlide.transition) { //attempt to use advanced transitions
+                    OmniSlide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
                         slideIndex = nextSlide;
-                        resetTimer();
-                        break;
-                    case 'fade':
-                    default:
-                        slider.$slides.eq(nextSlide).show();
-                        slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
+                        showOverlays(slideIndex, resetTimer);
+                    });
+                } else { //otherwise default to built ins
+                    switch (settings.transition.type) {
+                        case 'cut':
+                            slider.$slides.eq(slideIndex).hide();
                             slider.$slides.eq(slideIndex).removeClass('active');
+                            slider.$slides.eq(nextSlide).show();
                             slider.$slides.eq(nextSlide).addClass('active');
-                            slideIndex = nextSlide;
 
+                            slideIndex = nextSlide;
                             resetTimer();
-                        });
+                            break;
+                        case 'fade':
+                        default:
+                            slider.$slides.eq(nextSlide).show();
+                            slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
+                                slider.$slides.eq(slideIndex).removeClass('active');
+                                slider.$slides.eq(nextSlide).addClass('active');
+                                slideIndex = nextSlide;
+
+                                resetTimer();
+                            });
+                    }
                 }
-            }
+            });
         }
+
+        function moveOverlays(i, show, cb) {
+            var $timer = slider.$timer,
+                $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
+                $title = slider.$slides.eq(i).find('div.slide-title'),
+                extFunc, intFunc;
+
+            if (show) {
+                extFunc = 'animationIn';
+                intFunc = 'fadeIn';
+            } else {
+                extFunc = 'animationOut';
+                intFunc = 'fadeOut';
+            }
+
+            if (settings.timer.enabled && $timer.length) {
+                if (settings.timer[extFunc]) settings.timer[extFunc].call($timer);
+                else slider.$timer[intFunc]();
+            }
+
+            if ($title.length) {
+                if (settings.title[extFunc]) settings.title[extFunc].call($title);
+                else $title[intFunc]();
+            }
+
+            if ($overlay.length) {
+                if (settings.overlay[extFunc]) settings.overlay[extFunc].call($overlay);
+                else $overlay[intFunc]();
+            }
+
+            var overlayWait = setInterval(function () {
+                //wait until animations finish
+                if ($timer.is(':animated') || $overlay.is(':animated') || $title.is(':animated'))
+                    return;
+
+                //animations done
+                clearInterval(overlayWait);
+
+                if (cb) cb();
+            }, 50);
+        }
+
+        function hideOverlays(i, cb) { return moveOverlays(i, false, cb); }
+        function showOverlays(i, cb) { return moveOverlays(i, true, cb); }
 
         function resetTimer() {
             //create and manage timer if they have plugin installed
             if (settings.timer.enabled) {
                 if (!slider.timer)
                     slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer,
-                                                    doTransition, slider.$timer[0]);
+                                                    moveSlide, slider.$timer[0]);
 
                 slider.timer.reset();
                 slider.timer.start();
@@ -301,10 +358,12 @@
 
         //handle hovering in/out of the slide box
         function slideHover(e) {
-            if (e.type == 'mouseenter' && settings.hoverPause) {
-                slider.timer.stop();
-            } else if (e.type == 'mouseleave' && slider.timer.stopped) {
-                slider.timer.start();
+            if (settings.timer.enabled) {
+                if (e.type == 'mouseenter' && settings.hoverPause) {
+                    slider.timer.stop();
+                } else if (e.type == 'mouseleave' && slider.timer.stopped) {
+                    slider.timer.start();
+                }
             }
         }
 
@@ -333,12 +392,10 @@
 
             switch (ctrl) {
                 case 'slide-nav-back':
-                    slider.timer.finish(function () {
-                        doTransition(true);
-                    });
+                    moveSlide(true);
                     break;
                 case 'slide-nav-forward':
-                    slider.timer.finish(doTransition);
+                    moveSlide();
                     break;
                 case 'slide-nav-play':
                     slider.timer.unlock();
@@ -436,21 +493,21 @@
 
             return {};
         },
-        _getKeys: function(obj, showPrivate) {
+        _getKeys: function (obj, showPrivate) {
             var keys = [];
-            for(var key in obj) {
-                if(showPrivate || key.charAt(0) != '_')
+            for (var key in obj) {
+                if (showPrivate || key.charAt(0) != '_')
                     keys.push(key);
             }
             return keys;
         },
-        _rand: function(max) {
-            return ((Math.random()  * 0x10000) | 0) % max;
+        _rand: function (max) {
+            return ((Math.random() * 0x10000) | 0) % max;
         },
         log: function () { OmniSlide._log('log', arguments); },
         error: function () { OmniSlide._log('error', arguments); },
         warn: function () { OmniSlide._log('warn', arguments); },
-        generateGuid: function() {
+        generateGuid: function () {
             var S4 = function () {
                 return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
             };
