@@ -221,8 +221,9 @@
                 delete slider.timer;
 
                 //reset core variables
-                sets[guid] = {};
-                sliders[guid] = {};
+                storage.settings[guid] = {};
+                storage.sliders[guid] = {};
+                storage.slideIndexes[guid] = 0;
 
                 return this;
             }
@@ -300,6 +301,7 @@
             });
         }
 
+        //exec animations on slide overlays, custom or default
         function animateOverlays(i, show, cb) {
             var $timer = slider.$timer,
                 $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
@@ -341,9 +343,11 @@
             }, 50);
         }
 
+        //animateOverlays wrappers
         function hideOverlays(i, cb) { return animateOverlays(i, false, cb); }
         function showOverlays(i, cb) { return animateOverlays(i, true, cb); }
 
+        //resets the timer and/or creates a new one if we dont have one
         function resetTimer() {
             //create and manage timer if they have plugin installed
             if (settings.timer.enabled) {
@@ -359,23 +363,26 @@
             return false;
         }
 
+        //resets the timer and starts the tick loop
         function restartTimer() {
             if (resetTimer()) slider.timer.start();
         }
 
+        //pauses the timer with optional hard lock
         function pauseTimer(hard) {
             slider.timer.stop();
             if (hard) slider.timer.lock();
             slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
         }
 
+        //plays the timer optionaly a hard break of the lock
         function playTimer(hard) {
             if (hard) slider.timer.unlock();
             slider.timer.start();
             slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
         }
 
-        //builds out the slider
+        //builds out the slider's HTML
         function buildSlider(container) {
             //initialize container
             slider.$container = $(container);
@@ -547,13 +554,16 @@
         }
     }
 
+    //register jQuery plugin
     $.fn.extend({
         OmniSlide: electricSlide,
         omnislide: electricSlide
     });
 
+    //build global object for use by plugins as utilities
     win.OmniSlide = {
         version: 0.1,
+        //general logging override to avoid errors
         _log: function (type, args) {
             if (win.console && console[type]) {
                 console[type].apply(this, args);
@@ -562,6 +572,8 @@
 
             return {};
         },
+        //iterates through an object and returns the keys
+        //optionally showing the private "_*" keys as well
         _getKeys: function (obj, showPrivate) {
             var keys = [];
             for (var key in obj) {
@@ -570,18 +582,25 @@
             }
             return keys;
         },
+        //generates a random number between 0 -> max
+        //also a little more "random" than built in
+        //Math.random() functionality
         _rand: function (max) {
             return ((Math.random() * 0x10000) | 0) % max;
         },
+        //logging wrappers
         log: function () { OmniSlide._log('log', arguments); },
         error: function () { OmniSlide._log('error', arguments); },
         warn: function () { OmniSlide._log('warn', arguments); },
+        //generates a Guid that will identify a slider throughout its life.
         generateGuid: function () {
             var S4 = function () {
                 return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
             };
+
             return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
         }
     };
+    //add version string to the global object
     OmniSlide.versionString = 'v' + OmniSlide.version + ' BETA';
 })(jQuery, window);
