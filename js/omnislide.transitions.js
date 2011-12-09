@@ -374,8 +374,7 @@
 
                     if (callback) callback();
                 });
-            }//,
-            //directional: function ($slides, index, next, options, callback) { }
+            }
         },
         cut: {
             full: function ($slides, index, next, options, callback) {
@@ -391,7 +390,7 @@
 
     win.OmniSlide.transitions._defaults = {
         strips: 'wipe',
-        boxes: 'random',
+        boxes: 'fade',
         fade: 'full',
         cut: 'full'
     };
