@@ -5,13 +5,13 @@
         slides: undefined,      //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 1,          //initial slide for the plugin to start displaying
         transition: {
-            type: '',           //the type of transition to use
+            type: 'cut',        //the type of transition to use
             effect: '',         //specific transition effect
             easing: '',         //the type of easing to use on transitions
             direction: '',      //affects only certain effects direction
             wait: 5000,         //the wait time to show each slide 
             length: 1000,       //how long the transition animates
-            animatorNum: 15     //applies to strips/boxes; is the number of strips/boxes
+            animatorNum: 10     //the number of strips/boxes to use for creating advanced transitions
         },
         timer: {
             enabled: true,      //enable timer?
@@ -23,10 +23,10 @@
                 filled: '#FFF'  //color to show as ellapsed time
             },
             refreshRate: 10,    //time in ms between redraws (lower is smoother, reccommend <50)
-            ringWidth: 3,
-            style: 'ring',      //style of the timer; circle, ring, bar
-            animationIn: null,
-            animationOut: null
+            ringWidth: 3,       //width of the timer ring (filled, so not including border)
+            type: 'ring',       //type of the timer; circle, ring, bar
+            animationIn: null,  //custom animation to use for animating the timer into the slide
+            animationOut: null  //custom animation to use for animating the timer out of the slide
         },
         navigation: {
             enabled: true,
@@ -38,18 +38,18 @@
         thumbs: {
             enabled: false,         //enable thumbnails?
             tooltip: true,          //show as tooltip
-            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
+            triggerTooltip: 'hover',//event to trigger showing tooltip (if true)
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
         title: {
-            animationIn: null,
-            animationOut: null
+            animationIn: null,  //custom animation to use for animating the title into the slide
+            animationOut: null  //custom animation to use for animating the title out of the slide
         },
         overlay: {
-            animationIn: null,
-            animationOut: null
+            animationIn: null,  //custom animation to use for animating the overlay into the slide
+            animationOut: null  //custom animation to use for animating the overlay out of the slide
         },
-        hoverPause: true    //pause when a user hovers into the current slide
+        hoverPause: true        //pause when a user hovers into the current slide
     },
     //This was in the CSS theme file as classes, but moved to inline
     //to reduce chance of human error in and to reduce size of, the theme file.
@@ -129,7 +129,6 @@
 
                         return false;
                     }
-
                     //build out slider HTML
                     buildSlider(this);
 
@@ -307,7 +306,7 @@
         }
 
         function restartTimer() {
-            if(resetTimer()) slider.timer.start();
+            if (resetTimer()) slider.timer.start();
         }
 
         //builds out the slider

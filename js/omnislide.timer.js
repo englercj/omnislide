@@ -46,7 +46,7 @@
             ctx.fillStyle = options.colors.empty;
             ctx.strokeStyle = options.colors.empty;
 
-            switch (options.style) {
+            switch (options.type) {
                 case 'bar':
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -72,7 +72,7 @@
             ctx.fillStyle = options.colors.filled;
             ctx.strokeStyle = options.colors.filled;
 
-            switch (options.style) {
+            switch (options.type) {
                 case 'bar':
                     var w = (canvas.width * prct) - (border * 2);
 
