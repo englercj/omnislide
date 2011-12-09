@@ -214,10 +214,12 @@
             else nextSlide = (slideIndex + 1) % slider.$slides.length;
 
             hideOverlays(slideIndex, function () {
+                resetTimer();
+
                 if (OmniSlide.transition) { //attempt to use advanced transitions
                     OmniSlide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
                         slideIndex = nextSlide;
-                        showOverlays(slideIndex, resetTimer);
+                        showOverlays(slideIndex, restartTimer);
                     });
                 } else { //otherwise default to built ins
                     switch (settings.transition.type) {
@@ -248,7 +250,7 @@
         function moveOverlays(i, show, cb) {
             var $timer = slider.$timer,
                 $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
-                $title = slider.$slides.eq(i).find('div.slide-title'),
+                $title = slider.$slides.eq(i).find('h1.slide-title'),
                 extFunc, intFunc;
 
             if (show) {
@@ -297,8 +299,15 @@
                                                     moveSlide, slider.$timer[0]);
 
                 slider.timer.reset();
-                slider.timer.start();
+
+                return true;
             }
+
+            return false;
+        }
+
+        function restartTimer() {
+            if(resetTimer()) slider.timer.start();
         }
 
         //builds out the slider
@@ -340,11 +349,11 @@
                 if (slide.image)
                     $slide.css('background-image', 'url(' + slide.image + ')');
                 if (slide.content)
-                    $slide.append(slide.content);
+                    $slide.append('<div class="slide-content" style="display:none;">' + slide.content + '</div>');
                 if (slide.overlay)
-                    $slide.append('<div class="slide-overlay">' + slide.overlay + '</div>');
+                    $slide.append('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>');
                 if (slide.title)
-                    $slide.append('<h1 class="slide-title">' + slide.title + '</h1>');
+                    $slide.append('<h1 class="slide-title" style="display:none;">' + slide.title + '</h1>');
 
                 slider.$slides = slider.$slides.add($slide.hide());
 
@@ -357,7 +366,7 @@
 
         //handle hovering in/out of the slide box
         function slideHover(e) {
-            if (settings.timer.enabled) {
+            if (slider.timer && settings.timer.enabled) {
                 if (e.type == 'mouseenter' && settings.hoverPause) {
                     slider.timer.stop();
                 } else if (e.type == 'mouseleave' && slider.timer.stopped) {
