@@ -122,8 +122,7 @@
 
         timer = {
             setTimeLeft: function (time) {
-                if (timer.locked) return false;
-                if (time > animLen || time < 0) return false;
+                if (timer.locked || time > animLen || time < 0) return false;
 
                 timeEllapsed = (animLen - time);
                 return true;
@@ -141,14 +140,18 @@
                 timer.stopped = true;
             },
             reset: function () {
+                var bLock = timer.locked;
+
                 timer.unlock();
                 timer.stop();
                 clearCanvas();
                 bgPaint();
-                //fadeIn();
 
                 lastRad = 0;
                 timeEllapsed = 0;
+
+                //if it was locked before, relock it.
+                if (bLock) timer.lock();
             },
             lock: function () { timer.locked = true; },
             unlock: function () { timer.locked = false; },
