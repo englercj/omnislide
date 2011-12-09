@@ -18,7 +18,6 @@
     win.OmniSlide.transition = function (opts, $slides, index, next, callback) {
         //store vars locally for easier access and to lose references
         var trans = OmniSlide.transitions,
-            directions = ['down', 'left', 'up', 'right'],
             options = $.extend(true, {}, opts),
             def;
 
@@ -44,8 +43,7 @@
         }
 
         if (!options.direction) {
-            var r = OmniSlide._rand(directions.length);
-            options.direction = directions[r];
+            options.direction = 'right';
         }
 
         //special case that type is custom

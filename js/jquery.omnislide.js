@@ -3,12 +3,12 @@
     /////////////////////
     var defaults = {
         slides: undefined,      //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
-        startSlide: 1,          //initial slide for the plugin to start displaying
+        startSlide: 1,          //initial slide for the plugin to start displaying (0 based)
         transition: {
-            type: 'cut',        //the type of transition to use
-            effect: '',         //specific transition effect
-            easing: '',         //the type of easing to use on transitions
-            direction: '',      //affects only certain effects direction
+            type: 'cut',        //the type of transition to use (empty string chooses a random type)
+            effect: '',         //specific transition effect (empty string chooses a random effect)
+            easing: '',         //the type of easing to use on transitions (empty string chooses a random easing)
+            direction: '',      //affects only certain effects direction (empty string defaults to 'right')
             wait: 5000,         //the wait time to show each slide 
             length: 1000,       //how long the transition animates
             animatorNum: 10     //the number of strips/boxes to use for creating advanced transitions
@@ -38,7 +38,7 @@
         thumbs: {
             enabled: false,         //enable thumbnails?
             tooltip: true,          //show as tooltip
-            triggerTooltip: 'hover',//event to trigger showing tooltip (if true)
+            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
         title: {
@@ -82,8 +82,11 @@
             zIndex: 10
         }
     },
-    sets = [],
-    sliders = []
+    storage = {
+        settings: [],
+        sliders: [],
+        slideIndexes: []
+    }
 
     //Main functionality
     //////////////////////
@@ -104,7 +107,7 @@
             dataElmVisible: false
         },
 
-        slideIndex, loopTransition,
+        slideIndex,
         forcePaused = false,
 
         //plugin methods
@@ -133,16 +136,16 @@
                     buildSlider(this);
 
                     //setup slide Index and start transition timer
-                    slideIndex = (settings.startSlide > 1) ? settings.startSlide - 2 : -1;
-                    moveSlide();
+                    slideIndex = -1;
+                    moveSlide(settings.startSlide);
 
                     //fade out the navigation
                     slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
 
                     //store for retreival by methods
                     $(this).data('guid', guid);
-                    sets[guid] = settings;
-                    sliders[guid] = slider;
+                    storage.settings[guid] = settings;
+                    storage.sliders[guid] = slider;
 
                     return true;
                 });
@@ -150,13 +153,7 @@
             //changes an option to the given value
             //and/or returns value given by that option
             option: function (option, value) {
-                guid = this.data('guid');
-                settings = sets[guid];
-
-                if (!guid) {
-                    OmniSlide.error('Cannot update option, element is not a slider', this);
-                    return;
-                }
+                if (!loadStorage(this)) return;
 
                 if (typeof (option) === 'string') {
                     var levels = option.split('.'),
@@ -179,16 +176,31 @@
 
                 return this;
             },
+            //public wrapper around private moveSlide function
+            moveSlide: function (slide) {
+                if (!loadStorage(this)) return;
+
+                moveSlide(slide);
+
+                return this;
+            },
+            //public wrapper for animating the overlays
+            animateOverlays: function (show) {
+                if (!loadStorage(this)) return;
+
+                if (show) {
+                    showOverlays(slideIndex);
+                } else {
+                    hideOverlays(slideIndex);
+                }
+
+                return this;
+            },
             //reverses everything the initialization did
             //should put a user back to the state they were in
             //before calling this plugin
             destroy: function () {
-                guid = this.data('guid');
-                slider = sliders[guid];
-                if (!guid) {
-                    OmniSlide.error('Cannot destroy, element is not a slider', this);
-                    return;
-                }
+                if (!loadStorage(this)) return;
 
                 //remove slider and show the dataElment if it was visible before
                 slider.$wrapper.remove();
@@ -206,21 +218,51 @@
             }
         };
 
-        function moveSlide(backward) {
+        function loadStorage($elm) {
+            guid = $elm.data('guid');
+            settings = storage.settings[guid];
+            slider = storage.sliders[guid];
+            slideIndex = storage.slideIndexes[guid];
+
+            if (!guid) {
+                OmniSlide.error('Unable to load from storage, element is not a slider: ', this);
+                return false;
+            }
+
+            return true;
+        }
+
+        function moveSlide(slide) {
             var nextSlide;
 
-            if (backward) nextSlide = (slideIndex - 1 <= 0) ? slider.$slides.length - 1 : slideIndex - 1;
-            else nextSlide = (slideIndex + 1) % slider.$slides.length;
+            //if number go to that slide
+            if (typeof (slide) === 'number') {
+                nextSlide = (slide < slider.$slides.length && slide > -1) ? slide : 0;
+            }
+            //true means move backwards once
+            else if (slide === true) {
+                nextSlide = (slideIndex - 1 < 0) ? slider.$slides.length - 1 : slideIndex - 1;
+            }
+            //otherwise move forward once
+            else {
+                nextSlide = (slideIndex + 1) % slider.$slides.length;
+            }
 
+            //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
                 resetTimer();
 
-                if (OmniSlide.transition) { //attempt to use advanced transitions
+                //attempt to use advanced transitions
+                if (OmniSlide.transition) {
+                    //activate the transition and show overlays on callback
                     OmniSlide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
                         slideIndex = nextSlide;
+                        storage.slideIndexes[guid] = slideIndex;
                         showOverlays(slideIndex, restartTimer);
                     });
-                } else { //otherwise default to built ins
+                }
+                //otherwise default to simple built in transitions
+                else {
                     switch (settings.transition.type) {
                         case 'cut':
                             slider.$slides.eq(slideIndex).hide();
@@ -229,7 +271,8 @@
                             slider.$slides.eq(nextSlide).addClass('active');
 
                             slideIndex = nextSlide;
-                            resetTimer();
+                            storage.slideIndexes[guid] = slideIndex;
+                            restartTimer();
                             break;
                         case 'fade':
                         default:
@@ -237,16 +280,17 @@
                             slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
                                 slider.$slides.eq(slideIndex).removeClass('active');
                                 slider.$slides.eq(nextSlide).addClass('active');
-                                slideIndex = nextSlide;
 
-                                resetTimer();
+                                slideIndex = nextSlide;
+                                storage.slideIndexes[guid] = slideIndex;
+                                restartTimer();
                             });
                     }
                 }
             });
         }
 
-        function moveOverlays(i, show, cb) {
+        function animateOverlays(i, show, cb) {
             var $timer = slider.$timer,
                 $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
                 $title = slider.$slides.eq(i).find('h1.slide-title'),
@@ -287,8 +331,8 @@
             }, 50);
         }
 
-        function hideOverlays(i, cb) { return moveOverlays(i, false, cb); }
-        function showOverlays(i, cb) { return moveOverlays(i, true, cb); }
+        function hideOverlays(i, cb) { return animateOverlays(i, false, cb); }
+        function showOverlays(i, cb) { return animateOverlays(i, true, cb); }
 
         function resetTimer() {
             //create and manage timer if they have plugin installed
