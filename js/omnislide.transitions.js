@@ -247,17 +247,66 @@
                 }
             },
             wave: function ($slides, index, next, options, callback) {
+                var trans = OmniSlide.transitions, orient, $boxes, attr, atch,
+                    dir = options.direction;
+
+                switch(dir) {
+                    case 'up':
+                        attr = 'height';
+                        atch = 'bottom';
+                        orient = OmniSlide.transitions._orientation.VERTICAL_STRIP;
+                        break;
+                    case 'down':
+                        attr = 'height';
+                        atch = 'top';
+                        orient = OmniSlide.transitions._orientation.VERTICAL_STRIP;
+                        break;
+                    case 'left':
+                        attr = 'width';
+                        atch = 'right';
+                        orient = OmniSlide.transitions._orientation.HORIZONTAL_STRIP;
+                        break;
+                    case 'right':
+                        attr = 'width';
+                        atch = 'left';
+                        orient = OmniSlide.transitions._orientation.HORIZONTAL_STRIP;
+                        break;
+                }
+
+                $boxes = trans._boxify($slides.eq(next), options.animatorNum, options.guid, orient)
+                    .css(attr, 0).css(atch, 0).show();
+
+                wave(0, $boxes.length - 1);
+
+                function wave(i, end) {
+                    if(i === false) return;
+
+                    var css = {};
+                    css[attr] = $slides.eq(next)[attr]();
+
+                    $boxes.eq(i).animate(css, options.length, options.easing, function() {
+                        trans._animCallback(i, end, $boxes, animDone);
+                    });
+
+                    setTimeout(function () { wave(trans._animMoveIndex(i, end), end); }, 50);
+                }
+
+                function animDone() {
+                    trans._deactivate($slides.eq(index));
+                    trans._activate($slides.eq(next));
+
+                    if(callback) callback();
+                }
             },
             zipper: function ($slides, index, next, options, callback) {
-                var trans = OmniSlide.transitions, orient, boxes, attr, atch,
+                var trans = OmniSlide.transitions, orient, $boxes, attr, atch,
                     dir = options.direction;
 
                 if (dir == 'right' || dir == 'left') {
                     attr = 'height';
                     atch = ['top', 'bottom'];
                     orient = OmniSlide.transitions._orientation.VERTICAL_STRIP;
-                }
-                else {
+                } else {
                     attr = 'width';
                     atch = ['left', 'right'];
                     orient = OmniSlide.transitions._orientation.HORIZONTAL_STRIP;
@@ -297,7 +346,6 @@
                     trans._activate($slides.eq(next));
 
                     if(callback) callback();
-                    return;
                 }
             },
             curtain: function ($slides, index, next, options, callback) { }
