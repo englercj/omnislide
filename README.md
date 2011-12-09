@@ -12,7 +12,7 @@ Here are some of the features that OmniSlide supports:
 
 * Image slideshows
 * HTML Content (__WIP__)
-* HTML Titles and Overlays (__WIP__)
+* HTML Titles and Overlays
 * Canvas timer (bar, circle, or ring styles)
 * Slide Navigation Controls
 * Dynamic Thumbnails (__WIP__)
@@ -40,17 +40,15 @@ a `<ul/>` element in the proper format). Here is an example of the basic usage u
 ~~~~~ html
 	<div id="sliderUl"></div>
     <ul id="slides">
-        <li>
-            <img class="slide-thumb" src="" alt="" />
-            <img class="slide-image" src="img/slides/1.jpg" alt="" />
-            <div class="slide-content"></div>
-            <div class="slide-overlay"></div>
+        <li title="The First slide Title">
+            <img class="slide-thumb" src="" alt="" /> <!-- Image to be used as slide thumbnail -->
+            <img class="slide-image" src="img/slides/1.jpg" alt="" /> <!-- Image to be used as the slide image -->
+            <div class="slide-content">HTML Content of the slide</div>
+            <div class="slide-overlay">Some overlay content to go on the first slide</div>
         </li>
         <li>
-            <img class="slide-thumb" src="" alt="" />
+			<!-- You can use a many or as little of the elements as you want -->
             <img class="slide-image" src="img/slides/2.jpg" alt="" />
-            <div class="slide-content"></div>
-            <div class="slide-overlay"></div>
         </li>
 	</ul>
 ~~~~~
@@ -137,3 +135,4 @@ Notes
 
 * To use custom transitions, or to extend the built-in transitions you must include `js/omnislide.transitions.js`
 * Currently only image slideshows work with advanced transitions (working on HTML support)
+* The nav controlls are _really_ buggy right now. Need to rewrite their functionality.
