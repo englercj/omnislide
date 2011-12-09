@@ -21,6 +21,31 @@ Here are some of the features that OmniSlide supports:
 * Flexible Theming Classes
 * And More!
 
+Installation
+------------
+
+The slider requires [`jQuery 1.6+`](http://jquery.com/). For a minimal install, the only *required* file is
+`js/jquery.omnislide.js`. However, there are many features left out with only that implementation. Most notably
+the slider will look like crap. In order to bring some style to the slide include at least the base theme found
+in `css/omnislide.theme.base.css`. Other features such as advanced transitions and the canvas timer require the
+files `js/omnislide.transitions.js` and `js/omnislide.timer.js` respectively. Also, `img/sprite.png` provides a 
+simple control button sprite for use in the slide navigation.
+
+For a minimal install, include the following in your HTML:
+
+~~~~~ html
+	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+	<script src="js/jquery.omnislide.js"></script>
+~~~~~
+
+To use the advanced themes, and timer you will need to include those as well:
+
+~~~~~ html
+	<script src="js/omnislide.transitions.js"></script>
+	<script src="js/omnislide.timer.js"></script>
+~~~~~
+
 Usage
 -----
 
@@ -94,6 +119,24 @@ page to the state it was in before I initialized the slider:
 	$('#sliderUl').omnislide('destroy');
 ~~~~~~
 
+More advanced usage examples can be found in the 
+[Advanced Usage](https://github.com/englercj/OmniSlide/wiki/Advanced-Usage) Documentation
+
+Transitions
+-----------
+
+Transitions are specified using the `transition` option when instantiating the plugin, or by setting
+the `transition` variable on-the-fly using 
+
+~~~~~ javascript
+	$('#slider').omnislide('option', 'transition', { type: 'fade', effect: 'full' });
+~~~~~~
+
+You can use a custom transition effect by setting `transition.type` to `'custom'` and providing an
+animation function in the `transition.effect` option. Another option is to package your custom transitions
+into a transition plugin, to be then used by the plugin. Documentation on the subject can be found on the
+[Transition API](https://github.com/englercj/OmniSlide/wiki/Transition-API) Wiki page.
+
 Theming
 -------
 
@@ -105,30 +148,7 @@ can take the slider and brand it to your website, quickly and easily.
 If you open `css/omnislide.theme.base.css` you will find a skeleton theme. You can modify the base 
 theme to make the slide conform to any look and feel.
 
-Installation
-------------
-
-The slide requires [`jQuery 1.6+`](http://jquery.com/). For a minimal install, the only *required* file is
-`js/jquery.omnislide.js`. However, there are many features left out with only that implementation. Most notably
-the slider will look like crap. In order to bring some style to the slide include atleast the base theme found
-in `css/omnislide.theme.base.css`. Other features such as advanced transitions and the canvas timer require the
-files `js/omnislide.transitions.js` and `js/omnislide.timer.js` respectively. Also, `img/sprite.png` provides a 
-simple control button sprite for use in the slide navigation.
-
-For a minimal install, include the following in your HTML:
-
-~~~~~ html
-	<link type="text/css" rel="stylesheet" href="css/jquery.slide.css" />
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
-	<script src="js/jquery.omnislide.js"></script>
-~~~~~
-
-To use the advanced themes, and timer you will need to include those as well:
-
-~~~~~ html
-	<script src="js/omnislide.transitions.js"></script>
-	<script src="js/omnislide.timer.js"></script>
-~~~~~
+More information can be found in the [Theme API](https://github.com/englercj/OmniSlide/wiki/Theme-API) Documentation
 
 Notes
 -----
