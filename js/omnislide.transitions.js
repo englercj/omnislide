@@ -32,19 +32,26 @@
             //setup some reasonable defaults
             options.effect = options.effect || 'fade';
             options.easing = (!options.easing || !$.easing[options.easing]) ? 'linear' : options.easing;
-            options.length = options.length || 800;
+            options.order = options.order || 'normal';
+            options.direction = options.direction || directions[1];
+            options.slide = options.slide || 'this';
 
+            //set randoms to a value
             if (options.effect == 'random') options.effect = _getRandKey(api.transitions);
             if (options.easing == 'random') options.easing = _getRandKey($.easing);
             if (options.direction == 'random') options.direction = directions[_getRandKey(directions)];
             if (options.slide == 'random') options.slide = slideKeys[_getRandKey(slideKeys)];
 
+            //if transition doesn't exist warn them and default to fade
             if (!api.transitions[options.effect] || options.effect.charAt(0) == '_') {
-                //no transition found, or no default found
-                OmniSlide.warn('Unable to find transition "%s", using default fade', options.effect);
+                //no transition found
+                OmniSlide.warn('Unable to find transition "%s", using default transition: fade', options.effect);
                 options.effect = 'fade';
             }
 
+            //if the options contain a css or animation function
+            //then dont extend onto the api.transitions effect,
+            //just use theirs
             if (!options.css && !options.animation)
                 options = $.extend(true, {}, api.transitions[options.effect], options);
 
