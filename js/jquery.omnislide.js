@@ -1,4 +1,5 @@
 (function ($, win, undefined) {
+    'use strict';
     //Default settings
     /////////////////////
     var defaults = {
@@ -91,13 +92,13 @@
         settings: [],
         sliders: [],
         slideIndexes: []
-    }
+    };
 
-    //Main functionality
-    //////////////////////
-    function electricSlide(method) {
-        //variables
-        var settings = {},
+//Main functionality
+//////////////////////
+function electricSlide(method) {
+    //variables
+    var settings = {},
         guid = OmniSlide.generateGuid(),
         slides = [],
         slider = {
@@ -113,126 +114,125 @@
         },
 
         slideIndex,
-        forcePaused = false,
 
-        //plugin methods
+    //plugin methods
         methods = {
             //initialize the slider plugin
             init: function (options) {
                 return this.each(function () { //ensures chainability
                     if (options) $.extend(true, settings, defaults, options);
 
-                    //disable timer if plugin not installed
-                    if (!OmniSlide.timer) settings.timer.enabled = false;
+                        //disable timer if plugin not installed
+                        if (!OmniSlide.timer) settings.timer.enabled = false;
 
-                    //place guid where plugins can get at it
-                    settings.timer.guid = guid;
-                    settings.transition.guid = guid;
+                        //place guid where plugins can get at it
+                        settings.timer.guid = guid;
+                        settings.transition.guid = guid;
 
-                    //parse out the slides into usable data
-                    var parse = parseSlides();
-                    if (parse) {
-                        OmniSlide.error('Error while parsing slides: ', parse);
-                        OmniSlide.error('settings.slides: ', settings.slides);
+                        //parse out the slides into usable data
+                        var parse = parseSlides();
+                        if (parse) {
+                            OmniSlide.error('Error while parsing slides: ', parse);
+                            OmniSlide.error('settings.slides: ', settings.slides);
 
-                        return false;
+                            return false;
+                        }
+                        //build out slider HTML
+                        buildSlider(this);
+
+                        //setup slide Index and start transition timer
+                        slideIndex = -1;
+                        moveSlide(settings.startSlide);
+
+                        //fade out the navigation
+                        slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
+
+                        //store for retreival by methods
+                        $(this).data('guid', guid);
+                        storage.settings[guid] = settings;
+                        storage.sliders[guid] = slider;
+
+                        return true;
+                    });
+                },
+                //changes an option to the given value
+                //and/or returns value given by that option
+                option: function (option, value) {
+                    if (!loadStorage(this)) return;
+
+                    if (typeof (option) === 'string') {
+                        var levels = option.split('.'),
+                            opt = settings,
+                            i = levels.length - 1,
+                            key;
+
+                        while (i--) {
+                            opt = opt[levels.shift()];
+                        }
+                        key = levels.shift();
+
+                        if (value === undefined) return opt[key];
+
+                        if (typeof (value) === 'object')
+                            $.extend(true, opt[key], value);
+                        else
+                            opt[key] = value;
                     }
-                    //build out slider HTML
-                    buildSlider(this);
 
-                    //setup slide Index and start transition timer
-                    slideIndex = -1;
-                    moveSlide(settings.startSlide);
+                    return this;
+                },
+                //public wrapper around private moveSlide function
+                moveSlide: function (slide) {
+                    if (!loadStorage(this)) return;
 
-                    //fade out the navigation
-                    slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
+                    moveSlide(slide);
 
-                    //store for retreival by methods
-                    $(this).data('guid', guid);
-                    storage.settings[guid] = settings;
-                    storage.sliders[guid] = slider;
+                    return this;
+                },
+                pause: function () {
+                    pauseTimer();
 
-                    return true;
-                });
-            },
-            //changes an option to the given value
-            //and/or returns value given by that option
-            option: function (option, value) {
-                if (!loadStorage(this)) return;
+                    return this;
+                },
+                play: function () {
+                    playTimer();
 
-                if (typeof (option) === 'string') {
-                    var levels = option.split('.'),
-                        opt = settings,
-                        i = levels.length - 1,
-                        key;
+                    return this;
+                },
+                //public wrapper for animating the overlays
+                animateOverlays: function (show) {
+                    if (!loadStorage(this)) return;
 
-                    while (i--) {
-                        opt = opt[levels.shift()];
+                    if (show) {
+                        showOverlays(slideIndex);
+                    } else {
+                        hideOverlays(slideIndex);
                     }
-                    key = levels.shift();
 
-                    if (value === undefined) return opt[key];
+                    return this;
+                },
+                //reverses everything the initialization did
+                //should put a user back to the state they were in
+                //before calling this plugin
+                destroy: function () {
+                    if (!loadStorage(this)) return;
 
-                    if (typeof (value) === 'object')
-                        $.extend(true, opt[key], value);
-                    else
-                        opt[key] = value;
+                    //remove slider and show the dataElment if it was visible before
+                    slider.$wrapper.remove();
+                    if (slider.$dataElm.length > 0 && slider.dataElmVisible) slider.$dataElm.show();
+
+                    //reset & delete timer, GC should then pick it up
+                    slider.timer.reset();
+                    delete slider.timer;
+
+                    //reset core variables
+                    storage.settings[guid] = {};
+                    storage.sliders[guid] = {};
+                    storage.slideIndexes[guid] = 0;
+
+                    return this;
                 }
-
-                return this;
-            },
-            //public wrapper around private moveSlide function
-            moveSlide: function (slide) {
-                if (!loadStorage(this)) return;
-
-                moveSlide(slide);
-
-                return this;
-            },
-            pause: function () {
-                pauseTimer();
-
-                return this;
-            },
-            play: function () {
-                playTimer();
-
-                return this;
-            },
-            //public wrapper for animating the overlays
-            animateOverlays: function (show) {
-                if (!loadStorage(this)) return;
-
-                if (show) {
-                    showOverlays(slideIndex);
-                } else {
-                    hideOverlays(slideIndex);
-                }
-
-                return this;
-            },
-            //reverses everything the initialization did
-            //should put a user back to the state they were in
-            //before calling this plugin
-            destroy: function () {
-                if (!loadStorage(this)) return;
-
-                //remove slider and show the dataElment if it was visible before
-                slider.$wrapper.remove();
-                if (slider.$dataElm.length > 0 && slider.dataElmVisible) slider.$dataElm.show();
-
-                //reset & delete timer, GC should then pick it up
-                slider.timer.reset();
-                delete slider.timer;
-
-                //reset core variables
-                storage.settings[guid] = {};
-                storage.sliders[guid] = {};
-                storage.slideIndexes[guid] = 0;
-
-                return this;
-            }
-        };
+            };
 
         function loadStorage($elm) {
             guid = $elm.data('guid');
@@ -320,7 +320,7 @@
             var $timer = slider.$timer,
                 $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
                 $title = slider.$slides.eq(i).find('h1.slide-title'),
-                extFunc, intFunc;
+                extFunc, intFunc, overlayWait;
 
             if (show) {
                 extFunc = 'animationIn';
@@ -345,7 +345,7 @@
                 else $overlay[intFunc]();
             }
 
-            var overlayWait = setInterval(function () {
+            overlayWait = setInterval(function () {
                 //wait until animations finish
                 if ($timer.is(':animated') || $overlay.is(':animated') || $title.is(':animated'))
                     return;
@@ -481,8 +481,7 @@
 
         //handle nav control button click
         function navControlClick(e) {
-            var $this = $(this),
-                ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
+            var ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
 
             switch (ctrl) {
                 case 'slide-nav-back':
@@ -593,9 +592,9 @@
         //gets pertinent CSS attributes of an element
         //and returns an object containing them
         _getCss: function ($elm, attrs) {
-            var css = {};
+            var css = {}, i;
 
-            for (var i = 0; i < attrs.length; ++i) {
+            for (i = 0; i < attrs.length; ++i) {
                 css[attrs[i]] = $elm.css(attrs[i]);
             }
 
@@ -604,8 +603,8 @@
         //iterates through an object and returns the keys
         //optionally showing the private "_*" keys as well
         _getKeys: function (obj, showPrivate) {
-            var keys = [];
-            for (var key in obj) {
+            var keys = [], key;
+            for (key in obj) {
                 if (showPrivate || key.charAt(0) != '_')
                     keys.push(key);
             }

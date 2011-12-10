@@ -29,18 +29,25 @@
                 directions = ['left', 'topleft', 'top', 'topright', 'right', 'bottomright', 'bottom', 'bottomleft'],
                 slideKeys = ['this', 'next'];
 
+            //set randoms to a value
+            if (options.effect == 'random') options.effect = OmniSlide._getRandKey(api.transitions);
+            if (options.effect instanceof Array) options.effect = options.effect[OmniSlide._getRandKey(options.effect)];
+
+            if (options.easing == 'random') options.easing = OmniSlide._getRandKey($.easing);
+            if (options.easing instanceof Array) options.easing = options.easing[OmniSlide._getRandKey(options.easing)];
+
+            if (options.direction == 'random') options.direction = directions[OmniSlide._getRandKey(directions)];
+            if (options.direction instanceof Array) options.direction = options.direction[OmniSlide._getRandKey(options.direction)];
+
+            if (options.slide == 'random') options.slide = slideKeys[OmniSlide._getRandKey(slideKeys)];
+            if (options.slide instanceof Array) options.slide = options.slide[OmniSlide._getRandKey(options.slide)];
+
             //setup some reasonable defaults
             options.effect = options.effect || 'fade';
             options.easing = (!options.easing || !$.easing[options.easing]) ? 'linear' : options.easing;
             options.order = options.order || 'normal';
-            options.direction = options.direction || directions[1];
+            options.direction = options.direction || 'topleft';
             options.slide = options.slide || 'this';
-
-            //set randoms to a value
-            if (options.effect == 'random') options.effect = _getRandKey(api.transitions);
-            if (options.easing == 'random') options.easing = _getRandKey($.easing);
-            if (options.direction == 'random') options.direction = directions[_getRandKey(directions)];
-            if (options.slide == 'random') options.slide = slideKeys[_getRandKey(slideKeys)];
 
             //if transition doesn't exist warn them and default to fade
             if (!api.transitions[options.effect] || options.effect.charAt(0) == '_') {
@@ -126,8 +133,8 @@
                     //special case where we apply a '-=' or '+=' css
                     //we need to reverse that in the toCss
                     $.each(opt.css, function (key, val) {
-                        if (typeof(val) === 'string') {
-                            if(val.indexOf('-=') > -1)
+                        if (typeof (val) === 'string') {
+                            if (val.indexOf('-=') > -1)
                                 toCss[key] = val.replace('-=', '+=');
                             else if (val.indexOf('+=') > -1)
                                 toCss[key] = val.replace('+=', '-=');
@@ -232,23 +239,23 @@
         stripShrink: {
             css: { width: 0, height: 0 },
             delay: 100,
-            duration: 1000,
-            rows: 6,
+            duration: 800,
+            rows: 10,
             cols: 1
         },
         stripFadeHorizontal: {
             css: { opacity: 0 },
             delay: 250,
-            duration: 800,
-            rows: 6,
+            duration: 600,
+            rows: 10,
             cols: 1
         },
         stripFadeVertical: {
             css: { opacity: 0 },
             delay: 250,
-            duration: 800,
+            duration: 600,
             rows: 1,
-            cols: 6
+            cols: 10
         },
         boxFade: {
             css: { opacity: 0 },
@@ -275,15 +282,15 @@
             css: {
                 left: function (i, opt) {
                     var p;
-                    if(opt.direction.indexOf('left') > -1) p = '-=';
-                    else if(opt.direction.indexOf('right') > -1) p = '+=';
+                    if (opt.direction.indexOf('left') > -1) p = '-=';
+                    else if (opt.direction.indexOf('right') > -1) p = '+=';
 
                     return (p + ($(this).parent().width() + $(this).width() + 1) + 'px');
                 },
                 top: function (i, opt) {
                     var p;
-                    if(opt.direction.indexOf('top') > -1) p = '-=';
-                    else if(opt.direction.indexOf('bottom') > -1) p = '+=';
+                    if (opt.direction.indexOf('top') > -1) p = '-=';
+                    else if (opt.direction.indexOf('bottom') > -1) p = '+=';
 
                     return (p + ($(this).parent().height() + $(this).height() + 1) + 'px');
                 }
@@ -293,7 +300,7 @@
             rows: 3,
             cols: 6,
             direction: 'lefttop'
-        },
+        }
     };
 
     //        //Transition extension example
