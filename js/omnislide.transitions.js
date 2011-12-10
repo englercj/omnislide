@@ -234,13 +234,6 @@
     };
 
     win.OmniSlide.transitionAPI.transitions = {
-        fade: {
-            css: { opacity: 0 },
-            delay: 1,
-            duration: 600,
-            rows: 1,
-            cols: 1
-        },
         boxFade: {
             css: { opacity: 0 },
             delay: 100,
