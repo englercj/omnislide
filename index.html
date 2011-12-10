@@ -15,13 +15,13 @@
                     slides: '#slideInfo',
                     startSlide: 1,
                     transition: {
-                        type: 'strips',
-                        effect: 'wipe',
-                        easing: 'linear',
-                        direction: '',
-                        length: 2000,
-                        wait: 2000,
-                        animatorNum: 10
+                        effect: 'boxFadeShrink',     //the name of the transition to use
+                        easing: 'linear',   //the type of easing to use on animations (empty chooses random)
+
+                        wait: 5000,         //the wait time to show each slide 
+                        duration: 800,     //how long the transition animates
+                        rows: 3,
+                        cols: 6
                     },
                     timer: {
                         enabled: true,

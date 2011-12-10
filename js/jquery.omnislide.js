@@ -5,14 +5,13 @@
         slides: undefined,      //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 1,          //initial slide for the plugin to start displaying (0 based)
         transition: {
-            type: 'cut',        //the type of transition to use (empty string chooses a random type)
-            effect: '',         //specific transition effect (empty string chooses a random effect)
-            easing: '',         //the type of easing to use on transitions (empty string chooses a random easing)
-            direction: '',      //affects only certain effects direction (empty string defaults to 'right')
+            effect: 'fade',     //the name of the transition to use
+            easing: 'linear',   //the type of easing to use on animations (empty chooses random)
+
             wait: 5000,         //the wait time to show each slide 
-            length: 1000,       //how long the transition animates
-            rows: 10,     //the number of strips/boxes to use for creating advanced transitions
-            cols: 1
+            duration: 1000,     //how long the transition animates
+            rows: 3,            //the number of rows of boxes to use for animations
+            cols: 6             //the number of cols of boxes to use for animations
         },
         timer: {
             enabled: true,      //enable timer?
@@ -265,12 +264,13 @@
                 resetTimer();
 
                 //attempt to use advanced transitions
-                if (OmniSlide.transition) {
+                if (OmniSlide.transitionAPI) {
                     //activate the transition and show overlays on callback
-                    OmniSlide.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
+                    OmniSlide.transitionAPI.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
                         slideIndex = nextSlide;
                         storage.slideIndexes[guid] = slideIndex;
                         showOverlays(slideIndex, restartTimer);
+                        //TODO: Call after transition event
                     });
                 }
                 //otherwise default to simple built in transitions
