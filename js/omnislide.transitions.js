@@ -27,7 +27,7 @@
             var api = OmniSlide.transitionAPI,
                 options = $.extend(true, {}, opts),
                 directions = ['left', 'topleft', 'top', 'topright', 'right', 'bottomright', 'bottom', 'bottomleft'],
-                slideKeys = ['this', 'next'];
+                slideKeys = ['this', 'next'], orders = ['normal', 'reverse', 'random'];
 
             //set randoms to a value
             if (options.effect == 'random') options.effect = OmniSlide._getRandKey(api.transitions);
@@ -41,6 +41,9 @@
 
             if (options.slide == 'random') options.slide = slideKeys[OmniSlide._getRandKey(slideKeys)];
             if (options.slide instanceof Array) options.slide = options.slide[OmniSlide._getRandKey(options.slide)];
+
+            if (options.order == 'randomize') options.order = slideKeys[OmniSlide._getRandKey(orders)];
+            if (options.order instanceof Array) options.order = options.order[OmniSlide._getRandKey(options.order)];
 
             //setup some reasonable defaults
             options.effect = options.effect || 'fade';
@@ -123,7 +126,7 @@
                     $boxes = $boxes.not($box);
                 } else { $box = $boxes.eq(j); }
 
-                if (opt.slide == 'next') {
+                if (opt.slide == 'next' && opt.css) {
                     //if slide is next, then we need to reverse animation
                     //so store the current values of whatever css we are changing
                     //as the css to animate towards and then assign the specified 
@@ -232,7 +235,7 @@
         fade: {
             css: { opacity: 0 },
             delay: 1,
-            duration: 800,
+            duration: 600,
             rows: 1,
             cols: 1
         },
@@ -240,14 +243,14 @@
             css: { width: 0, height: 0 },
             delay: 100,
             duration: 800,
-            rows: 10,
+            rows: 8,
             cols: 1
         },
         stripFadeHorizontal: {
             css: { opacity: 0 },
             delay: 250,
             duration: 600,
-            rows: 10,
+            rows: 8,
             cols: 1
         },
         stripFadeVertical: {
@@ -255,7 +258,7 @@
             delay: 250,
             duration: 600,
             rows: 1,
-            cols: 10
+            cols: 8
         },
         boxFade: {
             css: { opacity: 0 },
