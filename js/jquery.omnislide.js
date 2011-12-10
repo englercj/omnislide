@@ -10,8 +10,12 @@
 
             wait: 5000,         //the wait time to show each slide 
             duration: 1000,     //how long the transition animates
+            delay: 100,         //the delay between the start of each box animation
             rows: 3,            //the number of rows of boxes to use for animations
-            cols: 6             //the number of cols of boxes to use for animations
+            cols: 6,            //the number of cols of boxes to use for animations
+            order: 'normal',    //order to animate the boxes (normal, reverse, or random)
+            css: {},            //the css to use as an ending point of the box animation
+            animations: false   //an animation function to use INSTEAD of $.animate (for complex animations)
         },
         timer: {
             enabled: true,      //enable timer?
