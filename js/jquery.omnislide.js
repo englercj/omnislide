@@ -586,6 +586,10 @@
 
             return {};
         },
+        _getRandKey: function (obj) {
+            var keys = OmniSlide._getKeys(obj);
+            return keys[OmniSlide._rand(keys.length)];
+        },
         //gets pertinent CSS attributes of an element
         //and returns an object containing them
         _getCss: function ($elm, attrs) {
