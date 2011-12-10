@@ -101,6 +101,8 @@
                 api._activate($slides.eq(next));
             }
 
+            OmniSlide.log(opt.effect, opt.order, opt.direction, opt.slide);
+
             //setup variables
             $boxes = boxes[0];
             $wrapper = boxes[1];
@@ -239,27 +241,6 @@
             rows: 1,
             cols: 1
         },
-        stripShrink: {
-            css: { width: 0, height: 0 },
-            delay: 100,
-            duration: 800,
-            rows: 8,
-            cols: 1
-        },
-        stripFadeHorizontal: {
-            css: { opacity: 0 },
-            delay: 250,
-            duration: 600,
-            rows: 8,
-            cols: 1
-        },
-        stripFadeVertical: {
-            css: { opacity: 0 },
-            delay: 250,
-            duration: 600,
-            rows: 1,
-            cols: 8
-        },
         boxFade: {
             css: { opacity: 0 },
             delay: 100,
@@ -287,6 +268,7 @@
                     var p;
                     if (opt.direction.indexOf('left') > -1) p = '-=';
                     else if (opt.direction.indexOf('right') > -1) p = '+=';
+                    else { return '-=0'; }
 
                     return (p + ($(this).parent().width() + $(this).width() + 1) + 'px');
                 },
@@ -294,6 +276,7 @@
                     var p;
                     if (opt.direction.indexOf('top') > -1) p = '-=';
                     else if (opt.direction.indexOf('bottom') > -1) p = '+=';
+                    else { return '-=0'; }
 
                     return (p + ($(this).parent().height() + $(this).height() + 1) + 'px');
                 }
