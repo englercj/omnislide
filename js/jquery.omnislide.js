@@ -9,13 +9,14 @@
             easing: 'linear',   //the type of easing to use on animations (empty chooses random)
 
             wait: 5000,         //the wait time to show each slide 
-            duration: 1000,     //how long the transition animates
-            delay: 100,         //the delay between the start of each box animation
-            rows: 3,            //the number of rows of boxes to use for animations
-            cols: 6,            //the number of cols of boxes to use for animations
+            //duration: 1000,     //how long the transition animates
+            //delay: 100,         //the delay between the start of each box animation
+            //rows: 3,            //the number of rows of boxes to use for animations
+            //cols: 6,            //the number of cols of boxes to use for animations
             order: 'normal',    //order to animate the boxes (normal, reverse, or random)
-            css: {},            //the css to use as an ending point of the box animation
-            animations: false   //an animation function to use INSTEAD of $.animate (for complex animations)
+            slide: 'this'       //slide to operate on, either 'this' slide or the 'next' slide (next reverses animation)
+            //css: {},            //the css to use as an ending point of the box animation
+            //animations: undefined//an animation function to use INSTEAD of $.animate (for complex animations)
         },
         timer: {
             enabled: true,      //enable timer?
@@ -261,6 +262,14 @@
             //otherwise move forward once
             else {
                 nextSlide = (slideIndex + 1) % slider.$slides.length;
+            }
+
+            if (slideIndex === -1) {
+                slideIndex = nextSlide;
+                slider.$slides.eq(slideIndex).show();
+                restartTimer();
+
+                return;
             }
 
             //hide the overlays and do transition on callback
@@ -576,6 +585,17 @@
             }
 
             return {};
+        },
+        //gets pertinent CSS attributes of an element
+        //and returns an object containing them
+        _getCss: function ($elm, attrs) {
+            var css = {};
+
+            for (var i = 0; i < attrs.length; ++i) {
+                css[attrs[i]] = $elm.css(attrs[i]);
+            }
+
+            return css;
         },
         //iterates through an object and returns the keys
         //optionally showing the private "_*" keys as well

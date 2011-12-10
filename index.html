@@ -15,11 +15,13 @@
                     slides: '#slideInfo',
                     startSlide: 1,
                     transition: {
-                        effect: 'boxFadeShrink',     //the name of the transition to use
-                        easing: 'linear',   //the type of easing to use on animations (empty chooses random)
+                        effect: 'boxFadeShrink',
+                        easing: 'linear',
+                        order: 'normal',
+                        slide: 'next',
 
-                        wait: 5000,         //the wait time to show each slide 
-                        duration: 800,     //how long the transition animates
+                        wait: 5000,
+                        duration: 800,
                         rows: 3,
                         cols: 6
                     },
