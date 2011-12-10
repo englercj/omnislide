@@ -55,8 +55,8 @@
             //if transition doesn't exist warn them and default to fade
             if (!api.transitions[options.effect] || options.effect.charAt(0) == '_') {
                 //no transition found
-                OmniSlide.warn('Unable to find transition "%s", using default transition: fade', options.effect);
-                options.effect = 'fade';
+                OmniSlide.warn('Unable to find transition "%s", using default transition: boxFade', options.effect);
+                options.effect = 'boxFade';
             }
 
             //if the options contain a css or animation function
@@ -100,8 +100,6 @@
                 api._deactivate($slides.eq(index));
                 api._activate($slides.eq(next));
             }
-
-            OmniSlide.log(opt.effect, opt.order, opt.direction, opt.slide);
 
             //setup variables
             $boxes = boxes[0];
