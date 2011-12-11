@@ -1,5 +1,8 @@
+////
+//Events:
+// - beforeTransition
+// - afterTransition
 (function ($, win, undefined) {
-    'use strict';
     //Default settings
     /////////////////////
     var defaults = {
@@ -9,13 +12,15 @@
             effect: 'fade',     //the name of the transition to use
             easing: 'linear',   //the type of easing to use on animations (empty chooses random)
 
-            wait: 5000,         //the wait time to show each slide 
+            wait: 5000          //the wait time to show each slide 
+            //these are commented out so the transition options will
+            //be used as defaults, if they exist
             //duration: 1000,     //how long the transition animates
             //delay: 100,         //the delay between the start of each box animation
             //rows: 3,            //the number of rows of boxes to use for animations
             //cols: 6,            //the number of cols of boxes to use for animations
-            order: 'normal',    //order to animate the boxes (normal, reverse, or random)
-            slide: 'this'       //slide to operate on, either 'this' slide or the 'next' slide (next reverses animation)
+            //order: 'normal',    //order to animate the boxes (normal, reverse, or random)
+            //slide: 'this'       //slide to operate on, either 'this' slide or the 'next' slide (next reverses animation)
             //css: {},            //the css to use as an ending point of the box animation
             //animations: undefined//an animation function to use INSTEAD of $.animate (for complex animations)
         },
@@ -94,11 +99,11 @@
         slideIndexes: []
     };
 
-//Main functionality
-//////////////////////
-function electricSlide(method) {
-    //variables
-    var settings = {},
+    //Main functionality
+    //////////////////////
+    function electricSlide(method) {
+        //variables
+        var settings = {},
         guid = OmniSlide.generateGuid(),
         slides = [],
         slider = {
@@ -115,124 +120,125 @@ function electricSlide(method) {
 
         slideIndex,
 
-    //plugin methods
+        //plugin methods
         methods = {
             //initialize the slider plugin
             init: function (options) {
                 return this.each(function () { //ensures chainability
                     if (options) $.extend(true, settings, defaults, options);
 
-                        //disable timer if plugin not installed
-                        if (!OmniSlide.timer) settings.timer.enabled = false;
+                    //disable timer if plugin not installed
+                    if (!OmniSlide.timer) settings.timer.enabled = false;
 
-                        //place guid where plugins can get at it
-                        settings.timer.guid = guid;
-                        settings.transition.guid = guid;
+                    //place guid where plugins can get at it
+                    settings.timer.guid = guid;
+                    settings.transition.guid = guid;
 
-                        //parse out the slides into usable data
-                        var parse = parseSlides();
-                        if (parse) {
-                            OmniSlide.error('Error while parsing slides: ', parse);
-                            OmniSlide.error('settings.slides: ', settings.slides);
+                    //parse out the slides into usable data
+                    var parse = parseSlides();
+                    if (parse) {
+                        OmniSlide.error('Error while parsing slides: ', parse);
+                        OmniSlide.error('settings.slides: ', settings.slides);
 
-                            return false;
-                        }
-                        //build out slider HTML
-                        buildSlider(this);
-
-                        //setup slide Index and start transition timer
-                        slideIndex = -1;
-                        moveSlide(settings.startSlide);
-
-                        //fade out the navigation
-                        slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
-
-                        //store for retreival by methods
-                        $(this).data('guid', guid);
-                        storage.settings[guid] = settings;
-                        storage.sliders[guid] = slider;
-
-                        return true;
-                    });
-                },
-                //changes an option to the given value
-                //and/or returns value given by that option
-                option: function (option, value) {
-                    if (!loadStorage(this)) return;
-
-                    if (typeof (option) === 'string') {
-                        var levels = option.split('.'),
-                            opt = settings,
-                            i = levels.length - 1,
-                            key;
-
-                        while (i--) {
-                            opt = opt[levels.shift()];
-                        }
-                        key = levels.shift();
-
-                        if (value === undefined) return opt[key];
-
-                        if (typeof (value) === 'object')
-                            $.extend(true, opt[key], value);
-                        else
-                            opt[key] = value;
+                        return false;
                     }
 
-                    return this;
-                },
-                //public wrapper around private moveSlide function
-                moveSlide: function (slide) {
-                    if (!loadStorage(this)) return;
+                    //build out slider HTML
+                    buildSlider(this);
 
-                    moveSlide(slide);
+                    //setup slide Index and start transition timer
+                    slideIndex = -1;
+                    moveSlide(settings.startSlide);
 
-                    return this;
-                },
-                pause: function () {
-                    pauseTimer();
+                    //fade out the navigation
+                    slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
 
-                    return this;
-                },
-                play: function () {
-                    playTimer();
+                    //store for retreival by methods
+                    $(this).data('guid', guid);
+                    storage.settings[guid] = settings;
+                    storage.sliders[guid] = slider;
 
-                    return this;
-                },
-                //public wrapper for animating the overlays
-                animateOverlays: function (show) {
-                    if (!loadStorage(this)) return;
+                    return true;
+                });
+            },
+            //changes an option to the given value
+            //and/or returns value given by that option
+            option: function (option, value) {
+                if (!loadStorage(this)) return;
 
-                    if (show) {
-                        showOverlays(slideIndex);
-                    } else {
-                        hideOverlays(slideIndex);
+                if (typeof (option) === 'string') {
+                    var levels = option.split('.'),
+                        opt = settings,
+                        i = levels.length - 1,
+                        key;
+
+                    while (i--) {
+                        opt = opt[levels.shift()];
                     }
+                    key = levels.shift();
 
-                    return this;
-                },
-                //reverses everything the initialization did
-                //should put a user back to the state they were in
-                //before calling this plugin
-                destroy: function () {
-                    if (!loadStorage(this)) return;
+                    if (value === undefined) return opt[key];
 
-                    //remove slider and show the dataElment if it was visible before
-                    slider.$wrapper.remove();
-                    if (slider.$dataElm.length > 0 && slider.dataElmVisible) slider.$dataElm.show();
-
-                    //reset & delete timer, GC should then pick it up
-                    slider.timer.reset();
-                    delete slider.timer;
-
-                    //reset core variables
-                    storage.settings[guid] = {};
-                    storage.sliders[guid] = {};
-                    storage.slideIndexes[guid] = 0;
-
-                    return this;
+                    if (typeof (value) === 'object')
+                        $.extend(true, opt[key], value);
+                    else
+                        opt[key] = value;
                 }
-            };
+
+                return this;
+            },
+            //public wrapper around private moveSlide function
+            moveSlide: function (slide) {
+                if (!loadStorage(this)) return;
+
+                moveSlide(slide);
+
+                return this;
+            },
+            pause: function () {
+                pauseTimer();
+
+                return this;
+            },
+            play: function () {
+                playTimer();
+
+                return this;
+            },
+            //public wrapper for animating the overlays
+            animateOverlays: function (show) {
+                if (!loadStorage(this)) return;
+
+                if (show) {
+                    showOverlays(slideIndex);
+                } else {
+                    hideOverlays(slideIndex);
+                }
+
+                return this;
+            },
+            //reverses everything the initialization did
+            //should put a user back to the state they were in
+            //before calling this plugin
+            destroy: function () {
+                if (!loadStorage(this)) return;
+
+                //remove slider and show the dataElment if it was visible before
+                slider.$wrapper.remove();
+                if (slider.$dataElm.length > 0 && slider.dataElmVisible) slider.$dataElm.show();
+
+                //reset & delete timer, GC should then pick it up
+                slider.timer.reset();
+                delete slider.timer;
+
+                //reset core variables
+                storage.settings[guid] = {};
+                storage.sliders[guid] = {};
+                storage.slideIndexes[guid] = 0;
+
+                return this;
+            }
+        };
 
         function loadStorage($elm) {
             guid = $elm.data('guid');
@@ -267,14 +273,16 @@ function electricSlide(method) {
             if (slideIndex === -1) {
                 slideIndex = nextSlide;
                 slider.$slides.eq(slideIndex).show();
-                restartTimer();
+                if (settings.timer.enabled) slider.timer.reset();
+                showOverlays(slideIndex, playTimer);
 
                 return;
             }
 
+            slider.$container.trigger('beforeTransition');
             //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
-                resetTimer();
+                if (settings.timer.enabled) slider.timer.reset();
 
                 //attempt to use advanced transitions
                 if (OmniSlide.transitionAPI) {
@@ -282,35 +290,22 @@ function electricSlide(method) {
                     OmniSlide.transitionAPI.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
                         slideIndex = nextSlide;
                         storage.slideIndexes[guid] = slideIndex;
-                        showOverlays(slideIndex, restartTimer);
-                        //TODO: Call after transition event
+                        showOverlays(slideIndex, playTimer);
+                        slider.$container.trigger('afterTransition');
                     });
                 }
-                //otherwise default to simple built in transitions
+                //otherwise default to simple built in transition
                 else {
-                    switch (settings.transition.type) {
-                        case 'cut':
-                            slider.$slides.eq(slideIndex).hide();
-                            slider.$slides.eq(slideIndex).removeClass('active');
-                            slider.$slides.eq(nextSlide).show();
-                            slider.$slides.eq(nextSlide).addClass('active');
+                    slider.$slides.eq(nextSlide).show();
+                    slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
+                        slider.$slides.eq(slideIndex).removeClass('active');
+                        slider.$slides.eq(nextSlide).addClass('active');
 
-                            slideIndex = nextSlide;
-                            storage.slideIndexes[guid] = slideIndex;
-                            restartTimer();
-                            break;
-                        case 'fade':
-                        default:
-                            slider.$slides.eq(nextSlide).show();
-                            slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
-                                slider.$slides.eq(slideIndex).removeClass('active');
-                                slider.$slides.eq(nextSlide).addClass('active');
-
-                                slideIndex = nextSlide;
-                                storage.slideIndexes[guid] = slideIndex;
-                                restartTimer();
-                            });
-                    }
+                        slideIndex = nextSlide;
+                        storage.slideIndexes[guid] = slideIndex;
+                        showOverlays(slideIndex, playTimer);
+                        slider.$container.trigger('afterTransition');
+                    });
                 }
             });
         }
@@ -361,39 +356,18 @@ function electricSlide(method) {
         function hideOverlays(i, cb) { return animateOverlays(i, false, cb); }
         function showOverlays(i, cb) { return animateOverlays(i, true, cb); }
 
-        //resets the timer and/or creates a new one if we dont have one
-        function resetTimer() {
-            //create and manage timer if they have plugin installed
-            if (settings.timer.enabled) {
-                if (!slider.timer)
-                    slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer,
-                                                    moveSlide, slider.$timer[0]);
-
-                slider.timer.reset();
-
-                return true;
-            }
-
-            return false;
-        }
-
-        //resets the timer and starts the tick loop
-        function restartTimer() {
-            if (resetTimer()) slider.timer.start();
-        }
-
         //pauses the timer with optional hard lock
         function pauseTimer(hard) {
-            slider.timer.stop();
+            if (slider.timer.stop() !== false)
+                slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
             if (hard) slider.timer.lock();
-            slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
         }
 
         //plays the timer optionaly a hard break of the lock
         function playTimer(hard) {
             if (hard) slider.timer.unlock();
-            slider.timer.start();
-            slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
+            if (slider.timer.start() !== false)
+                slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
         }
 
         //builds out the slider's HTML
@@ -425,8 +399,11 @@ function electricSlide(method) {
             }
 
             //create timer
-            if (settings.timer.enabled)
+            if (settings.timer.enabled) {
                 slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).appendTo(slider.$slider);
+                slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer,
+                                                    moveSlide, slider.$timer[0]);
+            }
 
             //create slides and thumbs
             $.each(slides, function (i, slide) {
@@ -453,30 +430,23 @@ function electricSlide(method) {
         //handle hovering in/out of the slide box
         function slideHover(e) {
             if (slider.timer && settings.timer.enabled) {
-                if (e.type == 'mouseenter' && settings.hoverPause) {
-                    pauseTimer();
-                } else if (e.type == 'mouseleave' && slider.timer.stopped) {
-                    playTimer();
-                }
+                if (e.type == 'mouseenter' && settings.hoverPause) pauseTimer();
+                else if (e.type == 'mouseleave' && slider.timer.stopped) playTimer();
             }
         }
 
         //handle hovering in/out of the naviation box
         function navHover(e) {
-            if (e.type == 'mouseenter') {
+            if (e.type == 'mouseenter') 
                 slider.$nav.stop().animate({ opacity: settings.navigation.opacity.focused });
-            } else if (e.type == 'mouseleave') {
+            else if (e.type == 'mouseleave') 
                 slider.$nav.stop().animate({ opacity: settings.navigation.opacity.blurred });
-            }
         }
 
         //handle hovering in/out of a navigation control
         function navControlHover(e) {
-            if (e.type == 'mouseenter') {
-                $(this).addClass('active');
-            } else if (e.type == 'mouseleave') {
-                $(this).removeClass('active');
-            }
+            if (e.type == 'mouseenter') $(this).addClass('active');
+            else if (e.type == 'mouseleave') $(this).removeClass('active');
         }
 
         //handle nav control button click
@@ -501,8 +471,7 @@ function electricSlide(method) {
 
         //parses the slide input into a normalized format
         function parseSlides() {
-            var data = settings.slides,
-                $data;
+            var data = settings.slides, $data;
 
             if (!data) return 'settings.slides is not defined!';
 
@@ -585,13 +554,13 @@ function electricSlide(method) {
 
             return {};
         },
-        _getRandKey: function (obj) {
-            var keys = OmniSlide._getKeys(obj);
-            return keys[OmniSlide._rand(keys.length)];
+        getRandKey: function (obj) {
+            var keys = OmniSlide.getKeys(obj);
+            return keys[OmniSlide.rand(keys.length)];
         },
         //gets pertinent CSS attributes of an element
         //and returns an object containing them
-        _getCss: function ($elm, attrs) {
+        getCss: function ($elm, attrs) {
             var css = {}, i;
 
             for (i = 0; i < attrs.length; ++i) {
@@ -602,7 +571,7 @@ function electricSlide(method) {
         },
         //iterates through an object and returns the keys
         //optionally showing the private "_*" keys as well
-        _getKeys: function (obj, showPrivate) {
+        getKeys: function (obj, showPrivate) {
             var keys = [], key;
             for (key in obj) {
                 if (showPrivate || key.charAt(0) != '_')
@@ -613,7 +582,7 @@ function electricSlide(method) {
         //generates a random number between 0 -> max
         //also a little more "random" than built in
         //Math.random() functionality
-        _rand: function (max) {
+        rand: function (max) {
             return ((Math.random() * 0x10000) | 0) % max;
         },
         //logging wrappers

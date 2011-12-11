@@ -30,20 +30,20 @@
                 slideKeys = ['this', 'next'], orders = ['normal', 'reverse', 'random'];
 
             //set randoms to a value
-            if (options.effect == 'random') options.effect = OmniSlide._getRandKey(api.transitions);
-            if (options.effect instanceof Array) options.effect = options.effect[OmniSlide._getRandKey(options.effect)];
+            if (options.effect == 'random') options.effect = OmniSlide.getRandKey(api.transitions);
+            if (options.effect instanceof Array) options.effect = options.effect[OmniSlide.getRandKey(options.effect)];
 
-            if (options.easing == 'random') options.easing = OmniSlide._getRandKey($.easing);
-            if (options.easing instanceof Array) options.easing = options.easing[OmniSlide._getRandKey(options.easing)];
+            if (options.easing == 'random') options.easing = OmniSlide.getRandKey($.easing);
+            if (options.easing instanceof Array) options.easing = options.easing[OmniSlide.getRandKey(options.easing)];
 
-            if (options.direction == 'random') options.direction = directions[OmniSlide._getRandKey(directions)];
-            if (options.direction instanceof Array) options.direction = options.direction[OmniSlide._getRandKey(options.direction)];
+            if (options.direction == 'random') options.direction = directions[OmniSlide.getRandKey(directions)];
+            if (options.direction instanceof Array) options.direction = options.direction[OmniSlide.getRandKey(options.direction)];
 
-            if (options.slide == 'random') options.slide = slideKeys[OmniSlide._getRandKey(slideKeys)];
-            if (options.slide instanceof Array) options.slide = options.slide[OmniSlide._getRandKey(options.slide)];
+            if (options.slide == 'random') options.slide = slideKeys[OmniSlide.getRandKey(slideKeys)];
+            if (options.slide instanceof Array) options.slide = options.slide[OmniSlide.getRandKey(options.slide)];
 
-            if (options.order == 'randomize') options.order = slideKeys[OmniSlide._getRandKey(orders)];
-            if (options.order instanceof Array) options.order = options.order[OmniSlide._getRandKey(options.order)];
+            if (options.order == 'randomize') options.order = slideKeys[OmniSlide.getRandKey(orders)];
+            if (options.order instanceof Array) options.order = options.order[OmniSlide.getRandKey(options.order)];
 
             //setup some reasonable defaults
             options.effect = options.effect || 'fade';
@@ -89,7 +89,7 @@
             $slide.hide().removeClass('active').css(OmniSlide.transitionAPI._css.slide);
         },
         _doTransition: function ($slides, index, next, opt, callback) {
-            var api = OmniSlide.transitionAPI, cssKeys = OmniSlide._getKeys(opt.css),
+            var api = OmniSlide.transitionAPI, cssKeys = OmniSlide.getKeys(opt.css),
                 boxes, $boxes, $wrapper, len, evalCss;
 
             if (opt.slide == 'next') {
@@ -121,7 +121,7 @@
                 var $box, toCss = opt.css, j = i;
                 if (opt.order == 'random') {
                     //select a random box and remove it from the elements to choose from
-                    j = OmniSlide._rand($boxes.length);
+                    j = OmniSlide.rand($boxes.length);
                     $box = $boxes.eq(j);
                     $boxes = $boxes.not($box);
                 } else { $box = $boxes.eq(j); }
@@ -131,7 +131,7 @@
                     //so store the current values of whatever css we are changing
                     //as the css to animate towards and then assign the specified 
                     //css to the box now
-                    toCss = OmniSlide._getCss($box, cssKeys);
+                    toCss = OmniSlide.getCss($box, cssKeys);
                     $box.css(opt.css);
                     //special case where we apply a '-=' or '+=' css
                     //we need to reverse that in the toCss
