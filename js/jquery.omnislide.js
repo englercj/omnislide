@@ -7,7 +7,7 @@
     /////////////////////
     var defaults = {
         slides: undefined,      //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
-        startSlide: 1,          //initial slide for the plugin to start displaying (0 based)
+        startSlide: 0,          //initial slide for the plugin to start displaying (0 based)
         transition: {
             effect: 'fade',     //the name of the transition to use
             easing: 'linear',   //the type of easing to use on animations (empty chooses random)
@@ -157,62 +157,47 @@
                     $(this).data('guid', guid);
                     storage.settings[guid] = settings;
                     storage.sliders[guid] = slider;
-
-                    return true;
                 });
             },
             //changes an option to the given value
             //and/or returns value given by that option
             option: function (option, value) {
-                if (!loadStorage(this)) return;
+                if (loadStorage(this)) {
+                    if (typeof (option) === 'string') {
+                        var levels = option.split('.'),
+                            opt = settings,
+                            i = levels.length - 1,
+                            key;
 
-                if (typeof (option) === 'string') {
-                    var levels = option.split('.'),
-                        opt = settings,
-                        i = levels.length - 1,
-                        key;
+                        while (i--) opt = opt[levels.shift()];
+                        key = levels.shift();
 
-                    while (i--) {
-                        opt = opt[levels.shift()];
+                        if (value === undefined) return opt[key];
+
+                        if (typeof (value) === 'object')
+                            $.extend(true, opt[key], value);
+                        else
+                            opt[key] = value;
                     }
-                    key = levels.shift();
-
-                    if (value === undefined) return opt[key];
-
-                    if (typeof (value) === 'object')
-                        $.extend(true, opt[key], value);
-                    else
-                        opt[key] = value;
                 }
 
                 return this;
             },
             //public wrapper around private moveSlide function
             moveSlide: function (slide) {
-                if (!loadStorage(this)) return;
-
-                moveSlide(slide);
+                if (loadStorage(this)) { moveSlide(slide); }
 
                 return this;
             },
-            pause: function () {
-                pauseTimer();
-
-                return this;
-            },
-            play: function () {
-                playTimer();
-
-                return this;
-            },
+            nextSlide: function () { return methods.moveSlide(); },
+            previousSlide: function () { return methods.moveSlide(true); },
+            pause: function () { pauseTimer(); return this; },
+            play: function () { playTimer(); return this; },
             //public wrapper for animating the overlays
             animateOverlays: function (show) {
-                if (!loadStorage(this)) return;
-
-                if (show) {
-                    showOverlays(slideIndex);
-                } else {
-                    hideOverlays(slideIndex);
+                if (loadStorage(this)) {
+                    if (show) showOverlays(slideIndex);
+                    else hideOverlays(slideIndex);
                 }
 
                 return this;
@@ -221,20 +206,20 @@
             //should put a user back to the state they were in
             //before calling this plugin
             destroy: function () {
-                if (!loadStorage(this)) return;
+                if (loadStorage(this)) {
+                    //remove slider and show the dataElment if it was visible before
+                    slider.$wrapper.remove();
+                    if (slider.dataElmVisible) slider.$dataElm.show();
 
-                //remove slider and show the dataElment if it was visible before
-                slider.$wrapper.remove();
-                if (slider.$dataElm.length > 0 && slider.dataElmVisible) slider.$dataElm.show();
+                    //reset & delete timer, GC should then pick it up
+                    slider.timer.reset();
+                    delete slider.timer;
 
-                //reset & delete timer, GC should then pick it up
-                slider.timer.reset();
-                delete slider.timer;
-
-                //reset core variables
-                storage.settings[guid] = {};
-                storage.sliders[guid] = {};
-                storage.slideIndexes[guid] = 0;
+                    //reset storage variables
+                    storage.settings[guid] = {};
+                    storage.sliders[guid] = {};
+                    storage.slideIndexes[guid] = 0;
+                }
 
                 return this;
             }
@@ -242,14 +227,15 @@
 
         function loadStorage($elm) {
             guid = $elm.data('guid');
-            settings = storage.settings[guid];
-            slider = storage.sliders[guid];
-            slideIndex = storage.slideIndexes[guid];
 
             if (!guid) {
                 OmniSlide.error('Unable to load from storage, element is not a slider: ', this);
                 return false;
             }
+
+            settings = storage.settings[guid];
+            slider = storage.sliders[guid];
+            slideIndex = storage.slideIndexes[guid];
 
             return true;
         }
@@ -258,17 +244,14 @@
             var nextSlide;
 
             //if number go to that slide
-            if (typeof (slide) === 'number') {
+            if (typeof (slide) === 'number')
                 nextSlide = (slide < slider.$slides.length && slide > -1) ? slide : 0;
-            }
             //true means move backwards once
-            else if (slide === true) {
+            else if (slide === true)
                 nextSlide = (slideIndex - 1 < 0) ? slider.$slides.length - 1 : slideIndex - 1;
-            }
             //otherwise move forward once
-            else {
+            else
                 nextSlide = (slideIndex + 1) % slider.$slides.length;
-            }
 
             if (slideIndex === -1) {
                 slideIndex = nextSlide;
@@ -401,8 +384,7 @@
             //create timer
             if (settings.timer.enabled) {
                 slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).appendTo(slider.$slider);
-                slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer,
-                                                    moveSlide, slider.$timer[0]);
+                slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
             }
 
             //create slides and thumbs
@@ -437,9 +419,9 @@
 
         //handle hovering in/out of the naviation box
         function navHover(e) {
-            if (e.type == 'mouseenter') 
+            if (e.type == 'mouseenter')
                 slider.$nav.stop().animate({ opacity: settings.navigation.opacity.focused });
-            else if (e.type == 'mouseleave') 
+            else if (e.type == 'mouseleave')
                 slider.$nav.stop().animate({ opacity: settings.navigation.opacity.blurred });
         }
 
@@ -454,18 +436,10 @@
             var ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
 
             switch (ctrl) {
-                case 'slide-nav-back':
-                    moveSlide(true);
-                    break;
-                case 'slide-nav-forward':
-                    moveSlide();
-                    break;
-                case 'slide-nav-play':
-                    playTimer(true);
-                    break;
-                case 'slide-nav-pause':
-                    pauseTimer(true);
-                    break;
+                case 'slide-nav-back':      moveSlide(true);    break;
+                case 'slide-nav-forward':   moveSlide();        break;
+                case 'slide-nav-play':      playTimer(true);    break;
+                case 'slide-nav-pause':     pauseTimer(true);   break;
             }
         }
 
@@ -488,6 +462,7 @@
                 //if its an object then it is either a DOM object,
                 //an xmlDocument, or a jQuery object. In any of these
                 //cases we need to just wrap it in a jQuery object
+                //(Wrapping a jQuery object again just clones it)
                 $data = $(data);
             }
 
@@ -544,7 +519,7 @@
 
     //build global object for use by plugins as utilities
     win.OmniSlide = {
-        version: 0.1,
+        version: 0.2,
         //general logging override to avoid errors
         _log: function (type, args) {
             if (win.console && console[type]) {

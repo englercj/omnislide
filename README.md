@@ -1,4 +1,4 @@
-OmniSlide (v0.1 BETA)
+OmniSlide (v0.2 BETA)
 =============
 OmniSlide is an amazing new slider being built to be a one-stop-shop for your slider needs. 
 This slider is meant to replace your need for any other slider by combining all the best
@@ -11,13 +11,13 @@ Features
 Here are some of the features that OmniSlide supports:
 
 * Image slideshows
-* HTML Content (__Coming Soon__)
+* HTML Content
 * HTML Titles and Overlays
 * Canvas timer (bar, circle, or ring styles)
 * Slide Navigation Controls
 * Dynamic Thumbnails (__Coming Soon__)
 * XML input support
-* Extensible Advanced Transitions (__WIP__)
+* Extensible Advanced Transitions
 * Flexible Theming Classes
 * And More!
 
