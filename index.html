@@ -6,6 +6,7 @@
         <link rel="stylesheet" type="text/css" href="css/omnislide.theme.base.css"/>
         
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
         <script src="js/jquery.omnislide.js"></script>
         <script src="js/omnislide.timer.js"></script>
         <script src="js/omnislide.transitions.js"></script>
@@ -16,8 +17,9 @@
                     startSlide: 1,
                     transition: {
                         effect: 'boxFly',
-                        order: 'randomize',
-                        direction: ['left', 'right', 'top', 'bottom'],
+                        order: 'normal',
+                        easing: 'easeOutBack',
+                        direction: 'top',
                         slide: 'next',
 
                         wait: 2000,
