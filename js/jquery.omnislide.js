@@ -341,15 +341,17 @@
 
         //pauses the timer with optional hard lock
         function pauseTimer(hard) {
-            if (slider.timer.stop() !== false)
+            if (slider.timer.stop() !== false && hard) {
                 slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
-            if (hard) slider.timer.lock();
+                slider.timer.lock();
+            }
         }
 
         //plays the timer optionaly a hard break of the lock
         function playTimer(hard) {
             if (hard) slider.timer.unlock();
-            if (slider.timer.start() !== false)
+
+            if (slider.timer.start() !== false && hard)
                 slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
         }
 
@@ -436,10 +438,10 @@
             var ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
 
             switch (ctrl) {
-                case 'slide-nav-back':      moveSlide(true);    break;
-                case 'slide-nav-forward':   moveSlide();        break;
-                case 'slide-nav-play':      playTimer(true);    break;
-                case 'slide-nav-pause':     pauseTimer(true);   break;
+                case 'slide-nav-back': moveSlide(true); break;
+                case 'slide-nav-forward': moveSlide(); break;
+                case 'slide-nav-play': playTimer(true); break;
+                case 'slide-nav-pause': pauseTimer(true); break;
             }
         }
 
