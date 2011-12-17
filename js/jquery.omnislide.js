@@ -9,20 +9,8 @@
         slides: undefined,      //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 0,          //initial slide for the plugin to start displaying (0 based)
         transition: {
-            effect: 'fade',     //the name of the transition to use
-            easing: 'linear',   //the type of easing to use on animations (empty chooses random)
-
-            wait: 5000          //the wait time to show each slide 
-            //these are commented out so the transition options will
-            //be used as defaults, if they exist
-            //duration: 1000,     //how long the transition animates
-            //delay: 100,         //the delay between the start of each box animation
-            //rows: 3,            //the number of rows of boxes to use for animations
-            //cols: 6,            //the number of cols of boxes to use for animations
-            //order: 'normal',    //order to animate the boxes (normal, reverse, or random)
-            //slide: 'this'       //slide to operate on, either 'this' slide or the 'next' slide (next reverses animation)
-            //css: {},            //the css to use as an ending point of the box animation
-            //animations: undefined//an animation function to use INSTEAD of $.animate (for complex animations)
+            duration: 1000,
+            wait: 2000          //the wait time to show each slide 
         },
         timer: {
             enabled: true,      //enable timer?
@@ -30,8 +18,8 @@
             width: 40,          //width of the timer
             border: 2,          //space between filled and empty colors on the timer
             colors: {
-                empty: 'rgba(30, 30, 30, 0.5)', //color to show on unfilled time
-                filled: '#FFF'  //color to show as ellapsed time
+                empty: 'rgba(30, 30, 30, 0.5)',     //color to show on unfilled time
+                filled: 'rgba(255, 255, 255, 0.8)'  //color to show as ellapsed time
             },
             refreshRate: 10,    //time in ms between redraws (lower is smoother, reccommend <50)
             ringWidth: 3,       //width of the timer ring (filled, so not including border)
@@ -49,7 +37,7 @@
         thumbs: {
             enabled: false,         //enable thumbnails?
             tooltip: true,          //show as tooltip
-            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
+            triggerTooltip: 'hover',//event to trigger showing tooltip (if true)
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
         title: {
@@ -280,7 +268,7 @@
                 //otherwise default to simple built in transition
                 else {
                     slider.$slides.eq(nextSlide).show();
-                    slider.$slides.eq(slideIndex).fadeOut(settings.transition.length, function () {
+                    slider.$slides.eq(slideIndex).fadeOut(settings.transition.duration, function () {
                         slider.$slides.eq(slideIndex).removeClass('active');
                         slider.$slides.eq(nextSlide).addClass('active');
 

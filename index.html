@@ -16,42 +16,19 @@
                     slides: '#slideInfo',
                     startSlide: 1,
                     transition: {
-                        effect: 'boxFly',
-                        order: 'normal',
-                        easing: 'easeOutBack',
-                        direction: 'top',
-                        slide: 'next',
-
-                        wait: 2000,
-                        duration: 800
+                        effect: 'boxFly'
                     },
                     timer: {
-                        enabled: true,
                         height: 8,
                         width: 200,
-                        border: 2,
-                        colors: {
-                            empty: 'rgba(30, 30, 30, 0.5)',
-                            filled: 'rgba(255, 255, 255, 0.9)'
-                        },
-                        refreshRate: 5,
-                        ringWidth: 4,
                         type: 'bar'
-                    },
-                    navigation: {
-                        enabled: true,
-                        opacity: {
-                            focused: 0.9,
-                            blurred: 0.1
-                        }
                     },
                     thumbs: {
                         enabled: true,
                         tooltip: false,
                         triggerTooltip: 'hover',
                         triggerSlide: 'dblclick'
-                    },
-                    hoverPause: true
+                    }
                 });
             });
 

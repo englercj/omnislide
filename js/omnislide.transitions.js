@@ -29,6 +29,19 @@
                 directions = ['left', 'topleft', 'top', 'topright', 'right', 'bottomright', 'bottom', 'bottomleft'],
                 slideKeys = ['this', 'next'], orders = ['normal', 'reverse', 'random'];
 
+            //if transition doesn't exist warn them and default to fade
+            if (!api.transitions[options.effect] || options.effect.charAt(0) == '_') {
+                //no transition found
+                OmniSlide.warn('Unable to find transition "%s", using default transition: boxFade', options.effect);
+                options.effect = 'boxFade';
+            }
+
+            //if the options contain a css or animation function
+            //then dont extend onto the api.transitions effect,
+            //just use theirs
+            if (!options.css && !options.animation)
+                options = $.extend(true, {}, api.transitions[options.effect], options);
+
             //set randoms to a value
             if (options.effect == 'random') options.effect = OmniSlide.getRandKey(api.transitions);
             if (options.effect instanceof Array) options.effect = options.effect[OmniSlide.getRandKey(options.effect)];
@@ -51,19 +64,6 @@
             options.order = options.order || 'normal';
             options.direction = options.direction || 'topleft';
             options.slide = options.slide || 'this';
-
-            //if transition doesn't exist warn them and default to fade
-            if (!api.transitions[options.effect] || options.effect.charAt(0) == '_') {
-                //no transition found
-                OmniSlide.warn('Unable to find transition "%s", using default transition: boxFade', options.effect);
-                options.effect = 'boxFade';
-            }
-
-            //if the options contain a css or animation function
-            //then dont extend onto the api.transitions effect,
-            //just use theirs
-            if (!options.css && !options.animation)
-                options = $.extend(true, {}, api.transitions[options.effect], options);
 
             return api._doTransition($slides, index, next, options, callback);
         },
@@ -237,21 +237,30 @@
             delay: 100,
             duration: 800,
             rows: 3,
-            cols: 6
+            cols: 6,
+            order: 'random',
+            easing: 'linear',
+            slide: 'this'
         },
         boxShrink: {
             css: { width: 0, height: 0 },
             delay: 100,
             duration: 800,
             rows: 3,
-            cols: 6
+            cols: 6,
+            order: 'normal',
+            easing: 'linear',
+            slide: 'this'
         },
         boxFadeShrink: {
             css: { opacity: 0, width: 0, height: 0 },
             delay: 100,
             duration: 800,
             rows: 3,
-            cols: 6
+            cols: 6,
+            order: 'normal',
+            easing: 'linear',
+            slide: 'this'
         },
         boxFly: {
             css: {
@@ -276,7 +285,10 @@
             duration: 1500,
             rows: 3,
             cols: 6,
-            direction: 'lefttop'
+            order: 'normal',
+            easing: 'easeOutBack',
+            slide: 'next',
+            direction: 'random'
         }
     };
 
@@ -289,18 +301,15 @@
     //                    //values here are overriden by values input to 
     //                    //the plugin so the values you put here are defaults
     //                    css: { opacity: 0 },
+    //                    delay: 1,
+    //                    duration: 1,
+    //                    rows: 1,
+    //                    cols: 1,
     //                    order: 'normal',
-    //                    delay: 0,
-    //                    duration: 0,
-    //                    rows: 1, 
-    //                    cols: 1
+    //                    easing: 'linear',
+    //                    slide: 'this'
     //                },
     //                advanced: {
-    //                    order: 'normal',
-    //                    delay: 100,
-    //                    duration: 1000,
-    //                    rows: 6, 
-    //                    cols: 6
     //                    //if your transition is more advanced than simple css
     //                    //manipulation you can specify an animation function
     //                    //to be called instead of the default $.animate(css)
@@ -317,7 +326,14 @@
     //                            //break the slider
     //                            if(callback) callback();
     //                        });
-    //                    }
+    //                    },
+    //                    delay: 100,
+    //                    duration: 1000,
+    //                    rows: 6, 
+    //                    cols: 6,
+    //                    order: 'normal',
+    //                    easing: 'linear',
+    //                    slide: 'this'
     //                }
     //            });
     //        })(jQuery, window);
