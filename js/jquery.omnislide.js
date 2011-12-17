@@ -37,7 +37,7 @@
         thumbs: {
             enabled: false,         //enable thumbnails?
             tooltip: true,          //show as tooltip
-            triggerTooltip: 'hover',//event to trigger showing tooltip (if true)
+            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
         title: {
@@ -265,18 +265,17 @@
                         slider.$container.trigger('afterTransition');
                     });
                 }
-                //otherwise default to simple built in transition
+                //otherwise default to simple built in cut
                 else {
                     slider.$slides.eq(nextSlide).show();
-                    slider.$slides.eq(slideIndex).fadeOut(settings.transition.duration, function () {
-                        slider.$slides.eq(slideIndex).removeClass('active');
-                        slider.$slides.eq(nextSlide).addClass('active');
+                    slider.$slides.eq(nextSlide).addClass('active');
+                    slider.$slides.eq(slideIndex).hide();
+                    slider.$slides.eq(slideIndex).removeClass('active');
 
-                        slideIndex = nextSlide;
-                        storage.slideIndexes[guid] = slideIndex;
-                        showOverlays(slideIndex, playTimer);
-                        slider.$container.trigger('afterTransition');
-                    });
+                    slideIndex = nextSlide;
+                    storage.slideIndexes[guid] = slideIndex;
+                    showOverlays(slideIndex, playTimer);
+                    slider.$container.trigger('afterTransition');
                 }
             });
         }
