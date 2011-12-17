@@ -286,55 +286,55 @@
             rows: 3,
             cols: 6,
             order: 'normal',
-            easing: 'easeOutBack',
+            easing: 'linear',
             slide: 'next',
             direction: 'random'
         }
     };
 
-    //        //Transition extension example
-    //        (function($, window, undefined) {
-    //            var api = OmniSlide.transitionAPI;
-    //
-    //            $.extend(api.transitions, {
-    //                cut: {
-    //                    //values here are overriden by values input to 
-    //                    //the plugin so the values you put here are defaults
-    //                    css: { opacity: 0 },
-    //                    delay: 1,
-    //                    duration: 1,
-    //                    rows: 1,
-    //                    cols: 1,
-    //                    order: 'normal',
-    //                    easing: 'linear',
-    //                    slide: 'this'
-    //                },
-    //                advanced: {
-    //                    //if your transition is more advanced than simple css
-    //                    //manipulation you can specify an animation function
-    //                    //to be called instead of the default $.animate(css)
-    //                    anim: function(opt, callback) {
-    //                        //the 'this' argument is the DOM element to manipulate
-    //
-    //                        //the opt variable passed is the transition options
-    //                        //object, which has been extended into this object
-    //                        //the 'advanced' object in this case
-    //                        $(this).animate(opt.css, opt.duration, opt.easing, function() {
-    //                            //always check if a callback was passed,
-    //                            //and if so be sure to call it after your 
-    //                            //animations complete. Not doing so will
-    //                            //break the slider
-    //                            if(callback) callback();
-    //                        });
-    //                    },
-    //                    delay: 100,
-    //                    duration: 1000,
-    //                    rows: 6, 
-    //                    cols: 6,
-    //                    order: 'normal',
-    //                    easing: 'linear',
-    //                    slide: 'this'
-    //                }
-    //            });
-    //        })(jQuery, window);
+//    //Transition extension example
+//    (function($, window, undefined) {
+//        var api = OmniSlide.transitionAPI;
+//    
+//        $.extend(api.transitions, {
+//            cut: {
+//                //values here are overriden by values input to 
+//                //the plugin so the values you put here are defaults
+//                css: { opacity: 0 },
+//                delay: 1,
+//                duration: 1,
+//                rows: 1,
+//                cols: 1,
+//                order: 'normal',
+//                easing: 'linear',
+//                slide: 'this'
+//            },
+//            advanced: {
+//                //if your transition is more advanced than simple css
+//                //manipulation you can specify an animation function
+//                //to be called instead of the default $.animate(css)
+//                anim: function(opt, callback) {
+//                    //the 'this' argument is the DOM element to manipulate
+//    
+//                    //the opt variable passed is the transition options
+//                    //object, which has been extended into this object
+//                    //the 'advanced' object in this case
+//                    $(this).animate(opt.css, opt.duration, opt.easing, function() {
+//                        //always check if a callback was passed,
+//                        //and if so be sure to call it after your 
+//                        //animations complete. Not doing so will
+//                        //break the slider
+//                        if(callback) callback();
+//                    });
+//                },
+//                delay: 100,
+//                duration: 1000,
+//                rows: 6, 
+//                cols: 6,
+//                order: 'normal',
+//                easing: 'linear',
+//                slide: 'this'
+//            }
+//        });
+//    })(jQuery, window);
 })(jQuery, window);
