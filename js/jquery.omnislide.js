@@ -296,6 +296,7 @@
             }
 
             if (settings.timer.enabled && $timer.length) {
+                slider.timer.stop();
                 if (settings.timer[extFunc]) settings.timer[extFunc].call($timer);
                 else slider.$timer[intFunc]();
             }
