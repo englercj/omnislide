@@ -9,7 +9,7 @@
         slides: undefined,      //pass either xml string, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 0,          //initial slide for the plugin to start displaying (0 based)
         transition: {
-            duration: 1000,
+            duration: 800,      //the duration of the animation for each box of the transition
             wait: 2000          //the wait time to show each slide 
         },
         timer: {
@@ -36,15 +36,18 @@
         },
         thumbs: {
             enabled: false,         //enable thumbnails?
-            tooltip: true,          //show as tooltip
-            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
+            tooltip: false,         //show as tooltip
+            titled: false,          //show slide title as well?
+            triggerTooltip: 'hover',//event to trigger showing tooltip (if true)
             triggerSlide: 'click'   //event to trigger changing to that slide
         },
         title: {
+            enabled: true,      //show title on the slide
             animationIn: null,  //custom animation to use for animating the title into the slide
             animationOut: null  //custom animation to use for animating the title out of the slide
         },
         overlay: {
+            enabled: true,      //show overlay on the slide
             animationIn: null,  //custom animation to use for animating the overlay into the slide
             animationOut: null  //custom animation to use for animating the overlay out of the slide
         },
@@ -299,20 +302,16 @@
                 intFunc = 'fadeOut';
             }
 
-            if (settings.timer.enabled && $timer.length) {
-                slider.timer.stop();
-                if (settings.timer[extFunc]) settings.timer[extFunc].call($timer);
-                else slider.$timer[intFunc]();
-            }
+            if (settings.timer.enabled) slider.timer.stop();
+            doAnimOverlay(settings.timer, $timer);
+            doAnimOverlay(settings.title, $title);
+            doAnimOverlay(settings.overlay, $overlay);
 
-            if ($title.length) {
-                if (settings.title[extFunc]) settings.title[extFunc].call($title);
-                else $title[intFunc]();
-            }
-
-            if ($overlay.length) {
-                if (settings.overlay[extFunc]) settings.overlay[extFunc].call($overlay);
-                else $overlay[intFunc]();
+            function doAnimOverlay(obj, $obj) {
+                if (obj.enabled && $obj.length) {
+                    if(obj[extFunc] && $.type(obj[extFunc]) === 'function') obj[extFunc].call($obj);
+                    else $obj[intFunc]();
+                }
             }
 
             overlayWait = setInterval(function () {
