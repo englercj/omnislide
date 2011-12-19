@@ -252,7 +252,6 @@
                 transitionCallback(nextSlide);
                 return;
             }
-
             //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
                 if (settings.timer.enabled) slider.timer.reset();
