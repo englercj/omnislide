@@ -24,6 +24,7 @@
             refreshRate: 10,    //time in ms between redraws (lower is smoother, reccommend <50)
             ringWidth: 3,       //width of the timer ring (filled, so not including border)
             type: 'ring',       //type of the timer; circle, ring, bar
+            animAsOverlay: true, //animate as overlay on slide (hide on transition, show on return)
             animationIn: null,  //custom animation to use for animating the timer into the slide
             animationOut: null  //custom animation to use for animating the timer out of the slide
         },
@@ -32,24 +33,33 @@
             opacity: {
                 focused: 1,     //the opacity to set on controls when focused
                 blurred: 0.1    //the opacity to set on controls when blurred
-            }
+            },
+            animAsOverlay: true, //animate as overlay on slide (hide on transition, show on return)
+            animationIn: null,  //custom animation to use for animating the navigation into the slide
+            animationOut: null  //custom animation to use for animating the navigation out of the slide
         },
         thumbs: {
             enabled: false,         //enable thumbnails?
-            tooltip: false,         //show as tooltip
-            titled: false,          //show slide title as well?
-            triggerTooltip: 'hover',//event to trigger showing tooltip (if true)
-            triggerSlide: 'click'   //event to trigger changing to that slide
+            showImage: false,       //show thumbnail image?
+            showTitle: false,       //show slide title?
+            tooltip: false,         //can be 'title', 'image', 'both', string content, DOM obj, $ obj, or function returning any of the previous
+            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
+            triggerSlide: 'click',  //event to trigger changing to that slide
+            animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
+            animationIn: null,      //custom animation to use for animating the navigation into the slide
+            animationOut: null      //custom animation to use for animating the navigation out of the slide
         },
         title: {
             enabled: true,      //show title on the slide
-            animationIn: null,  //custom animation to use for animating the title into the slide
-            animationOut: null  //custom animation to use for animating the title out of the slide
+            animAsOverlay: true, //animate as overlay on slide (hide on transition, show on return)
+            animationIn: false, //custom animation to use for animating the title into the slide
+            animationOut: false //custom animation to use for animating the title out of the slide
         },
         overlay: {
             enabled: true,      //show overlay on the slide
-            animationIn: null,  //custom animation to use for animating the overlay into the slide
-            animationOut: null  //custom animation to use for animating the overlay out of the slide
+            animAsOverlay: true, //animate as overlay on slide (hide on transition, show on return)
+            animationIn: false, //custom animation to use for animating the overlay into the slide
+            animationOut: false //custom animation to use for animating the overlay out of the slide
         },
         hoverPause: true        //pause when a user hovers into the current slide
     },
@@ -98,16 +108,17 @@
         guid = OmniSlide.generateGuid(),
         slides = [],
         slider = {
-            $container: {},
-            $wrapper: {},
-            $slider: {},
-            $nav: {},
-            $timer: {},
-            timer: null,
+            $container: $(),
+            $wrapper: $(),
+            $slider: $(),
+            $nav: $(),
+            $timer: $(),
+            $thumbs: $(),
             $slides: $(),
             $dataElm: $(),
             dataElmVisible: false,
-            sliding: false
+            sliding: false,
+            timer: false
         },
 
         slideIndex, sliding,
@@ -289,8 +300,7 @@
 
         //exec animations on slide overlays, custom or default
         function animateOverlays(i, show, cb) {
-            var $timer = slider.$timer,
-                $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
+            var $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
                 $title = slider.$slides.eq(i).find('h1.slide-title'),
                 extFunc, intFunc, overlayWait;
 
@@ -303,21 +313,25 @@
             }
 
             if (settings.timer.enabled) slider.timer.stop();
-            doAnimOverlay(settings.timer, $timer);
+
+
+            doAnimOverlay(settings.timer, slider.$timer);
+            doAnimOverlay(settings.navigation, slider.$nav);
+            doAnimOverlay(settings.thumbs, slider.$thumbs)
             doAnimOverlay(settings.title, $title);
             doAnimOverlay(settings.overlay, $overlay);
 
             function doAnimOverlay(obj, $obj) {
-                if (obj.enabled && $obj.length) {
-                    if(obj[extFunc] && $.type(obj[extFunc]) === 'function') obj[extFunc].call($obj);
+                if (obj.enabled && obj.animAsOverlay && $obj.length) {
+                    if (obj[extFunc] && $.type(obj[extFunc]) === 'function') obj[extFunc].call($obj);
                     else $obj[intFunc]();
                 }
             }
 
             overlayWait = setInterval(function () {
                 //wait until animations finish
-                if ($timer.is(':animated') || $overlay.is(':animated') || $title.is(':animated'))
-                    return;
+                if (slider.$timer.is(':animated') || slider.$nav.is(':animated') || slider.$thumbs.is(':animated') ||
+                    $overlay.is(':animated') || $title.is(':animated')) return;
 
                 //animations done
                 clearInterval(overlayWait);
@@ -397,7 +411,7 @@
                 slider.$slides = slider.$slides.add($slide.hide());
 
                 if (settings.thumbs.enabled) {
-                    //TODO: Create thumbnails
+                    slider.$thumbs = $();
                 }
             });
             slider.$slides.appendTo(slider.$slider);
