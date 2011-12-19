@@ -349,26 +349,23 @@
             slider.$container = $(container);
 
             //create wrapper
-            slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>').css(css.wrapper).appendTo(slider.$container);
+            slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>').css(css.wrapper)
+                .delegate('div.slide-box', 'hover', slideHover)
+                .delegate('div.slide-nav', 'hover', navHover)
+                .delegate('div.slide-nav-control', 'hover', navControlHover)
+                .delegate('div.slide-nav-control', 'click', navControlClick)
+                .appendTo(slider.$container);
 
             //create slider box
-            slider.$slider = $('<div class="slide-box"/>').hover(slideHover).css(css.box).appendTo(slider.$wrapper);
+            slider.$slider = $('<div class="slide-box"/>').css(css.box).appendTo(slider.$wrapper);
 
             //create navigation
             if (settings.navigation.enabled) {
-                slider.$nav = $('<div class="slide-nav"/>').hover(navHover).css(css.navigation).appendTo(slider.$slider);
-                slider.$nav.append(
-                    $('<div class="slide-nav-control slide-nav-back">&nbsp;</div>')
-                        .hover(navControlHover).click(navControlClick)
-                );
-                slider.$nav.append(
-                    $('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>')
-                        .hover(navControlHover).click(navControlClick)
-                );
-                slider.$nav.append(
-                    $('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>')
-                        .hover(navControlHover).click(navControlClick)
-                );
+                slider.$nav = $('<div class="slide-nav"/>').css(css.navigation).appendTo(slider.$slider);
+
+                slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
+                slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
+                slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
             }
 
             //create timer
