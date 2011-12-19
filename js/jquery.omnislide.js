@@ -6,7 +6,7 @@
     //Default settings
     /////////////////////
     var defaults = {
-        slides: undefined,      //pass either xmlData, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
+        slides: undefined,      //pass either xml string, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 0,          //initial slide for the plugin to start displaying (0 based)
         transition: {
             duration: 1000,
@@ -103,10 +103,11 @@
             timer: null,
             $slides: $(),
             $dataElm: $(),
-            dataElmVisible: false
+            dataElmVisible: false,
+            sliding: false
         },
 
-        slideIndex,
+        slideIndex, sliding,
 
         //plugin methods
         methods = {
@@ -229,6 +230,9 @@
         }
 
         function moveSlide(slide) {
+            if (slider.sliding) return false;
+
+            slider.sliding = true;
             var nextSlide;
 
             //if number go to that slide
@@ -241,16 +245,14 @@
             else
                 nextSlide = (slideIndex + 1) % slider.$slides.length;
 
-            if (slideIndex === -1) {
-                slideIndex = nextSlide;
-                slider.$slides.eq(slideIndex).show();
-                if (settings.timer.enabled) slider.timer.reset();
-                showOverlays(slideIndex, playTimer);
+            slider.$container.trigger('beforeTransition');
 
+            if (slideIndex === -1) {
+                slider.$slides.eq(nextSlide).show();
+                transitionCallback(nextSlide);
                 return;
             }
 
-            slider.$container.trigger('beforeTransition');
             //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
                 if (settings.timer.enabled) slider.timer.reset();
@@ -258,12 +260,8 @@
                 //attempt to use advanced transitions
                 if (OmniSlide.transitionAPI) {
                     //activate the transition and show overlays on callback
-                    OmniSlide.transitionAPI.transition(settings.transition, slider.$slides, slideIndex, nextSlide, function () {
-                        slideIndex = nextSlide;
-                        storage.slideIndexes[guid] = slideIndex;
-                        showOverlays(slideIndex, playTimer);
-                        slider.$container.trigger('afterTransition');
-                    });
+                    OmniSlide.transitionAPI.transition(settings.transition, slider.$slides,
+                        slideIndex, nextSlide, function () { transitionCallback(nextSlide); });
                 }
                 //otherwise default to simple built in cut
                 else {
@@ -272,12 +270,19 @@
                     slider.$slides.eq(slideIndex).hide();
                     slider.$slides.eq(slideIndex).removeClass('active');
 
-                    slideIndex = nextSlide;
-                    storage.slideIndexes[guid] = slideIndex;
-                    showOverlays(slideIndex, playTimer);
-                    slider.$container.trigger('afterTransition');
+                    transitionCallback(nextSlide);
                 }
             });
+
+            function transitionCallback(nextSlide) {
+                slideIndex = nextSlide;
+                storage.slideIndexes[guid] = slideIndex;
+                showOverlays(slideIndex, function () {
+                    slider.sliding = false;
+                    playTimer();
+                    slider.$container.trigger('afterTransition');
+                });
+            }
         }
 
         //exec animations on slide overlays, custom or default
@@ -329,6 +334,8 @@
 
         //pauses the timer with optional hard lock
         function pauseTimer(hard) {
+            if (slider.sliding) return false;
+
             if (slider.timer.stop() !== false && hard) {
                 slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
                 slider.timer.lock();
@@ -337,6 +344,8 @@
 
         //plays the timer optionaly a hard break of the lock
         function playTimer(hard) {
+            if (slider.sliding) return false;
+
             if (hard) slider.timer.unlock();
 
             if (slider.timer.start() !== false && hard)
