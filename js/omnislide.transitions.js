@@ -25,46 +25,20 @@
         transition: function (opts, $slides, index, next, callback) {
             //store vars locally for easier access and to lose references
             var api = OmniSlide.transitionAPI,
-                options = $.extend(true, {}, opts),
-                directions = ['left', 'topleft', 'top', 'topright', 'right', 'bottomright', 'bottom', 'bottomleft'],
-                slideKeys = ['this', 'next'], orders = ['normal', 'reverse', 'random'];
+                options = $.extend(true, {}, opts);
 
-            //if transition doesn't exist warn them and default to fade
-            if (!api.transitions[options.effect] || options.effect.charAt(0) == '_') {
-                //no transition found
-                OmniSlide.warn('Unable to find transition "%s", using default transition: boxFade', options.effect);
-                options.effect = 'boxFade';
-            }
+            //effect needs to be determined BEFORE we extend
+            api._setRandomIfInvalid(options, 'effect');
 
-            //if the options contain a css or animation function
-            //then dont extend onto the api.transitions effect,
-            //just use theirs
+            //if the options contain a css or animation function then dont 
+            //extend onto the api.transitions effect, just use theirs
             if (!options.css && !options.animation)
                 options = $.extend(true, {}, api.transitions[options.effect], options);
 
-            //set randoms to a value
-            if (options.effect == 'random') options.effect = OmniSlide.getRandKey(api.transitions);
-            if (options.effect instanceof Array) options.effect = options.effect[OmniSlide.getRandKey(options.effect)];
+            //This randomizes values if its an array, its 'random', or its undefined
+            for (key in api._validKeys) api._setRandomIfInvalid(options, key);
 
-            if (options.easing == 'random') options.easing = OmniSlide.getRandKey($.easing);
-            if (options.easing instanceof Array) options.easing = options.easing[OmniSlide.getRandKey(options.easing)];
-
-            if (options.direction == 'random') options.direction = directions[OmniSlide.getRandKey(directions)];
-            if (options.direction instanceof Array) options.direction = options.direction[OmniSlide.getRandKey(options.direction)];
-
-            if (options.slide == 'random') options.slide = slideKeys[OmniSlide.getRandKey(slideKeys)];
-            if (options.slide instanceof Array) options.slide = options.slide[OmniSlide.getRandKey(options.slide)];
-
-            if (options.order == 'randomize') options.order = slideKeys[OmniSlide.getRandKey(orders)];
-            if (options.order instanceof Array) options.order = options.order[OmniSlide.getRandKey(options.order)];
-
-            //setup some reasonable defaults
-            options.effect = options.effect || 'fade';
-            options.easing = (!options.easing || !$.easing[options.easing]) ? 'linear' : options.easing;
-            options.order = options.order || 'normal';
-            options.direction = options.direction || 'topleft';
-            options.slide = options.slide || 'this';
-
+            //run the transition
             return api._doTransition($slides, index, next, options, callback);
         },
         _css: {
@@ -82,11 +56,43 @@
             slide: { zIndex: 3 },
             activeSlide: { zIndex: 4 }
         },
+        _validKeys: {
+            easing: $.easing,
+            direction: ['left', 'topleft', 'top', 'topright', 'right', 'bottomright', 'bottom', 'bottomleft'],
+            slide: ['this', 'next'],
+            order: ['normal', 'reverse', 'randomized']//TODO: Implement spiral order
+        },
         _activate: function ($slide) {
             $slide.show().addClass('active').css(OmniSlide.transitionAPI._css.activeSlide);
         },
         _deactivate: function ($slide) {
             $slide.hide().removeClass('active').css(OmniSlide.transitionAPI._css.slide);
+        },
+        _setRandomIfInvalid: function (obj, key) {
+            var api = OmniSlide.transitionAPI,
+                vals = api._validKeys[key],
+                err;
+
+            //if its an array, get random value of that array
+            if (obj[key] instanceof Array) {
+                api._setToRandom(obj, key, obj[key]);
+            }
+            //if its 'random', randomize it
+            else if (obj[key] === 'random') {
+                api._setToRandom(obj, key, vals);
+            }
+            //if its an invalid value, randomize it, and warn them
+            else if (vals[obj[key]] === undefined || obj[key].charAt(0) === '_') {
+                err = 'Value "' + obj[key] + '" for option "' + key + '" is invalid. ';
+                api._setToRandom(obj, key, vals);
+                err += 'It has been assigned a random value (' + obj[key] + ').';
+            }
+
+            if (err) OmniSlide.warn(err);
+        },
+        _setToRandom: function (obj, key, vals) {
+            if (vals instanceof Array) obj[key] = vals[OmniSlide.getRandKey(vals)];
+            else obj[key] = OmniSlide.getRandKey(vals);
         },
         _doTransition: function ($slides, index, next, opt, callback) {
             var api = OmniSlide.transitionAPI, cssKeys = OmniSlide.getKeys(opt.css),
@@ -119,7 +125,7 @@
 
             for (var i = 0; i < len; ++i) {
                 var $box, toCss = opt.css, j = i;
-                if (opt.order == 'random') {
+                if (opt.order == 'randomized') {
                     //select a random box and remove it from the elements to choose from
                     j = OmniSlide.rand($boxes.length);
                     $box = $boxes.eq(j);
@@ -157,7 +163,7 @@
                         })
                         .dequeue('omnislide.transition');
                 } else {
-                    var j = (opt.order == 'random') ? $boxes.eq(0) : $boxes.eq(i);
+                    var j = (opt.order == 'randomized') ? $boxes.eq(0) : $boxes.eq(i);
                     $box.delay((opt.delay * i), 'omnislide.transition')
                         .queue('omnislide.transition', function (next) {
                             if (opt.animation && typeof (opt.animation) === 'function') {
@@ -235,7 +241,7 @@
         boxFade: {
             css: { opacity: 0 },
             delay: 100,
-            duration: 800,
+            duration: 600,
             rows: 3,
             cols: 6,
             order: 'random',
@@ -245,20 +251,20 @@
         boxShrink: {
             css: { width: 0, height: 0 },
             delay: 100,
-            duration: 800,
+            duration: 600,
             rows: 3,
             cols: 6,
-            order: 'normal',
+            order: 'random',
             easing: 'linear',
             slide: 'this'
         },
         boxFadeShrink: {
             css: { opacity: 0, width: 0, height: 0 },
             delay: 100,
-            duration: 800,
+            duration: 600,
             rows: 3,
             cols: 6,
-            order: 'normal',
+            order: 'random',
             easing: 'linear',
             slide: 'this'
         },
@@ -286,55 +292,55 @@
             rows: 3,
             cols: 6,
             order: 'normal',
-            easing: 'linear',
+            easing: 'easeInOutBack',
             slide: 'next',
             direction: 'random'
         }
     };
 
-//    //Transition extension example
-//    (function($, window, undefined) {
-//        var api = OmniSlide.transitionAPI;
-//    
-//        $.extend(api.transitions, {
-//            cut: {
-//                //values here are overriden by values input to 
-//                //the plugin so the values you put here are defaults
-//                css: { opacity: 0 },
-//                delay: 1,
-//                duration: 1,
-//                rows: 1,
-//                cols: 1,
-//                order: 'normal',
-//                easing: 'linear',
-//                slide: 'this'
-//            },
-//            advanced: {
-//                //if your transition is more advanced than simple css
-//                //manipulation you can specify an animation function
-//                //to be called instead of the default $.animate(css)
-//                anim: function(opt, callback) {
-//                    //the 'this' argument is the DOM element to manipulate
-//    
-//                    //the opt variable passed is the transition options
-//                    //object, which has been extended into this object
-//                    //the 'advanced' object in this case
-//                    $(this).animate(opt.css, opt.duration, opt.easing, function() {
-//                        //always check if a callback was passed,
-//                        //and if so be sure to call it after your 
-//                        //animations complete. Not doing so will
-//                        //break the slider
-//                        if(callback) callback();
-//                    });
-//                },
-//                delay: 100,
-//                duration: 1000,
-//                rows: 6, 
-//                cols: 6,
-//                order: 'normal',
-//                easing: 'linear',
-//                slide: 'this'
-//            }
-//        });
-//    })(jQuery, window);
+    //    //Transition extension example
+    //    (function($, window, undefined) {
+    //        var api = OmniSlide.transitionAPI;
+    //    
+    //        $.extend(api.transitions, {
+    //            cut: {
+    //                //values here are overriden by values input to 
+    //                //the plugin so the values you put here are defaults
+    //                css: { opacity: 0 },
+    //                delay: 1,
+    //                duration: 1,
+    //                rows: 1,
+    //                cols: 1,
+    //                order: 'normal',
+    //                easing: 'linear',
+    //                slide: 'this'
+    //            },
+    //            advanced: {
+    //                //if your transition is more advanced than simple css
+    //                //manipulation you can specify an animation function
+    //                //to be called instead of the default $.animate(css)
+    //                anim: function(opt, callback) {
+    //                    //the 'this' argument is the DOM element to manipulate
+    //    
+    //                    //the opt variable passed is the transition options
+    //                    //object, which has been extended into this object
+    //                    //the 'advanced' object in this case
+    //                    $(this).animate(opt.css, opt.duration, opt.easing, function() {
+    //                        //always check if a callback was passed,
+    //                        //and if so be sure to call it after your 
+    //                        //animations complete. Not doing so will
+    //                        //break the slider
+    //                        if(callback) callback();
+    //                    });
+    //                },
+    //                delay: 100,
+    //                duration: 1000,
+    //                rows: 6, 
+    //                cols: 6,
+    //                order: 'normal',
+    //                easing: 'linear',
+    //                slide: 'this'
+    //            }
+    //        });
+    //    })(jQuery, window);
 })(jQuery, window);
