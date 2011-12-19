@@ -28,7 +28,7 @@
                 options = $.extend(true, {}, opts);
 
             //effect needs to be determined BEFORE we extend
-            api._setRandomIfInvalid(options, 'effect');
+            api._setRandomIfInvalid(options, 'effect', api.transitions);
 
             //if the options contain a css or animation function then dont 
             //extend onto the api.transitions effect, just use theirs
@@ -68,30 +68,39 @@
         _deactivate: function ($slide) {
             $slide.hide().removeClass('active').css(OmniSlide.transitionAPI._css.slide);
         },
-        _setRandomIfInvalid: function (obj, key) {
+        _setRandomIfInvalid: function (obj, key, vals) {
             var api = OmniSlide.transitionAPI,
-                vals = api._validKeys[key],
                 err;
 
+            vals = vals || api._validKeys[key];
+
             //if its an array, get random value of that array
-            if (obj[key] instanceof Array) {
+            //special case
+            if ($.type(obj[key]) === 'array') {
                 api._setToRandom(obj, key, obj[key]);
             }
             //if its 'random', randomize it
-            else if (obj[key] === 'random') {
+            else if (obj[key] === 'random' || obj[key] === undefined) {
+                api._setToRandom(obj, key, vals);
+            }
+            //if its private, randomize it, and warn them
+            else if (obj[key].charAt(0) == '_') {
+                err = 'Value "' + obj[key] + '" for option "' + key + '" is private. ';
                 api._setToRandom(obj, key, vals);
             }
             //if its an invalid value, randomize it, and warn them
-            else if (vals[obj[key]] === undefined || obj[key].charAt(0) === '_') {
-                err = 'Value "' + obj[key] + '" for option "' + key + '" is invalid. ';
+            else if (($.type(vals) === 'array' && $.inArray(obj[key], vals) === -1) || ($.type(vals) === 'object' && [obj[key]] === undefined)) {
+                err = 'Value "' + obj[key] + '" for option "' + key + '" doesn\'t exist. ';
                 api._setToRandom(obj, key, vals);
-                err += 'It has been assigned a random value (' + obj[key] + ').';
             }
 
-            if (err) OmniSlide.warn(err);
+            if (err) {
+                err += 'It has been assigned a random value (' + obj[key] + ').';
+                OmniSlide.warn(err);
+            }
         },
         _setToRandom: function (obj, key, vals) {
-            if (vals instanceof Array) obj[key] = vals[OmniSlide.getRandKey(vals)];
+            if ($.type(vals) === 'array') obj[key] = vals[OmniSlide.getRandKey(vals)];
             else obj[key] = OmniSlide.getRandKey(vals);
         },
         _doTransition: function ($slides, index, next, opt, callback) {
@@ -118,8 +127,8 @@
 
             //check if any css functions need to be evaluated
             $.each(opt.css, function (key, val) {
-                if (typeof (val) === 'function') {
-                    opt.css[key] = opt.css[key].call($box, j, opt);
+                if ($.type(val) === 'function') {
+                    opt.css[key] = val.call($box, j, opt);
                 }
             });
 
@@ -142,7 +151,7 @@
                     //special case where we apply a '-=' or '+=' css
                     //we need to reverse that in the toCss
                     $.each(opt.css, function (key, val) {
-                        if (typeof (val) === 'string') {
+                        if ($.type(val) === 'string') {
                             if (val.indexOf('-=') > -1)
                                 toCss[key] = val.replace('-=', '+=');
                             else if (val.indexOf('+=') > -1)
@@ -154,7 +163,7 @@
                 if (i < len - 1) {
                     $box.delay((opt.delay * i), 'omnislide.transition')
                         .queue('omnislide.transition', function (next) {
-                            if (opt.animation && typeof (opt.animation) === 'function') {
+                            if (opt.animation && $.type(opt.animation) === 'function') {
                                 opt.animation.call(this, toCss, opt);
                             } else {
                                 $(this).animate(toCss, opt.duration, opt.easing);
@@ -163,10 +172,10 @@
                         })
                         .dequeue('omnislide.transition');
                 } else {
-                    var j = (opt.order == 'randomized') ? $boxes.eq(0) : $boxes.eq(i);
+                    j = (opt.order == 'randomized') ? $boxes.eq(0) : $boxes.eq(i);
                     $box.delay((opt.delay * i), 'omnislide.transition')
                         .queue('omnislide.transition', function (next) {
-                            if (opt.animation && typeof (opt.animation) === 'function') {
+                            if (opt.animation && $.type(opt.animation) === 'function') {
                                 opt.animation.call(this, opt, transitionDone);
                             } else {
                                 $(this).animate(toCss, opt.duration, opt.easing, transitionDone);
