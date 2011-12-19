@@ -6,37 +6,37 @@
     //Default settings
     /////////////////////
     var defaults = {
-        slides: undefined,      //pass either xml string, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
-        startSlide: 0,          //initial slide for the plugin to start displaying (0 based)
+        slides: undefined,          //pass either xml string, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
+        startSlide: 0,              //initial slide for the plugin to start displaying (0 based)
         transition: {
-            duration: 800,      //the duration of the animation for each box of the transition
-            wait: 2000          //the wait time to show each slide 
+            duration: 800,          //the duration of the animation for each box of the transition
+            wait: 2000              //the wait time to show each slide 
         },
         timer: {
-            enabled: true,      //enable timer?
-            height: 40,         //height of the timer
-            width: 40,          //width of the timer
-            border: 2,          //space between filled and empty colors on the timer
+            enabled: true,          //enable timer?
+            height: 40,             //height of the timer
+            width: 40,              //width of the timer
+            border: 2,              //space between filled and empty colors on the timer
             colors: {
                 empty: 'rgba(30, 30, 30, 0.5)',     //color to show on unfilled time
                 filled: 'rgba(255, 255, 255, 0.8)'  //color to show as ellapsed time
             },
-            refreshRate: 10,    //time in ms between redraws (lower is smoother, reccommend <50)
-            ringWidth: 3,       //width of the timer ring (filled, so not including border)
-            type: 'ring',       //type of the timer; circle, ring, bar
-            animAsOverlay: true, //animate as overlay on slide (hide on transition, show on return)
-            animationIn: null,  //custom animation to use for animating the timer into the slide
-            animationOut: null  //custom animation to use for animating the timer out of the slide
+            refreshRate: 10,        //time in ms between redraws (lower is smoother, reccommend <50)
+            ringWidth: 3,           //width of the timer ring (filled, so not including border)
+            type: 'ring',           //type of the timer; circle, ring, bar
+            animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
+            animationIn: null,      //custom animation to use for animating the timer into the slide
+            animationOut: null      //custom animation to use for animating the timer out of the slide
         },
         navigation: {
             enabled: true,
             opacity: {
-                focused: 1,     //the opacity to set on controls when focused
-                blurred: 0.1    //the opacity to set on controls when blurred
+                focused: 1,         //the opacity to set on controls when focused
+                blurred: 0.1        //the opacity to set on controls when blurred
             },
-            animAsOverlay: true, //animate as overlay on slide (hide on transition, show on return)
-            animationIn: null,  //custom animation to use for animating the navigation into the slide
-            animationOut: null  //custom animation to use for animating the navigation out of the slide
+            animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
+            animationIn: null,      //custom animation to use for animating the navigation into the slide
+            animationOut: null      //custom animation to use for animating the navigation out of the slide
         },
         thumbs: {
             enabled: false,         //enable thumbnails?
@@ -45,23 +45,23 @@
             tooltip: false,         //can be 'title', 'image', 'both', string content, DOM obj, $ obj, or function returning any of the previous
             triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
             triggerSlide: 'click',  //event to trigger changing to that slide
-            animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
+            animAsOverlay: false,   //animate as overlay on slide (hide on transition, show on return)
             animationIn: null,      //custom animation to use for animating the navigation into the slide
             animationOut: null      //custom animation to use for animating the navigation out of the slide
         },
         title: {
-            enabled: true,      //show title on the slide
-            animAsOverlay: true, //animate as overlay on slide (hide on transition, show on return)
-            animationIn: false, //custom animation to use for animating the title into the slide
-            animationOut: false //custom animation to use for animating the title out of the slide
+            enabled: true,          //show title on the slide
+            animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
+            animationIn: false,     //custom animation to use for animating the title into the slide
+            animationOut: false     //custom animation to use for animating the title out of the slide
         },
         overlay: {
-            enabled: true,      //show overlay on the slide
-            animAsOverlay: true, //animate as overlay on slide (hide on transition, show on return)
-            animationIn: false, //custom animation to use for animating the overlay into the slide
-            animationOut: false //custom animation to use for animating the overlay out of the slide
+            enabled: true,          //show overlay on the slide
+            animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
+            animationIn: false,     //custom animation to use for animating the overlay into the slide
+            animationOut: false     //custom animation to use for animating the overlay out of the slide
         },
-        hoverPause: true        //pause when a user hovers into the current slide
+        hoverPause: true            //pause when a user hovers into the current slide
     },
     //This was in the CSS theme file as classes, but moved to inline
     //to reduce chance of human error in and to reduce size of, the theme file.
