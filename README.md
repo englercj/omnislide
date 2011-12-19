@@ -1,4 +1,4 @@
-OmniSlide (v0.2 BETA)
+OmniSlide (v0.5 BETA)
 =============
 OmniSlide is an amazing new slider being built to be a one-stop-shop for your slider needs. 
 This slider is meant to replace your need for any other slider by combining all the best
@@ -120,7 +120,7 @@ page to the state it was in before I initialized the slider:
 ~~~~~~
 
 More advanced usage examples can be found in the 
-[Advanced Usage](https://github.com/englercj/OmniSlide/wiki/Advanced-Usage) Documentation
+[Advanced Usage](#) Documentation
 
 Transitions
 -----------
@@ -129,13 +129,15 @@ Transitions are specified using the `transition` option when instantiating the p
 the `transition` variable on-the-fly using 
 
 ~~~~~ javascript
-	$('#slider').omnislide('option', 'transition', { type: 'fade', effect: 'full' });
+	$('#slider').omnislide('option', 'transition', { effect: 'boxFade' });
+	//OR
+	$('#slider').omnislide('option', 'transition.effect', 'boxFade');
 ~~~~~~
 
 You can use a custom transition effect by setting `transition.type` to `'custom'` and providing an
 animation function in the `transition.effect` option. Another option is to package your custom transitions
 into a transition plugin, to be then used by the plugin. Documentation on the subject can be found on the
-[Transition API](https://github.com/englercj/OmniSlide/wiki/Transition-API) Wiki page.
+[Transition API](#) Wiki page.
 
 Theming
 -------
@@ -154,7 +156,4 @@ Notes
 -----
 
 * To use custom transitions, or to extend the built-in transitions you must include `js/omnislide.transitions.js`
-* Currently only image slideshows work with advanced transitions (working on HTML support)
-* The nav controlls are _really_ buggy right now. Need to rewrite their functionality.
-* HTML Content is completely untested.
 * Slider has only been tested _minimally_ in FF 8.0 and Chrome 15.0
