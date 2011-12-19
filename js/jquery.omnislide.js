@@ -194,8 +194,8 @@
             },
             nextSlide: function () { return methods.moveSlide(); },
             previousSlide: function () { return methods.moveSlide(true); },
-            pause: function () { pauseTimer(); return this; },
-            play: function () { playTimer(); return this; },
+            pause: function () { pauseTimer(true); return this; },
+            play: function () { playTimer(true); return this; },
             //public wrapper for animating the overlays
             animateOverlays: function (show) {
                 if (loadStorage(this)) {
