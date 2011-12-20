@@ -166,7 +166,7 @@
             //and/or returns value given by that option
             option: function (option, value) {
                 if (loadStorage(this)) {
-                    if (typeof (option) === 'string') {
+                    if ($.type(option) === 'string') {
                         var levels = option.split('.'),
                             opt = settings,
                             i = levels.length - 1,
@@ -177,7 +177,7 @@
 
                         if (value === undefined) return opt[key];
 
-                        if (typeof (value) === 'object')
+                        if ($.isPlainObject(value))
                             $.extend(true, opt[key], value);
                         else
                             opt[key] = value;
@@ -250,7 +250,7 @@
             var nextSlide;
 
             //if number go to that slide
-            if (typeof (slide) === 'number')
+            if ($.isNumeric(slide))
                 nextSlide = (slide < slider.$slides.length && slide > -1) ? slide : 0;
             //true means move backwards once
             else if (slide === true)
@@ -323,7 +323,7 @@
 
             function doAnimOverlay(obj, $obj) {
                 if (obj.enabled && obj.animAsOverlay && $obj.length) {
-                    if (obj[extFunc] && $.type(obj[extFunc]) === 'function') obj[extFunc].call($obj);
+                    if (obj[extFunc] && $.isFunction(obj[extFunc])) obj[extFunc].call($obj);
                     else $obj[intFunc]();
                 }
             }
@@ -512,7 +512,7 @@
         //method calling
         if (methods[method]) {
             return methods[method].apply(this, [].slice.call(arguments, 1));
-        } else if (typeof method === 'object' || !method) {
+        } else if (!method || $.type(method) === 'object') {
             return methods.init.apply(this, arguments);
         } else {
             $.error('Method "' + method + '" does not exist in jQuery.slide');

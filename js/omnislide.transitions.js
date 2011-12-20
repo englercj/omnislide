@@ -76,7 +76,7 @@
 
             //if its an array, get random value of that array
             //special case
-            if ($.type(obj[key]) === 'array') {
+            if ($.isArray(obj[key])) {
                 api._setToRandom(obj, key, obj[key]);
             }
             //if its 'random', randomize it
@@ -89,7 +89,7 @@
                 api._setToRandom(obj, key, vals);
             }
             //if its an invalid value, randomize it, and warn them
-            else if (($.type(vals) === 'array' && $.inArray(obj[key], vals) === -1) || ($.type(vals) === 'object' && [obj[key]] === undefined)) {
+            else if (($.isArray(vals) && $.inArray(obj[key], vals) === -1) || ($.isPlainObject(vals) && [obj[key]] === undefined)) {
                 err = 'Value "' + obj[key] + '" for option "' + key + '" doesn\'t exist. ';
                 api._setToRandom(obj, key, vals);
             }
@@ -100,7 +100,7 @@
             }
         },
         _setToRandom: function (obj, key, vals) {
-            if ($.type(vals) === 'array') obj[key] = vals[OmniSlide.getRandKey(vals)];
+            if ($.isArray(vals)) obj[key] = vals[OmniSlide.getRandKey(vals)];
             else obj[key] = OmniSlide.getRandKey(vals);
         },
         _doTransition: function ($slides, index, next, opt, callback) {
@@ -127,7 +127,7 @@
 
             //check if any css functions need to be evaluated
             $.each(opt.css, function (key, val) {
-                if ($.type(val) === 'function') {
+                if ($.isFunction(val)) {
                     opt.css[key] = val.call($box, j, opt);
                 }
             });
@@ -163,7 +163,7 @@
                 if (i < len - 1) {
                     $box.delay((opt.delay * i), 'omnislide.transition')
                         .queue('omnislide.transition', function (next) {
-                            if (opt.animation && $.type(opt.animation) === 'function') {
+                            if (opt.animation && $.isFunction(opt.animation)) {
                                 opt.animation.call(this, toCss, opt);
                             } else {
                                 $(this).animate(toCss, opt.duration, opt.easing);
@@ -175,7 +175,7 @@
                     j = (opt.order == 'randomized') ? $boxes.eq(0) : $boxes.eq(i);
                     $box.delay((opt.delay * i), 'omnislide.transition')
                         .queue('omnislide.transition', function (next) {
-                            if (opt.animation && $.type(opt.animation) === 'function') {
+                            if (opt.animation && $.isFunction(opt.animation)) {
                                 opt.animation.call(this, opt, transitionDone);
                             } else {
                                 $(this).animate(toCss, opt.duration, opt.easing, transitionDone);
