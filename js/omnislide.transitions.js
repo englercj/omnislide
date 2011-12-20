@@ -249,33 +249,33 @@
     win.OmniSlide.transitionAPI.transitions = {
         boxFade: {
             css: { opacity: 0 },
-            delay: 100,
-            duration: 600,
+            delay: 75,
+            duration: 800,
             rows: 3,
             cols: 6,
             order: 'random',
             easing: 'linear',
-            slide: 'this'
+            slide: 'random'
         },
         boxShrink: {
             css: { width: 0, height: 0 },
-            delay: 100,
-            duration: 600,
+            delay: 75,
+            duration: 800,
             rows: 3,
             cols: 6,
             order: 'random',
             easing: 'linear',
-            slide: 'this'
+            slide: 'random'
         },
         boxFadeShrink: {
             css: { opacity: 0, width: 0, height: 0 },
-            delay: 100,
-            duration: 600,
+            delay: 75,
+            duration: 800,
             rows: 3,
             cols: 6,
             order: 'random',
             easing: 'linear',
-            slide: 'this'
+            slide: 'random'
         },
         boxFly: {
             css: {
