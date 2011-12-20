@@ -247,7 +247,7 @@
     };
 
     win.OmniSlide.transitionAPI.transitions = {
-        boxFade: {
+        fade: {
             css: { opacity: 0 },
             delay: 75,
             duration: 800,
@@ -257,7 +257,7 @@
             easing: 'linear',
             slide: 'random'
         },
-        boxShrink: {
+        shrink: {
             css: { width: 0, height: 0 },
             delay: 75,
             duration: 800,
@@ -267,7 +267,7 @@
             easing: 'linear',
             slide: 'random'
         },
-        boxFadeShrink: {
+        fadeShrink: {
             css: { opacity: 0, width: 0, height: 0 },
             delay: 75,
             duration: 800,
@@ -277,7 +277,17 @@
             easing: 'linear',
             slide: 'random'
         },
-        boxFly: {
+        blinds: {
+            css: { height: 0 },
+            delay: 1,
+            duration: 800,
+            rows: 8,
+            cols: 1,
+            order: 'normal',
+            easing: 'linear',
+            slide: 'random'
+        },
+        fly: {
             css: {
                 left: function (i, opt) {
                     var p;
