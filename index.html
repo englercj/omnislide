@@ -10,21 +10,15 @@
         <script src="js/jquery.omnislide.js"></script>
         <script src="js/omnislide.timer.js"></script>
         <script src="js/omnislide.transitionapi.js"></script>
+        <script src="js/omnislide.transitions.js"></script>
         <script>
             $(function () {
                 $('#sliderUl').OmniSlide({
                     slides: '#slideInfo',
                     startSlide: 1,
                     transition: {
-                        effect: 'fly',
-                        direction: ['left', 'right'],
-                        slide: 'next',
-                        order: 'normal',
-                        easing: 'linear',
-                        rows: 5,
-                        cols: 1,
-                        duration: 1500,
-                        delay: 150
+                        effect: 'evaporate',
+                        slide: 'random'
                     },
                     timer: {
                         height: 8,

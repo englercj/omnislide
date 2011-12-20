@@ -130,6 +130,8 @@
                 }
             });
 
+            OmniSlide.log(opt.effect, opt);
+
             for (var i = 0; i < len; ++i) {
                 var $box, toCss = opt.css, j = i;
                 if (opt.order == 'randomized') {
@@ -174,7 +176,7 @@
                     $box.delay((opt.delay * i), 'omnislide.transition')
                         .queue('omnislide.transition', function (next) {
                             if (opt.animation && $.isFunction(opt.animation)) {
-                                opt.animation.call(this, opt, transitionDone);
+                                opt.animation.call(this, toCss, opt, transitionDone);
                             } else {
                                 $(this).animate(toCss, opt.duration, opt.easing, transitionDone);
                             }
@@ -245,57 +247,43 @@
     };
 
     win.OmniSlide.transitionAPI.transitions = {
-        fade: {
+        fadeOut: {
             css: { opacity: 0 },
             delay: 75,
             duration: 800,
             rows: 3,
-            cols: 6,
-            order: 'random',
-            easing: 'linear',
-            slide: 'random'
-        },
-        blinds: {
-            css: { height: 0 },
-            delay: 1,
-            duration: 800,
-            rows: 8,
-            cols: 1,
-            order: 'random',
-            easing: 'linear',
-            slide: 'random'
-        },
-        curtains: {
-            css: { width: 0 },
-            delay: 1,
-            duration: 800,
-            rows: 1,
             cols: 8,
             order: 'random',
-            easing: 'linear',
-            slide: 'random'
+            easing: 'easeInSine',
+            slide: 'this'
         },
-        shrink: {
-            css: { width: 0, height: 0 },
-            delay: 75,
-            duration: 800,
-            rows: 3,
-            cols: 6,
-            order: 'random',
-            easing: 'linear',
-            slide: 'random'
-        },
-        fadeShrink: {
+        rowShrinkOut: {
             css: { opacity: 0, width: 0, height: 0 },
-            delay: 75,
-            duration: 800,
-            rows: 3,
-            cols: 6,
-            order: 'random',
-            easing: 'linear',
-            slide: 'random'
+            duration: 1100,
+            delay: 85,
+            cols: 1,
+            rows: 8,
+            order: 'normal',
+            easing: 'easeInSine',
+            slide: 'this'
         },
-        fly: {
+        shrinkOut: {
+            css: {
+                top: '-=50',
+                left: '-=50',
+                width: 0,
+                height: 0,
+                opacity: 0
+            },
+            duration: 900,
+            delay: 75,
+            cols: 8,
+            rows: 3,
+            order: 'random',
+            easing: 'swing',
+            slide: 'this'
+        },
+        flyIn: {
             css: {
                 left: function (i, opt) {
                     var p;
@@ -317,15 +305,16 @@
             delay: 100,
             duration: 1500,
             rows: 3,
-            cols: 6,
+            cols: 8,
             order: 'random',
             easing: 'easeInOutBack',
-            slide: 'random',
+            slide: 'next',
             direction: 'random'
         }
     };
-
-
+    win.OmniSlide.transitionAPI.transitions['colShrinkOut'] = $.extend(true, {}, win.OmniSlide.transitionAPI.transitions.rowShrinkOut);
+    win.OmniSlide.transitionAPI.transitions['colShrinkOut'].cols = 8;
+    win.OmniSlide.transitionAPI.transitions['colShrinkOut'].rows = 1;
 
     //    //Transition extension example
     //    (function($, window, undefined) {
@@ -348,17 +337,21 @@
     //                //if your transition is more advanced than simple css
     //                //manipulation you can specify an animation function
     //                //to be called instead of the default $.animate(css)
-    //                anim: function(opt, callback) {
-    //                    //the 'this' argument is the DOM element to manipulate
+    //                anim: function(toCss, opt, callback) {
+    //                    //the 'this' arg is the DOM element to manipulate
+    //                    //the 'toCss' arg is the CSS to animate towards (if css was specified)
+    //                    //the 'opt' arg the transition options variable
+    //                    //the 'callback' arg if passed is the callback to execute AFTER all animations complete.
+    //                    //    If callback is passed, then this is the last box to operate on.
     //    
     //                    //the opt variable passed is the transition options
-    //                    //object, which has been extended into this object
-    //                    //the 'advanced' object in this case
-    //                    $(this).animate(opt.css, opt.duration, opt.easing, function() {
+    //                    //object, which has been extended into this object.
+    //                    //The 'advanced' object in this case
+    //                    $(this).animate(toCss, opt.duration, opt.easing, function() {
     //                        //always check if a callback was passed,
-    //                        //and if so be sure to call it after your 
-    //                        //animations complete. Not doing so will
-    //                        //break the slider
+    //                        //and if so be sure to call it AFTER YOUR 
+    //                        //ANIMATIONS COMPLETE. Not doing so will
+    //                        //prevent the slider from continuing after the transition
     //                        if(callback) callback();
     //                    });
     //                },
