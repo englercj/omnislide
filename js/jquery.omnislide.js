@@ -82,17 +82,12 @@
             zIndex: 3,
             background: '0 0 no-repeat'
         },
-        activeSlide: {
-            zIndex: 4
-        },
-        navigation: {
-            position: 'absolute',
-            zIndex: 10
-        },
-        timer: {
-            position: 'absolute',
-            zIndex: 10
-        }
+        activeSlide: { zIndex: 4 },
+        slideContent: {},
+        nav: { position: 'absolute', zIndex: 10 },
+        timer: { position: 'absolute', zIndex: 10 },
+        overlay: { position: 'absolute', zIndex: 10 },
+        title: { position: 'absolute', zIndex: 10 }
     },
     storage = {
         settings: [],
@@ -279,9 +274,9 @@
                 //otherwise default to simple built in cut
                 else {
                     slider.$slides.eq(nextSlide).show();
-                    slider.$slides.eq(nextSlide).addClass('active');
+                    slider.$slides.eq(nextSlide).css(css.activeSlide).addClass('active');
                     slider.$slides.eq(slideIndex).hide();
-                    slider.$slides.eq(slideIndex).removeClass('active');
+                    slider.$slides.eq(slideIndex).css(css.slide).removeClass('active');
 
                     transitionCallback(nextSlide);
                 }
@@ -381,40 +376,38 @@
             slider.$slider = $('<div class="slide-box"/>').css(css.box).appendTo(slider.$wrapper);
 
             //create navigation
-            if (settings.navigation.enabled) {
-                slider.$nav = $('<div class="slide-nav"/>').css(css.navigation).appendTo(slider.$slider);
+            slider.$nav = $('<div class="slide-nav"/>').css(css.nav).toggle(settings.navigation.enabled).appendTo(slider.$slider);
 
-                slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
-                slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
-                slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
-            }
+            slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
+            slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
+            slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
 
             //create timer
-            if (settings.timer.enabled) {
-                slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).appendTo(slider.$slider);
-                slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
-            }
+            slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).toggle(settings.timer.enabled).appendTo(slider.$slider);
+            slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
 
             //create slides and thumbs
             $.each(slides, function (i, slide) {
+                //create slide
                 var $slide = $('<div class="slide"/>').css(css.slide);
 
+                //add slide content
                 if (slide.image)
                     $slide.css('background-image', 'url(' + slide.image + ')');
                 if (slide.content)
-                    $slide.append('<div class="slide-content">' + slide.content + '</div>');
+                    $slide.append($('<div class="slide-content">' + slide.content + '</div>').css(css.slideContent));
                 if (slide.overlay)
-                    $slide.append('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>');
+                    $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>').css(css.overlay));
                 if (slide.title)
-                    $slide.append('<h1 class="slide-title" style="display:none;">' + slide.title + '</h1>');
+                    $slide.append($('<h1 class="slide-title" style="display:none;">' + slide.title + '</h1>').css(css.title));
 
                 slider.$slides = slider.$slides.add($slide.hide());
 
-                if (settings.thumbs.enabled) {
-                    slider.$thumbs = $();
-                }
+                //create this slide's thumbnail
+                //slider.$thumbs = $();
             });
             slider.$slides.appendTo(slider.$slider);
+            slider.$thumbs.toggle(settings.thumbs.enabled).appendTo(slider.$wrapper);
         }
 
         //handle hovering in/out of the slide box

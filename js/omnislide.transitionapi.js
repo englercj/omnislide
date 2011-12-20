@@ -257,6 +257,26 @@
             easing: 'linear',
             slide: 'random'
         },
+        blinds: {
+            css: { height: 0 },
+            delay: 1,
+            duration: 800,
+            rows: 8,
+            cols: 1,
+            order: 'random',
+            easing: 'linear',
+            slide: 'random'
+        },
+        curtains: {
+            css: { width: 0 },
+            delay: 1,
+            duration: 800,
+            rows: 1,
+            cols: 8,
+            order: 'random',
+            easing: 'linear',
+            slide: 'random'
+        },
         shrink: {
             css: { width: 0, height: 0 },
             delay: 75,
@@ -273,16 +293,6 @@
             duration: 800,
             rows: 3,
             cols: 6,
-            order: 'random',
-            easing: 'linear',
-            slide: 'random'
-        },
-        blinds: {
-            css: { height: 0 },
-            delay: 1,
-            duration: 800,
-            rows: 8,
-            cols: 1,
             order: 'random',
             easing: 'linear',
             slide: 'random'
