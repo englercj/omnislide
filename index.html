@@ -16,7 +16,15 @@
                     slides: '#slideInfo',
                     startSlide: 1,
                     transition: {
-                        effect: 'fadeShrink'
+                        effect: 'fly',
+                        direction: ['left', 'right'],
+                        slide: 'next',
+                        order: 'normal',
+                        easing: 'linear',
+                        rows: 5,
+                        cols: 1,
+                        duration: 1500,
+                        delay: 150
                     },
                     timer: {
                         height: 8,

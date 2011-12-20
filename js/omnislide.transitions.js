@@ -283,7 +283,7 @@
             duration: 800,
             rows: 8,
             cols: 1,
-            order: 'normal',
+            order: 'random',
             easing: 'linear',
             slide: 'random'
         },
@@ -310,9 +310,9 @@
             duration: 1500,
             rows: 3,
             cols: 6,
-            order: 'normal',
-            easing: 'easeInOutBack',
-            slide: 'next',
+            order: 'random',
+            easing: 'linear',
+            slide: 'random',
             direction: 'random'
         }
     };
