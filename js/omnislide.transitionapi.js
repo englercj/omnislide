@@ -30,10 +30,8 @@
             //effect needs to be determined BEFORE we extend
             api._setRandomIfInvalid(options, 'effect', api.transitions);
 
-            //if the options contain a css or animation function then dont 
-            //extend onto the api.transitions effect, just use theirs
-            if (!options.css && !options.animation)
-                options = $.extend(true, {}, api.transitions[options.effect], options);
+            //extend onto the api.transitions effect
+            options = $.extend(true, {}, api.transitions[options.effect], options);
 
             //This randomizes values if its an array, its 'random', or its undefined
             for (key in api._validKeys) api._setRandomIfInvalid(options, key);
@@ -321,11 +319,13 @@
             rows: 3,
             cols: 6,
             order: 'random',
-            easing: 'linear',
+            easing: 'easeInOutBack',
             slide: 'random',
             direction: 'random'
         }
     };
+
+
 
     //    //Transition extension example
     //    (function($, window, undefined) {

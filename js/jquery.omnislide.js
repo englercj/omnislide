@@ -396,10 +396,10 @@
                     $slide.css('background-image', 'url(' + slide.image + ')');
                 if (slide.content)
                     $slide.append($('<div class="slide-content">' + slide.content + '</div>').css(css.slideContent));
-                if (slide.overlay)
-                    $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>').css(css.overlay));
                 if (slide.title)
                     $slide.append($('<h1 class="slide-title" style="display:none;">' + slide.title + '</h1>').css(css.title));
+                if (slide.overlay)
+                    $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>').css(css.overlay));
 
                 slider.$slides = slider.$slides.add($slide.hide());
 
