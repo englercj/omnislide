@@ -123,3 +123,10 @@ More information can be found in the [Theme API](https://github.com/englercj/Omn
 	* The active slide is at z-index 4
 	* If you are using the transitionapi, transition boxes are at z-index 7
 	* Overlays (navigation, title, overlay, timer, etc) are at z-index 10
+
+## TODO
+
+* [Later] Slide specific properties/transitions
+* [Later] More slide orders (spiral, checker, alternate) [alternate can combine with all others]
+* [Now] Thumbnails
+* [Now] Themes
