@@ -53,10 +53,10 @@ div.slide-nav-back      { background-position:0 -144px; }
 div.slide-nav-forward   { background-position:0 -96px; }
 div.slide-nav-pause     { background-position:0 -48px; }
 div.slide-nav-play      { background-position:0 0; }
-div.slide-nav-back.active   { background-position:-48px -144px; }
-div.slide-nav-forward.active{ background-position:-48px -96px; }
-div.slide-nav-pause.active  { background-position:-48px -48px; }
-div.slide-nav-play.active   { background-position:-48px 0; }
+div.slide-nav-back:hover   { background-position:-48px -144px; }
+div.slide-nav-forward:hover{ background-position:-48px -96px; }
+div.slide-nav-pause:hover  { background-position:-48px -48px; }
+div.slide-nav-play:hover   { background-position:-48px 0; }
 
 div.slide-thumb {  }
 div.slide-thumb img {  }

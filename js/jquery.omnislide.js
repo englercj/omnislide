@@ -1,10 +1,19 @@
 ////
 //Events:
-// - beforeTransition
-// - afterTransition
+// - transition-before  - Data Passed: { index: 'current slide index', next: 'index of next slide' }
+// - transition-after   - Data Passed: { index: 'current slide index' }
+// - thumb-mouseenter   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
+// - thumb-mouseleave   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
+// - thumb-click        - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
+// - nav-mouseenter     - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
+// - nav-mouseleave     - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
+// - nav-click          - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
+// - slide-mouseenter   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
+// - slide-mouseleave   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
 (function ($, win, undefined) {
-    //Default settings
-    /////////////////////
+    //////////////////////////////////////
+    // Vars global to ALL slider instances
+    //////////////////////////////////////
     var defaults = {
         slides: undefined,          //pass either xml string, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 0,              //initial slide for the plugin to start displaying (0 based)
@@ -42,9 +51,9 @@
             enabled: false,         //enable thumbnails?
             showImage: false,       //show thumbnail image?
             showTitle: false,       //show slide title?
-            tooltip: false,         //can be 'title', 'image', 'both', string content, DOM obj, $ obj, or function returning any of the previous
-            triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
-            triggerSlide: 'click',  //event to trigger changing to that slide
+            //tooltip: false,         //can be 'title', 'image', 'both', string content, DOM obj, $ obj, or function returning any of the previous
+            //triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
+            //triggerSlide: 'click',  //event to trigger changing to that slide
             animAsOverlay: false,   //animate as overlay on slide (hide on transition, show on return)
             animationIn: null,      //custom animation to use for animating the navigation into the slide
             animationOut: null      //custom animation to use for animating the navigation out of the slide
@@ -95,10 +104,11 @@
         slideIndexes: []
     };
 
-    //Main functionality
-    //////////////////////
+    //time to do the electric slide....
     function electricSlide(method) {
-        //variables
+        //////////////////////////////////////
+        // Variables used throughout plugin
+        //////////////////////////////////////
         var settings = {},
         guid = OmniSlide.generateGuid(),
         slides = [],
@@ -118,7 +128,9 @@
 
         slideIndex, sliding,
 
-        //plugin methods
+        //////////////////////////////////////
+        // Public Plugin Methods
+        //////////////////////////////////////
         methods = {
             //initialize the slider plugin
             init: function (options) {
@@ -182,21 +194,23 @@
                 return this;
             },
             //public wrapper around private moveSlide function
-            moveSlide: function (slide) {
+            gotoSlide: function (slide) {
                 if (loadStorage(this)) { moveSlide(slide); }
 
                 return this;
             },
-            nextSlide: function () { return methods.moveSlide(); },
-            previousSlide: function () { return methods.moveSlide(true); },
+            nextSlide: function () { return methods.gotoSlide(); },
+            previousSlide: function () { return methods.gotoSlide(true); },
             pause: function () { pauseTimer(true); return this; },
             play: function () { playTimer(true); return this; },
             //public wrapper for animating the overlays
-            animateOverlays: function (show) {
-                if (loadStorage(this)) {
-                    if (show) showOverlays(slideIndex);
-                    else hideOverlays(slideIndex);
-                }
+            showOverlays: function () {
+                if (loadStorage(this)) {  showOverlays(slideIndex);  }
+
+                return this;
+            },
+            hideOverlays: function () {
+                if (loadStorage(this)) { hideOverlays(slideIndex); }
 
                 return this;
             },
@@ -223,20 +237,9 @@
             }
         };
 
-        function loadStorage($elm) {
-            guid = $elm.data('guid');
-
-            if (!guid) {
-                OmniSlide.error('Unable to load from storage, element is not a slider: ', this);
-                return false;
-            }
-
-            settings = storage.settings[guid];
-            slider = storage.sliders[guid];
-            slideIndex = storage.slideIndexes[guid];
-
-            return true;
-        }
+        //////////////////////////////////////
+        // Transition Handler
+        //////////////////////////////////////
 
         function moveSlide(slide) {
             if (slider.sliding) return false;
@@ -254,7 +257,7 @@
             else
                 nextSlide = (slideIndex + 1) % slider.$slides.length;
 
-            slider.$container.trigger('beforeTransition');
+            slider.$container.trigger('transition-before', [{ index: slideIndex, next: nextSlide }]);
 
             if (slideIndex === -1) {
                 slider.$slides.eq(nextSlide).show();
@@ -288,9 +291,30 @@
                 showOverlays(slideIndex, function () {
                     slider.sliding = false;
                     playTimer();
-                    slider.$container.trigger('afterTransition');
+                    slider.$container.trigger('transition-after', [{ index: slideIndex }]);
                 });
             }
+        }
+
+        //////////////////////////////////////
+        // Utilities
+        //////////////////////////////////////
+
+        //load up the stored values for the slider we are operating on
+        // (methods called with $().OmniSlide('...') aren't in closure scope)
+        function loadStorage($elm) {
+            guid = $elm.data('guid');
+
+            if (!guid) {
+                OmniSlide.error('Unable to load from storage, element is not a slider: ', this);
+                return false;
+            }
+
+            settings = storage.settings[guid];
+            slider = storage.sliders[guid];
+            slideIndex = storage.slideIndexes[guid];
+
+            return true;
         }
 
         //exec animations on slide overlays, custom or default
@@ -359,90 +383,69 @@
                 slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
         }
 
-        //builds out the slider's HTML
-        function buildSlider(container) {
-            //initialize container
-            slider.$container = $(container);
+        //////////////////////////////////////
+        // Event Handlers
+        //////////////////////////////////////
 
-            //create wrapper
-            slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>').css(css.wrapper)
-                .delegate('div.slide-box', 'hover', slideHover)
-                .delegate('div.slide-nav', 'hover', navHover)
-                .delegate('div.slide-nav-control', 'hover', navControlHover)
-                .delegate('div.slide-nav-control', 'click', navControlClick)
-                .appendTo(slider.$container);
+        //handles all events on Thumbnails
+        function thumbEvent(e) {
+            os.log(e.type, 'Thumb', e);
 
-            //create slider box
-            slider.$slider = $('<div class="slide-box"/>').css(css.box).appendTo(slider.$wrapper);
-
-            //create navigation
-            slider.$nav = $('<div class="slide-nav"/>').css(css.nav).toggle(settings.navigation.enabled).appendTo(slider.$slider);
-
-            slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
-            slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
-            slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
-
-            //create timer
-            slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).toggle(settings.timer.enabled).appendTo(slider.$slider);
-            slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
-
-            //create slides and thumbs
-            $.each(slides, function (i, slide) {
-                //create slide
-                var $slide = $('<div class="slide"/>').css(css.slide);
-
-                //add slide content
-                if (slide.image)
-                    $slide.css('background-image', 'url(' + slide.image + ')');
-                if (slide.content)
-                    $slide.append($('<div class="slide-content">' + slide.content + '</div>').css(css.slideContent));
-                if (slide.title)
-                    $slide.append($('<h1 class="slide-title" style="display:none;">' + slide.title + '</h1>').css(css.title));
-                if (slide.overlay)
-                    $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>').css(css.overlay));
-
-                slider.$slides = slider.$slides.add($slide.hide());
-
-                //create this slide's thumbnail
-                //slider.$thumbs = $();
-            });
-            slider.$slides.appendTo(slider.$slider);
-            slider.$thumbs.toggle(settings.thumbs.enabled).appendTo(slider.$wrapper);
+            switch (e) {
+                case 'mouseenter':
+                    break;
+                case 'mouseleave':
+                    break;
+                case 'click':
+                    break;
+            }
+            slider.$container.trigger('thumb-' + e.type, [{ originalEvent: e, target: this }]);
         }
 
-        //handle hovering in/out of the slide box
-        function slideHover(e) {
+        //handles all events on Slides
+        function slideEvent(e) {
+            os.log(e.type, 'Slide', e);
+
             if (slider.timer && settings.timer.enabled) {
-                if (e.type == 'mouseenter' && settings.hoverPause) pauseTimer();
-                else if (e.type == 'mouseleave' && slider.timer.stopped) playTimer();
+                switch (e) {
+                    case 'mouseenter':
+                        if (settings.hoverPause) pauseTimer();
+                        break;
+                    case 'mouseleave':
+                        if (slider.timer.stopped) playTimer();
+                        break;
+                }
             }
+            slider.$container.trigger('slide-' + e.type, [{ originalEvent: e, target: this }]);
         }
 
-        //handle hovering in/out of the naviation box
-        function navHover(e) {
-            if (e.type == 'mouseenter')
-                slider.$nav.stop().animate({ opacity: settings.navigation.opacity.focused });
-            else if (e.type == 'mouseleave')
-                slider.$nav.stop().animate({ opacity: settings.navigation.opacity.blurred });
-        }
+        //handles all events on Navigation
+        function navEvent(e) {
+            os.log(e.type, 'Navigation', e);
+            switch (e) {
+                case 'mouseenter':
+                    slider.$nav.stop().animate({ opacity: settings.navigation.opacity.focused });
+                    break;
+                case 'mouseleave':
+                    slider.$nav.stop().animate({ opacity: settings.navigation.opacity.blurred });
+                    break;
+                case 'click':
+                    var ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
 
-        //handle hovering in/out of a navigation control
-        function navControlHover(e) {
-            if (e.type == 'mouseenter') $(this).addClass('active');
-            else if (e.type == 'mouseleave') $(this).removeClass('active');
-        }
-
-        //handle nav control button click
-        function navControlClick(e) {
-            var ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
-
-            switch (ctrl) {
-                case 'slide-nav-back': moveSlide(true); break;
-                case 'slide-nav-forward': moveSlide(); break;
-                case 'slide-nav-play': playTimer(true); break;
-                case 'slide-nav-pause': pauseTimer(true); break;
+                    switch (ctrl) {
+                        case 'slide-nav-back': moveSlide(true); break;
+                        case 'slide-nav-forward': moveSlide(); break;
+                        case 'slide-nav-play': playTimer(true); break;
+                        case 'slide-nav-pause': pauseTimer(true); break;
+                    }
+                    break;
             }
+            slider.$container.trigger('nav-' + e.type, [{ originalEvent: e, target: this }]);
         }
+
+        //////////////////////////////////////
+        // Parsers and HTML Builders
+        //////////////////////////////////////
 
         //parses the slide input into a normalized format
         function parseSlides() {
@@ -502,7 +505,74 @@
             return false;
         }
 
-        //method calling
+        //builds out the slider's HTML
+        function buildSlider(container) {
+            //initialize container
+            slider.$container = $(container);
+
+            //create wrapper
+            slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>').css(css.wrapper)
+                .delegate('div.slide-box', 'hover', slideEvent)
+                .delegate('div.slide-nav', 'hover', navEvent)
+                .delegate('div.slide-nav-control', 'click', navEvent)
+                .appendTo(slider.$container);
+
+            //create slider box
+            slider.$slider = $('<div class="slide-box"/>').css(css.box).appendTo(slider.$wrapper);
+
+            //create navigation
+            slider.$nav = $('<div class="slide-nav"/>').css(css.nav).toggle(settings.navigation.enabled).appendTo(slider.$slider);
+
+            slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
+            slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
+            slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
+
+            //create timer
+            slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).toggle(settings.timer.enabled).appendTo(slider.$slider);
+            slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
+
+            //create slides and thumbs
+            $.each(slides, function (i, slide) {
+                //create slide
+                var $slide = $('<div class="slide"/>').css(css.slide);
+
+                //add slide content
+                if (slide.image)
+                    $slide.css('background-image', 'url(' + slide.image + ')');
+                if (slide.content)
+                    $slide.append($('<div class="slide-content">' + slide.content + '</div>').css(css.slideContent));
+                if (slide.title)
+                    $slide.append($('<h1 class="slide-title" style="display:none;">' + slide.title + '</h1>').css(css.title));
+                if (slide.overlay)
+                    $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>').css(css.overlay));
+
+                //create this slide's thumbnail
+                if (settings.thumbs.enabled) {
+                    var $thumb = $('<div class="slide-thumb"/>').bind({
+                        click: thumbEvent, hover: thumbEvent
+                    });
+
+                    if (settings.thumbs.triggerSlide !== 'click' && settings.thumbs.triggerSlide !== 'hover')
+                        $thumb.bind(settings.thumbs.triggerSlide, thumbEvent);
+
+                    if (settings.thumbs.showImage && slide.thumb)
+                        $thumb.append('<img class="slide-thumb-image"/>');
+                    if (settings.thumbs.showTitle && slide.title)
+                        $thumb.append('<span class="slide-thumb-title">' + slide.title + '</span>');
+                    slider.$thumbs
+                }
+
+                slider.$slides = slider.$slides.add($slide.hide());
+
+            });
+            slider.$slides.appendTo(slider.$slider);
+            slider.$thumbs.toggle(settings.thumbs.enabled).appendTo(slider.$wrapper);
+        }
+
+        //////////////////////////////////////
+        // Method Claling Logic
+        //////////////////////////////////////
+
         if (methods[method]) {
             return methods[method].apply(this, [].slice.call(arguments, 1));
         } else if (!method || $.type(method) === 'object') {
@@ -512,7 +582,10 @@
         }
     }
 
-    //register jQuery plugin
+    //////////////////////////////////////
+    // Registration of Plugin and API
+    //////////////////////////////////////
+    //register plugin with jQuery
     $.fn.extend({
         OmniSlide: electricSlide,
         omnislide: electricSlide
