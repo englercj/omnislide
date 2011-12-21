@@ -95,9 +95,9 @@
         title: { position: 'absolute', zIndex: 10 }
     },
     storage = {
-        settings: [],
-        sliders: [],
-        slideIndexes: []
+        settings: {},
+        sliders: {},
+        slideIndexes: {}
     };
 
     //time to do the electric slide....
@@ -589,7 +589,9 @@
 
             return {};
         },
-        _time: function () { return '[' + (new Date()).toISOString().replace(/.*T|Z/g, '') + ']'; },
+        _time: function () {
+            return '[' + (new Date()).toISOString().replace(/.*T|Z/g, '') + ']';
+        },
         getRandKey: function (obj) {
             var keys = OmniSlide.getKeys(obj);
             return keys[OmniSlide.rand(keys.length)];
@@ -637,12 +639,10 @@
     };
     //add version string to the global object
     OmniSlide.versionString = 'v' + OmniSlide.version + ' BETA';
-})(jQuery, window);
 
-/*
- * OmniSlide Canvas Timer
- */
-(function (win, undefined) {
+    /*
+    * OmniSlide Canvas Timer
+    */
     win.OmniSlide.timer = function (animLen, options, callback, canvas) {
         if (!canvas)
             canvas = document.createElement('canvas');
@@ -673,8 +673,8 @@
             clearCanvas();
             ctx.fillStyle = options.colors.empty;
             ctx.strokeStyle = options.colors.empty;
-            
-            if(!options.visible) return;
+
+            if (!options.visible) return;
 
             switch (options.type) {
                 case 'bar':
@@ -698,7 +698,7 @@
 
         //paint forground based on % done
         fgPaint = function () {
-            if(!options.visible) return;
+            if (!options.visible) return;
 
             var prct = timeEllapsed / animLen, rads;
             ctx.fillStyle = options.colors.filled;
@@ -786,7 +786,7 @@
             },
             lock: function () { timer.locked = true; },
             unlock: function () { timer.locked = false; },
-            visible: function (v) { options.visible = v; },
+            visible: function (v) { options.visible = v; if (v) bgPaint(); },
             stopped: true,
             locked: false,
             canvas: canvas
@@ -797,4 +797,4 @@
         //Public Interface
         return timer;
     }
-})(window);
+})(jQuery, window);
