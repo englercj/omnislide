@@ -70,7 +70,7 @@
             },
             cols: 8,
             rows: 3,
-            order: 'randomized',
+            order: 'randomize',
             easing: 'easeInSine',
             slide: 'next'
         },
@@ -150,7 +150,7 @@
             },
             cols: 1,
             rows: 6,
-            order: 'randomized',
+            order: 'randomize',
             easing: 'easeInSine',
             slide: 'next'
         },
@@ -202,7 +202,7 @@
             },
             cols: 12,
             rows: 1,
-            order: 'randomized',
+            order: 'randomize',
             easing: 'easeInSine',
             slide: 'next'
         },
@@ -241,7 +241,7 @@
             },
             cols: 12,
             rows: 5,
-            order: 'randomized',
+            order: 'randomize',
             easing: 'linear',
             slide: 'this'
         }

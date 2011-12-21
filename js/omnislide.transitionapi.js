@@ -58,7 +58,7 @@
             easing: $.easing,
             direction: ['left', 'topleft', 'top', 'topright', 'right', 'bottomright', 'bottom', 'bottomleft'],
             slide: ['this', 'next'],
-            order: ['normal', 'reverse', 'randomized']//TODO: Implement spiral order
+            order: ['normal', 'reverse', 'randomize']//TODO: Implement spiral order
         },
         _activate: function ($slide) {
             $slide.show().addClass('active').css(OmniSlide.transitionAPI._css.activeSlide);
@@ -134,7 +134,7 @@
 
             for (var i = 0; i < len; ++i) {
                 var $box, toCss = opt.css, j = i;
-                if (opt.order == 'randomized') {
+                if (opt.order == 'randomize') {
                     //select a random box and remove it from the elements to choose from
                     j = OmniSlide.rand($boxes.length);
                     $box = $boxes.eq(j);
@@ -172,7 +172,7 @@
                         })
                         .dequeue('omnislide.transition');
                 } else {
-                    j = (opt.order == 'randomized') ? $boxes.eq(0) : $boxes.eq(i);
+                    j = (opt.order == 'randomize') ? $boxes.eq(0) : $boxes.eq(i);
                     $box.delay((opt.delay * i), 'omnislide.transition')
                         .queue('omnislide.transition', function (next) {
                             if (opt.animation && $.isFunction(opt.animation)) {
