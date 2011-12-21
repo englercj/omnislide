@@ -49,11 +49,7 @@
         },
         thumbs: {
             enabled: false,         //enable thumbnails?
-            showImage: false,       //show thumbnail image?
-            showTitle: false,       //show slide title?
-            //tooltip: false,         //can be 'title', 'image', 'both', string content, DOM obj, $ obj, or function returning any of the previous
-            //triggerTooltip: 'hover', //event to trigger showing tooltip (if true)
-            //triggerSlide: 'click',  //event to trigger changing to that slide
+            slideOn: 'click',
             animAsOverlay: false,   //animate as overlay on slide (hide on transition, show on return)
             animationIn: null,      //custom animation to use for animating the navigation into the slide
             animationOut: null      //custom animation to use for animating the navigation out of the slide
@@ -205,7 +201,7 @@
             play: function () { playTimer(true); return this; },
             //public wrapper for animating the overlays
             showOverlays: function () {
-                if (loadStorage(this)) {  showOverlays(slideIndex);  }
+                if (loadStorage(this)) { showOverlays(slideIndex); }
 
                 return this;
             },
@@ -257,7 +253,7 @@
             else
                 nextSlide = (slideIndex + 1) % slider.$slides.length;
 
-            slider.$container.trigger('transition-before', [{ index: slideIndex, next: nextSlide }]);
+            slider.$container.trigger('transition-before', [{ index: slideIndex, next: nextSlide}]);
 
             if (slideIndex === -1) {
                 slider.$slides.eq(nextSlide).show();
@@ -291,7 +287,7 @@
                 showOverlays(slideIndex, function () {
                     slider.sliding = false;
                     playTimer();
-                    slider.$container.trigger('transition-after', [{ index: slideIndex }]);
+                    slider.$container.trigger('transition-after', [{ index: slideIndex}]);
                 });
             }
         }
@@ -389,25 +385,24 @@
 
         //handles all events on Thumbnails
         function thumbEvent(e) {
-            os.log(e.type, 'Thumb', e);
-
-            switch (e) {
+            if(e.type == settings.thumbs.slideOn) {
+                moveSlide(slider.$thumbs.index(this));
+            }
+            /*switch (e.type) {
                 case 'mouseenter':
                     break;
                 case 'mouseleave':
                     break;
                 case 'click':
                     break;
-            }
-            slider.$container.trigger('thumb-' + e.type, [{ originalEvent: e, target: this }]);
+            }*/
+            slider.$container.trigger('thumb-' + e.type, [{ originalEvent: e, target: this}]);
         }
 
         //handles all events on Slides
         function slideEvent(e) {
-            os.log(e.type, 'Slide', e);
-
             if (slider.timer && settings.timer.enabled) {
-                switch (e) {
+                switch (e.type) {
                     case 'mouseenter':
                         if (settings.hoverPause) pauseTimer();
                         break;
@@ -416,13 +411,12 @@
                         break;
                 }
             }
-            slider.$container.trigger('slide-' + e.type, [{ originalEvent: e, target: this }]);
+            slider.$container.trigger('slide-' + e.type, [{ originalEvent: e, target: this}]);
         }
 
         //handles all events on Navigation
         function navEvent(e) {
-            os.log(e.type, 'Navigation', e);
-            switch (e) {
+            switch (e.type) {
                 case 'mouseenter':
                     slider.$nav.stop().animate({ opacity: settings.navigation.opacity.focused });
                     break;
@@ -440,7 +434,7 @@
                     }
                     break;
             }
-            slider.$container.trigger('nav-' + e.type, [{ originalEvent: e, target: this }]);
+            slider.$container.trigger('nav-' + e.type, [{ originalEvent: e, target: this}]);
         }
 
         //////////////////////////////////////
@@ -516,6 +510,8 @@
                 .delegate('div.slide-nav', 'hover', navEvent)
                 .delegate('div.slide-nav-control', 'click', navEvent)
                 .appendTo(slider.$container);
+
+            if (settings.thumbs.slideOn) slider.$wrapper.delegate('div.slide-thumb', settings.thumbs.slideOn, thumbEvent);
 
             //create slider box
             slider.$slider = $('<div class="slide-box"/>').css(css.box).appendTo(slider.$wrapper);
