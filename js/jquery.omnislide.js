@@ -519,17 +519,20 @@
     });
 
     //build global object for use by plugins as utilities
-    win.OmniSlide = {
+    win.OmniSlide = win.os = {
         version: 0.5,
         //general logging override to avoid errors
         _log: function (type, args) {
-            if (win.console && console[type]) {
+            if (console && console[type]) {
+                args = ([].slice.call(args, 0));
+                args.unshift(OmniSlide._time());
                 console[type].apply(this, args);
-                return win.console;
+                return console;
             }
 
             return {};
         },
+        _time: function () { return '[' + (new Date()).toISOString().replace(/.*T|Z/g, '') + ']'; },
         getRandKey: function (obj) {
             var keys = OmniSlide.getKeys(obj);
             return keys[OmniSlide.rand(keys.length)];
@@ -565,6 +568,7 @@
         log: function () { OmniSlide._log('log', arguments); },
         error: function () { OmniSlide._log('error', arguments); },
         warn: function () { OmniSlide._log('warn', arguments); },
+        debug: function () { OmniSlide._log('info', arguments); },
         //generates a Guid that will identify a slider throughout its life.
         generateGuid: function () {
             var S4 = function () {
