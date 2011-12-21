@@ -22,7 +22,7 @@
             wait: 2000              //the wait time to show each slide 
         },
         timer: {
-            enabled: true,          //enable timer?
+            visible: true,          //show canvas timer?
             height: 40,             //height of the timer
             width: 40,              //width of the timer
             border: 2,              //space between filled and empty colors on the timer
@@ -38,7 +38,7 @@
             animationOut: null      //custom animation to use for animating the timer out of the slide
         },
         navigation: {
-            enabled: true,
+            enabled: true,          //enable navigation?
             opacity: {
                 focused: 1,         //the opacity to set on controls when focused
                 blurred: 0.1        //the opacity to set on controls when blurred
@@ -55,13 +55,13 @@
             animationOut: null      //custom animation to use for animating the navigation out of the slide
         },
         title: {
-            enabled: true,          //show title on the slide
+            enabled: true,          //enable slide titles?
             animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
             animationIn: false,     //custom animation to use for animating the title into the slide
             animationOut: false     //custom animation to use for animating the title out of the slide
         },
         overlay: {
-            enabled: true,          //show overlay on the slide
+            enabled: true,          //enable slide overlay?
             animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
             animationIn: false,     //custom animation to use for animating the overlay into the slide
             animationOut: false     //custom animation to use for animating the overlay out of the slide
@@ -132,9 +132,6 @@
             init: function (options) {
                 return this.each(function () { //ensures chainability
                     if (options) $.extend(true, settings, defaults, options);
-
-                    //disable timer if plugin not installed
-                    if (!OmniSlide.timer) settings.timer.enabled = false;
 
                     //place guid where plugins can get at it
                     settings.timer.guid = guid;
@@ -262,7 +259,7 @@
             }
             //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
-                if (settings.timer.enabled) slider.timer.reset();
+                slider.timer.reset();
 
                 //attempt to use advanced transitions
                 if (OmniSlide.transitionAPI) {
@@ -327,8 +324,7 @@
                 intFunc = 'fadeOut';
             }
 
-            if (settings.timer.enabled) slider.timer.stop();
-
+            slider.timer.stop();
 
             doAnimOverlay(settings.timer, slider.$timer);
             doAnimOverlay(settings.navigation, slider.$nav);
@@ -337,7 +333,7 @@
             doAnimOverlay(settings.overlay, $overlay);
 
             function doAnimOverlay(obj, $obj) {
-                if (obj.enabled && obj.animAsOverlay && $obj.length) {
+                if ((obj.enabled || obj.visible) && obj.animAsOverlay && $obj.length) {
                     if (obj[extFunc] && $.isFunction(obj[extFunc])) obj[extFunc].call($obj);
                     else $obj[intFunc]();
                 }
@@ -385,23 +381,23 @@
 
         //handles all events on Thumbnails
         function thumbEvent(e) {
-            if(e.type == settings.thumbs.slideOn) {
+            if (e.type == settings.thumbs.slideOn) {
                 moveSlide(slider.$thumbs.index(this));
             }
             /*switch (e.type) {
-                case 'mouseenter':
-                    break;
-                case 'mouseleave':
-                    break;
-                case 'click':
-                    break;
+            case 'mouseenter':
+            break;
+            case 'mouseleave':
+            break;
+            case 'click':
+            break;
             }*/
             slider.$container.trigger('thumb-' + e.type, [{ originalEvent: e, target: this}]);
         }
 
         //handles all events on Slides
         function slideEvent(e) {
-            if (slider.timer && settings.timer.enabled) {
+            if (slider.timer) {
                 switch (e.type) {
                     case 'mouseenter':
                         if (settings.hoverPause) pauseTimer();
@@ -524,7 +520,7 @@
             slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
 
             //create timer
-            slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).toggle(settings.timer.enabled).appendTo(slider.$slider);
+            slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).toggle(settings.timer.visible).appendTo(slider.$slider);
             slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
 
             //create slides and thumbs
@@ -542,24 +538,16 @@
                 if (slide.overlay)
                     $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>').css(css.overlay));
 
-                //create this slide's thumbnail
-                if (settings.thumbs.enabled) {
-                    var $thumb = $('<div class="slide-thumb"/>').bind({
-                        click: thumbEvent, hover: thumbEvent
-                    });
-
-                    if (settings.thumbs.triggerSlide !== 'click' && settings.thumbs.triggerSlide !== 'hover')
-                        $thumb.bind(settings.thumbs.triggerSlide, thumbEvent);
-
-                    if (settings.thumbs.showImage && slide.thumb)
-                        $thumb.append('<img class="slide-thumb-image"/>');
-                    if (settings.thumbs.showTitle && slide.title)
-                        $thumb.append('<span class="slide-thumb-title">' + slide.title + '</span>');
-                    slider.$thumbs
-                }
-
                 slider.$slides = slider.$slides.add($slide.hide());
 
+                //add thumbnail
+                if (settings.thumbs.enabled) {
+                    var $thumb = $('<div class="slide-thumb"/>');
+
+                    $thumb.append('<img class="slide-thumb-image" src="" alt=""/>').attr('src', slide.thumb);
+                    $thumb.append('<span class="slide-thumb-title">' + slide.title + '</span>');
+                    slider.$thumbs = slider.$thumbs.add($thumb);
+                }
             });
             slider.$slides.appendTo(slider.$slider);
             slider.$thumbs.toggle(settings.thumbs.enabled).appendTo(slider.$wrapper);
@@ -650,3 +638,163 @@
     //add version string to the global object
     OmniSlide.versionString = 'v' + OmniSlide.version + ' BETA';
 })(jQuery, window);
+
+/*
+ * OmniSlide Canvas Timer
+ */
+(function (win, undefined) {
+    win.OmniSlide.timer = function (animLen, options, callback, canvas) {
+        if (!canvas)
+            canvas = document.createElement('canvas');
+
+        //init canvas
+        canvas.height = options.height;
+        canvas.width = options.width;
+        canvas.className = 'slide-timer';
+
+        var ctx = canvas.getContext('2d'),
+
+        midX = canvas.width / 2,
+        midY = canvas.height / 2,
+
+        timeEllapsed = 0,
+
+        //radianStart = Math.PI - 0.5,
+        radianMax = Math.PI * 2,
+        radius = canvas.width / 2,
+        lastRad = 0,
+
+        border = options.border,
+
+        tickLoop = null,
+
+        //paint background
+        bgPaint = function () {
+            clearCanvas();
+            ctx.fillStyle = options.colors.empty;
+            ctx.strokeStyle = options.colors.empty;
+            
+            if(!options.visible) return;
+
+            switch (options.type) {
+                case 'bar':
+                    clearCanvas();
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    break;
+                case 'circle':
+                    ctx.beginPath();
+                    ctx.arc(midX, midY, radius, 0, radianMax, false);
+                    ctx.fill();
+                    break;
+                default: //ring
+                    ctx.beginPath();
+                    ctx.arc(midX, midY, radius - options.ringWidth / 2 - border, 0, radianMax, false);
+                    ctx.lineWidth = options.ringWidth + (border * 2);
+                    ctx.stroke();
+                    break;
+                    break;
+            }
+        },
+
+        //paint forground based on % done
+        fgPaint = function () {
+            if(!options.visible) return;
+
+            var prct = timeEllapsed / animLen, rads;
+            ctx.fillStyle = options.colors.filled;
+            ctx.strokeStyle = options.colors.filled;
+
+            switch (options.type) {
+                case 'bar':
+                    var w = (canvas.width * prct) - (border * 2);
+
+                    w = (w < 0) ? 0 : w;
+                    ctx.clearRect(border, border, w, canvas.height - (border * 2));
+                    ctx.fillRect(border, border, w, canvas.height - (border * 2));
+                    break;
+                case 'circle':
+                    rads = (radianMax * prct) - lastRad;
+
+                    ctx.beginPath();
+                    ctx.moveTo(midX, midY);
+                    ctx.arc(midX, midY, radius - border, lastRad, lastRad + rads, false);
+                    ctx.fill();
+
+                    lastRad = lastRad + rads;
+                    break;
+                default:
+                    rads = (radianMax * prct) - lastRad;
+
+                    ctx.beginPath();
+                    ctx.arc(midX, midY, radius - (options.ringWidth / 2) - border, lastRad, lastRad + rads, false);
+                    ctx.lineWidth = options.ringWidth;
+                    ctx.stroke();
+
+                    lastRad = lastRad + rads;
+                    break;
+            }
+        },
+
+        //clear canvas
+        clearCanvas = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        },
+
+        tick = function () {
+            if (timeEllapsed >= animLen) {
+                timer.stop();
+                callback();
+
+                return;
+            }
+
+            timeEllapsed += options.refreshRate;
+            fgPaint();
+        },
+
+        timer = {
+            setTimeLeft: function (time) {
+                if (timer.locked || time > animLen || time < 0) return false;
+
+                timeEllapsed = (animLen - time);
+                return true;
+            },
+            start: function () {
+                if (timer.locked) return false;
+
+                tickLoop = setInterval(tick, options.refreshRate);
+                timer.stopped = false;
+            },
+            stop: function () {
+                if (timer.locked) return false;
+
+                clearInterval(tickLoop);
+                timer.stopped = true;
+            },
+            reset: function () {
+                var bLock = timer.locked;
+
+                timer.unlock();
+                timer.stop();
+                bgPaint();
+
+                lastRad = 0;
+                timeEllapsed = 0;
+
+                //if it was locked before, relock it.
+                if (bLock) timer.lock();
+            },
+            lock: function () { timer.locked = true; },
+            unlock: function () { timer.locked = false; },
+            visible: function (v) { options.visible = v; },
+            stopped: true,
+            locked: false,
+            canvas: canvas
+        };
+
+        timer.reset();
+
+        //Public Interface
+        return timer;
+    }
+})(window);
