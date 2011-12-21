@@ -130,8 +130,6 @@
                 }
             });
 
-            OmniSlide.log(opt.effect, opt);
-
             for (var i = 0; i < len; ++i) {
                 var $box, toCss = opt.css, j = i;
                 if (opt.order == 'randomize') {
