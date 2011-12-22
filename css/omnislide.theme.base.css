@@ -61,6 +61,7 @@ div.slide-nav-play:hover   { background-position:-48px 0; }
 div.slide-thumbs-wrapper { height:50px; width:100%; position:absolute; top:435px; margin:0; padding:0; }
 div.slide-thumb { float:left; height:50px; width:165px; cursor:pointer; }
 div.slide-thumb:hover > span.slide-thumb-title { text-decoration:underline; }
+div.slide-thumb.active { }
 img.slide-thumb-image { float:left; height:50px; width:65px; border-radius:5px; }
 span.slide-thumb-title { float:left; font-size:0.8em; display:block; padding:20px 0 20px 3px; }
 

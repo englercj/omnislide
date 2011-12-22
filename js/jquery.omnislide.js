@@ -269,6 +269,7 @@
             }
 
             sets = checkOverrides(nextSlide);
+            slider.$thumbs.eq(slideIndex).removeClass('active');
 
             //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
@@ -292,6 +293,8 @@
             function transitionCallback(nextSlide) {
                 slideIndex = nextSlide;
                 storage.slideIndexes[guid] = slideIndex;
+
+                slider.$thumbs.eq(slideIndex).addClass('active');
                 remakeTimer();
 
                 showOverlays(slideIndex, function () {
