@@ -1,8 +1,6 @@
 /* THEMING CLASSES
  * ---
  * Please Modify these to change the theme of the slider
- * NOTE: 
- *  div.slide-wrapper's width/height should usually match div.slide-box's width/height
  */
 div.slide-wrapper { 
     font-family: Arial,Helvetica,sans-serif;
