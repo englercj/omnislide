@@ -34,8 +34,8 @@
             ringWidth: 3,           //width of the timer ring (filled, so not including border)
             type: 'ring',           //type of the timer; circle, ring, bar
             animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
-            animationIn: null,      //custom animation to use for animating the timer into the slide
-            animationOut: null      //custom animation to use for animating the timer out of the slide
+            animationIn: false,     //custom animation to use for animating the timer into the slide
+            animationOut: false     //custom animation to use for animating the timer out of the slide
         },
         navigation: {
             visible: true,          //enable navigation?
@@ -44,15 +44,15 @@
                 blurred: 0.1        //the opacity to set on controls when blurred
             },
             animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
-            animationIn: null,      //custom animation to use for animating the navigation into the slide
-            animationOut: null      //custom animation to use for animating the navigation out of the slide
+            animationIn: false,     //custom animation to use for animating the navigation into the slide
+            animationOut: false     //custom animation to use for animating the navigation out of the slide
         },
         thumbs: {
             visible: true,          //enable thumbnails?
             slideOn: 'click',
             animAsOverlay: false,   //animate as overlay on slide (hide on transition, show on return)
-            animationIn: null,      //custom animation to use for animating the navigation into the slide
-            animationOut: null      //custom animation to use for animating the navigation out of the slide
+            animationIn: false,     //custom animation to use for animating the navigation into the slide
+            animationOut: false     //custom animation to use for animating the navigation out of the slide
         },
         title: {
             visible: true,          //enable slide titles?
