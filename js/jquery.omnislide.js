@@ -264,15 +264,19 @@
 
             if (slideIndex === -1) {
                 slider.$slides.eq(nextSlide).show();
+                slider.$thumbs.eq(nextSlide).addClass('active');
+
                 transitionCallback(nextSlide);
                 return;
             }
 
             sets = checkOverrides(nextSlide);
-            slider.$thumbs.eq(slideIndex).removeClass('active');
 
             //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
+                slider.$thumbs.eq(slideIndex).removeClass('active');
+                slider.$thumbs.eq(nextSlide).addClass('active');
+
                 //attempt to use advanced transitions
                 if ($.OmniSlide.transitionAPI) {
                     //activate the transition and show overlays on callback
@@ -293,8 +297,6 @@
             function transitionCallback(nextSlide) {
                 slideIndex = nextSlide;
                 storage.slideIndexes[guid] = slideIndex;
-
-                slider.$thumbs.eq(slideIndex).addClass('active');
                 remakeTimer();
 
                 showOverlays(slideIndex, function () {
@@ -830,7 +832,7 @@
 
                 timer.unlock();
                 timer.stop();
-                clearCanvas();
+                bgPaint();
 
                 lastRad = 0;
                 timeEllapsed = 0;
