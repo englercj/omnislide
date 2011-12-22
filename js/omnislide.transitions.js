@@ -1,5 +1,5 @@
 ﻿(function ($, window, undefined) {
-    var trans = OmniSlide.transitionAPI.transitions;
+    var trans = $.OmniSlide.transitionAPI.transitions;
 
     jQuery.extend(trans, {
         flyLeft: {

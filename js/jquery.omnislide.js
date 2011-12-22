@@ -106,7 +106,7 @@
         // Variables used throughout plugin
         //////////////////////////////////////
         var settings = {},
-        guid = OmniSlide.generateGuid(),
+        guid = $.OmniSlide.generateGuid(),
         slides = [],
         slider = {
             $container: $(),
@@ -140,8 +140,8 @@
                     //parse out the slides into usable data
                     var parse = parseSlides();
                     if (parse) {
-                        OmniSlide.error('Error while parsing slides: ', parse);
-                        OmniSlide.error('settings.slides: ', settings.slides);
+                        $.OmniSlide.error('Error while parsing slides: ', parse);
+                        $.OmniSlide.error('settings.slides: ', settings.slides);
 
                         return false;
                     }
@@ -262,9 +262,9 @@
                 slider.timer.reset();
 
                 //attempt to use advanced transitions
-                if (OmniSlide.transitionAPI) {
+                if ($.OmniSlide.transitionAPI) {
                     //activate the transition and show overlays on callback
-                    OmniSlide.transitionAPI.transition(settings.transition, slider.$slides,
+                    $.OmniSlide.transitionAPI.transition(settings.transition, slider.$slides,
                         slideIndex, nextSlide, function () { transitionCallback(nextSlide); });
                 }
                 //otherwise default to simple built in cut
@@ -299,7 +299,7 @@
             guid = $elm.data('guid');
 
             if (!guid) {
-                OmniSlide.error('Unable to load from storage, element is not a slider: ', this);
+                $.OmniSlide.error('Unable to load from storage, element is not a slider: ', this);
                 return false;
             }
 
@@ -521,7 +521,7 @@
 
             //create timer
             slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).toggle(settings.timer.visible).appendTo(slider.$slider);
-            slider.timer = new OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
+            slider.timer = new $.OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
 
             //create slides and thumbs
             $.each(slides, function (i, slide) {
@@ -567,22 +567,22 @@
     }
 
     //////////////////////////////////////
-    // Registration of Plugin and API
+    // Register jQuery Plugin
     //////////////////////////////////////
     //register plugin with jQuery
-    $.fn.extend({
-        OmniSlide: electricSlide,
-        omnislide: electricSlide
-    });
+    $.fn.OmniSlide = electricSlide;
 
+    //////////////////////////////////////
+    // Build the API variable
+    //////////////////////////////////////
     //build global object for use by plugins as utilities
-    win.OmniSlide = win.os = {
+    $.OmniSlide = {
         version: 0.5,
         //general logging override to avoid errors
         _log: function (type, args) {
             if (console && console[type]) {
                 args = ([].slice.call(args, 0));
-                args.unshift(OmniSlide._time());
+                args.unshift($.OmniSlide._time());
                 console[type].apply(this, args);
                 return console;
             }
@@ -593,8 +593,8 @@
             return '[' + (new Date()).toISOString().replace(/.*T|Z/g, '') + ']';
         },
         getRandKey: function (obj) {
-            var keys = OmniSlide.getKeys(obj);
-            return keys[OmniSlide.rand(keys.length)];
+            var keys = $.OmniSlide.getKeys(obj);
+            return keys[$.OmniSlide.rand(keys.length)];
         },
         //gets pertinent CSS attributes of an element
         //and returns an object containing them
@@ -624,10 +624,10 @@
             return ((Math.random() * 0x10000) | 0) % max;
         },
         //logging wrappers
-        log: function () { OmniSlide._log('log', arguments); },
-        error: function () { OmniSlide._log('error', arguments); },
-        warn: function () { OmniSlide._log('warn', arguments); },
-        debug: function () { OmniSlide._log('info', arguments); },
+        log: function () { $.OmniSlide._log('log', arguments); },
+        error: function () { $.OmniSlide._log('error', arguments); },
+        warn: function () { $.OmniSlide._log('warn', arguments); },
+        debug: function () { $.OmniSlide._log('info', arguments); },
         //generates a Guid that will identify a slider throughout its life.
         generateGuid: function () {
             var S4 = function () {
@@ -638,12 +638,12 @@
         }
     };
     //add version string to the global object
-    OmniSlide.versionString = 'v' + OmniSlide.version + ' BETA';
+    $.OmniSlide.versionString = 'v' + $.OmniSlide.version + ' BETA';
 
-    /*
-    * OmniSlide Canvas Timer
-    */
-    win.OmniSlide.timer = function (animLen, options, callback, canvas) {
+    //////////////////////////////////////
+    // OmniSlide canvas timer
+    //////////////////////////////////////
+    $.OmniSlide.timer = function (animLen, options, callback, canvas) {
         if (!canvas)
             canvas = document.createElement('canvas');
 

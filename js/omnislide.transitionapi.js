@@ -21,10 +21,10 @@
 */
 
 (function ($, win, undefined) {
-    win.OmniSlide.transitionAPI = {
+    $.OmniSlide.transitionAPI = {
         transition: function (opts, $slides, index, next, callback) {
             //store vars locally for easier access and to lose references
-            var api = OmniSlide.transitionAPI,
+            var api = $.OmniSlide.transitionAPI,
                 options = $.extend(true, {}, opts);
 
             //effect needs to be determined BEFORE we extend
@@ -61,13 +61,13 @@
             order: ['normal', 'reverse', 'randomize']//TODO: Implement spiral order
         },
         _activate: function ($slide) {
-            $slide.show().addClass('active').css(OmniSlide.transitionAPI._css.activeSlide);
+            $slide.show().addClass('active').css($.OmniSlide.transitionAPI._css.activeSlide);
         },
         _deactivate: function ($slide) {
-            $slide.hide().removeClass('active').css(OmniSlide.transitionAPI._css.slide);
+            $slide.hide().removeClass('active').css($.OmniSlide.transitionAPI._css.slide);
         },
         _setRandomIfInvalid: function (obj, key, vals) {
-            var api = OmniSlide.transitionAPI,
+            var api = $.OmniSlide.transitionAPI,
                 err;
 
             vals = vals || api._validKeys[key];
@@ -94,15 +94,15 @@
 
             if (err) {
                 err += 'It has been assigned a random value (' + obj[key] + ').';
-                OmniSlide.warn(err);
+                $.OmniSlide.warn(err);
             }
         },
         _setToRandom: function (obj, key, vals) {
-            if ($.isArray(vals)) obj[key] = vals[OmniSlide.getRandKey(vals)];
-            else obj[key] = OmniSlide.getRandKey(vals);
+            if ($.isArray(vals)) obj[key] = vals[$.OmniSlide.getRandKey(vals)];
+            else obj[key] = $.OmniSlide.getRandKey(vals);
         },
         _doTransition: function ($slides, index, next, opt, callback) {
-            var api = OmniSlide.transitionAPI, cssKeys = OmniSlide.getKeys(opt.css),
+            var api = $.OmniSlide.transitionAPI, cssKeys = $.OmniSlide.getKeys(opt.css),
                 boxes, $boxes, $wrapper, len, evalCss;
 
             if (opt.slide == 'next') {
@@ -134,7 +134,7 @@
                 var $box, toCss = opt.css, j = i;
                 if (opt.order == 'randomize') {
                     //select a random box and remove it from the elements to choose from
-                    j = OmniSlide.rand($boxes.length);
+                    j = $.OmniSlide.rand($boxes.length);
                     $box = $boxes.eq(j);
                     $boxes = $boxes.not($box);
                 } else { $box = $boxes.eq(j); }
@@ -144,7 +144,7 @@
                     //so store the current values of whatever css we are changing
                     //as the css to animate towards and then assign the specified 
                     //css to the box now
-                    toCss = OmniSlide.getCss($box, cssKeys);
+                    toCss = $.OmniSlide.getCss($box, cssKeys);
                     $box.css(opt.css);
                     //special case where we apply a '-=' or '+=' css
                     //we need to reverse that in the toCss
@@ -198,7 +198,7 @@
             var slideW = $slide.width(), slideH = $slide.height(),
                 w = slideW / cols, h = slideH / rows,
                 $boxes = $(), $wrapper,
-                api = OmniSlide.transitionAPI;
+                api = $.OmniSlide.transitionAPI;
 
             //create boxes and set them up
             for (var y = 0; y < rows; ++y) {
@@ -244,7 +244,7 @@
         }
     };
 
-    win.OmniSlide.transitionAPI.transitions = {
+    $.OmniSlide.transitionAPI.transitions = {
         fadeOut: {
             css: { opacity: 0 },
             delay: 75,
@@ -310,13 +310,13 @@
             direction: 'random'
         }
     };
-    win.OmniSlide.transitionAPI.transitions['colShrinkOut'] = $.extend(true, {}, win.OmniSlide.transitionAPI.transitions.rowShrinkOut);
-    win.OmniSlide.transitionAPI.transitions['colShrinkOut'].cols = 8;
-    win.OmniSlide.transitionAPI.transitions['colShrinkOut'].rows = 1;
+    $.OmniSlide.transitionAPI.transitions['colShrinkOut'] = $.extend(true, {}, $.OmniSlide.transitionAPI.transitions.rowShrinkOut);
+    $.OmniSlide.transitionAPI.transitions['colShrinkOut'].cols = 8;
+    $.OmniSlide.transitionAPI.transitions['colShrinkOut'].rows = 1;
 
     //    //Transition extension example
     //    (function($, window, undefined) {
-    //        var api = OmniSlide.transitionAPI;
+    //        var api = $.OmniSlide.transitionAPI;
     //    
     //        $.extend(api.transitions, {
     //            cut: {
