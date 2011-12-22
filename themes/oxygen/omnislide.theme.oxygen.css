@@ -10,7 +10,7 @@ div.slide-wrapper.oxygen {
 }
 div.slide-box.oxygen { width:960px; height:512px; }
 
-div.slide.oxygen { }
+div.slide.oxygen { background:rgb(25,25,25); }
 div.slide.active.oxygen { }
 
 div.slide-nav.oxygen { top:0; left:0; height:100%; width:100%; }
