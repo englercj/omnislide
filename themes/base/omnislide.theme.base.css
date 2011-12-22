@@ -40,7 +40,7 @@ div.slide-nav {
     filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bf515151', endColorstr='#bf1b1b1b',GradientType=0 ); /* IE6-9 */
 }
 div.slide-nav-control {
-    background:left top url('../img/sprite.png') no-repeat;
+    background:left top url('sprite.png') no-repeat;
     
     width:48px; 
     height:48px; 
