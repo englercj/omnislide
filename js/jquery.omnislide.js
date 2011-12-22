@@ -592,85 +592,9 @@
     }
 
     //////////////////////////////////////
-    // Register jQuery Plugin
-    //////////////////////////////////////
-    //register plugin with jQuery
-    $.fn.OmniSlide = electricSlide;
-
-    //////////////////////////////////////
-    // Build the API variable
-    //////////////////////////////////////
-    //build global object for use by plugins as utilities
-    $.OmniSlide = {
-        version: 0.5,
-        //general logging override to avoid errors
-        _log: function (type, args) {
-            if (console && console[type]) {
-                args = ([].slice.call(args, 0));
-                args.unshift($.OmniSlide._time());
-                console[type].apply(this, args);
-                return console;
-            }
-
-            return {};
-        },
-        _time: function () {
-            return '[' + (new Date()).toISOString().replace(/.*T|Z/g, '') + ']';
-        },
-        getRandKey: function (obj) {
-            var keys = $.OmniSlide.getKeys(obj);
-            return keys[$.OmniSlide.rand(keys.length)];
-        },
-        //gets pertinent CSS attributes of an element
-        //and returns an object containing them
-        getCss: function ($elm, attrs) {
-            var css = {}, i;
-
-            for (i = 0; i < attrs.length; ++i) {
-                css[attrs[i]] = $elm.css(attrs[i]);
-            }
-
-            return css;
-        },
-        //iterates through an object and returns the keys
-        //optionally showing the private "_*" keys as well
-        getKeys: function (obj, showPrivate) {
-            var keys = [], key;
-            for (key in obj) {
-                if (showPrivate || key.charAt(0) != '_')
-                    keys.push(key);
-            }
-            return keys;
-        },
-        //generates a random number between 0 -> max
-        //also a little more "random" than built in
-        //Math.random() functionality
-        rand: function (max) {
-            return ((Math.random() * 0x10000) | 0) % max;
-        },
-        //logging wrappers
-        log: function () { $.OmniSlide._log('log', arguments); },
-        error: function () { $.OmniSlide._log('error', arguments); },
-        warn: function () { $.OmniSlide._log('warn', arguments); },
-        debug: function () { $.OmniSlide._log('info', arguments); },
-        //XOR: function (a, b) { return a ? !b : b; },
-        //XNOR: function (a, b) { return !($.OmniSlide.XOR(a, b)); },
-        //generates a Guid that will identify a slider throughout its life.
-        generateGuid: function () {
-            var S4 = function () {
-                return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
-            };
-
-            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
-        }
-    };
-    //add version string to the global object
-    $.OmniSlide.versionString = 'v' + $.OmniSlide.version + ' BETA';
-
-    //////////////////////////////////////
     // OmniSlide canvas timer
     //////////////////////////////////////
-    $.OmniSlide.timer = function (animLen, options, callback, canvas) {
+    function electricTimer(animLen, options, callback, canvas) {
         if (!canvas)
             canvas = document.createElement('canvas');
 
@@ -835,4 +759,81 @@
         //Public Interface
         return timer;
     }
+
+    //////////////////////////////////////
+    // Register jQuery Plugin
+    //////////////////////////////////////
+    //register plugin with jQuery
+    $.fn.OmniSlide = electricSlide;
+
+    //////////////////////////////////////
+    // Build the API variable
+    //////////////////////////////////////
+    //build global object for use by plugins as utilities
+    $.OmniSlide = {
+        version: 0.6,
+        //general logging override to avoid errors
+        _log: function (type, args) {
+            if (console && console[type]) {
+                args = ([].slice.call(args, 0));
+                args.unshift($.OmniSlide._time());
+                console[type].apply(this, args);
+                return console;
+            }
+
+            return {};
+        },
+        _time: function () {
+            return '[' + (new Date()).toISOString().replace(/.*T|Z/g, '') + ']';
+        },
+        getRandKey: function (obj) {
+            var keys = $.OmniSlide.getKeys(obj);
+            return keys[$.OmniSlide.rand(keys.length)];
+        },
+        //gets pertinent CSS attributes of an element
+        //and returns an object containing them
+        getCss: function ($elm, attrs) {
+            var css = {}, i;
+
+            for (i = 0; i < attrs.length; ++i) {
+                css[attrs[i]] = $elm.css(attrs[i]);
+            }
+
+            return css;
+        },
+        //iterates through an object and returns the keys
+        //optionally showing the private "_*" keys as well
+        getKeys: function (obj, showPrivate) {
+            var keys = [], key;
+            for (key in obj) {
+                if (showPrivate || key.charAt(0) != '_')
+                    keys.push(key);
+            }
+            return keys;
+        },
+        //generates a random number between 0 -> max
+        //also a little more "random" than built in
+        //Math.random() functionality
+        rand: function (max) {
+            return ((Math.random() * 0x10000) | 0) % max;
+        },
+        //logging wrappers
+        log: function () { $.OmniSlide._log('log', arguments); },
+        error: function () { $.OmniSlide._log('error', arguments); },
+        warn: function () { $.OmniSlide._log('warn', arguments); },
+        debug: function () { $.OmniSlide._log('info', arguments); },
+        //XOR: function (a, b) { return a ? !b : b; },
+        //XNOR: function (a, b) { return !($.OmniSlide.XOR(a, b)); },
+        //generates a Guid that will identify a slider throughout its life.
+        generateGuid: function () {
+            var S4 = function () {
+                return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1);
+            };
+
+            return (S4() + S4() + "-" + S4() + "-" + S4() + "-" + S4() + "-" + S4() + S4() + S4());
+        },
+        timer: electricTimer
+    };
+    //add version string to the global object
+    $.OmniSlide.versionString = 'v' + $.OmniSlide.version + ' BETA';
 })(jQuery, window);
