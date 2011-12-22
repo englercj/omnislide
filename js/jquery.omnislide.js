@@ -38,7 +38,7 @@
             animationOut: null      //custom animation to use for animating the timer out of the slide
         },
         navigation: {
-            enabled: true,          //enable navigation?
+            visible: true,          //enable navigation?
             opacity: {
                 focused: 1,         //the opacity to set on controls when focused
                 blurred: 0.1        //the opacity to set on controls when blurred
@@ -48,23 +48,33 @@
             animationOut: null      //custom animation to use for animating the navigation out of the slide
         },
         thumbs: {
-            enabled: false,         //enable thumbnails?
+            visible: true,          //enable thumbnails?
             slideOn: 'click',
             animAsOverlay: false,   //animate as overlay on slide (hide on transition, show on return)
             animationIn: null,      //custom animation to use for animating the navigation into the slide
             animationOut: null      //custom animation to use for animating the navigation out of the slide
         },
         title: {
-            enabled: true,          //enable slide titles?
+            visible: true,          //enable slide titles?
             animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
             animationIn: false,     //custom animation to use for animating the title into the slide
             animationOut: false     //custom animation to use for animating the title out of the slide
         },
         overlay: {
-            enabled: true,          //enable slide overlay?
+            visible: true,          //enable slide overlay?
             animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
             animationIn: false,     //custom animation to use for animating the overlay into the slide
             animationOut: false     //custom animation to use for animating the overlay out of the slide
+        },
+        slideOverrides: {
+            //These slide options override the given values in settings
+            //you specify the index of the slide it overrides as the key
+            //and the object is a full settings object just like you passed
+            //above, you can override anything you want here.
+
+            //Can't Override:
+            // - slides
+            // - startSlide
         },
         hoverPause: true            //pause when a user hovers into the current slide
     },
@@ -238,7 +248,7 @@
             if (slider.sliding) return false;
 
             slider.sliding = true;
-            var nextSlide;
+            var nextSlide, sets;
 
             //if number go to that slide
             if ($.isNumeric(slide))
@@ -257,14 +267,15 @@
                 transitionCallback(nextSlide);
                 return;
             }
+
+            sets = checkOverrides(nextSlide);
+
             //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
-                slider.timer.reset();
-
                 //attempt to use advanced transitions
                 if ($.OmniSlide.transitionAPI) {
                     //activate the transition and show overlays on callback
-                    $.OmniSlide.transitionAPI.transition(settings.transition, slider.$slides,
+                    $.OmniSlide.transitionAPI.transition(sets.transition, slider.$slides,
                         slideIndex, nextSlide, function () { transitionCallback(nextSlide); });
                 }
                 //otherwise default to simple built in cut
@@ -281,6 +292,8 @@
             function transitionCallback(nextSlide) {
                 slideIndex = nextSlide;
                 storage.slideIndexes[guid] = slideIndex;
+                remakeTimer();
+
                 showOverlays(slideIndex, function () {
                     slider.sliding = false;
                     playTimer();
@@ -292,6 +305,21 @@
         //////////////////////////////////////
         // Utilities
         //////////////////////////////////////
+
+        //for checking if the current slide has setting overrides
+        function checkOverrides(slide) {
+            //if no slide passed, use slideIndex
+            slide = slide || slideIndex;
+
+            //lose original setting reference
+            var sets = $.extend(true, {}, settings);
+
+            //if there is an override, perform it
+            if (sets.slideOverrides[slide]) $.extend(true, sets, sets.slideOverrides[slide]);
+
+            //return possibly overriden settings
+            return sets;
+        }
 
         //load up the stored values for the slider we are operating on
         // (methods called with $().OmniSlide('...') aren't in closure scope)
@@ -314,7 +342,7 @@
         function animateOverlays(i, show, cb) {
             var $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
                 $title = slider.$slides.eq(i).find('h1.slide-title'),
-                extFunc, intFunc, overlayWait;
+                extFunc, intFunc, overlayWait, sets = checkOverrides(i);
 
             if (show) {
                 extFunc = 'animationIn';
@@ -326,14 +354,14 @@
 
             slider.timer.stop();
 
-            doAnimOverlay(settings.timer, slider.$timer);
-            doAnimOverlay(settings.navigation, slider.$nav);
-            doAnimOverlay(settings.thumbs, slider.$thumbs)
-            doAnimOverlay(settings.title, $title);
-            doAnimOverlay(settings.overlay, $overlay);
+            doAnimOverlay(sets.timer, slider.$timer);
+            doAnimOverlay(sets.navigation, slider.$nav);
+            doAnimOverlay(sets.thumbs, slider.$thumbs)
+            doAnimOverlay(sets.title, $title);
+            doAnimOverlay(sets.overlay, $overlay);
 
             function doAnimOverlay(obj, $obj) {
-                if ((obj.enabled || obj.visible) && obj.animAsOverlay && $obj.length) {
+                if (obj.visible && obj.animAsOverlay && $obj.length) {
                     if (obj[extFunc] && $.isFunction(obj[extFunc])) obj[extFunc].call($obj);
                     else $obj[intFunc]();
                 }
@@ -375,6 +403,16 @@
                 slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
         }
 
+        //this will set overriden settings onto the timer
+        function remakeTimer() {
+            var sets = checkOverrides();
+
+            slider.timer.reset();
+            delete slider.timer;
+
+            slider.timer = new $.OmniSlide.timer(sets.transition.wait, sets.timer, moveSlide, slider.$timer[0]);
+        }
+
         //////////////////////////////////////
         // Event Handlers
         //////////////////////////////////////
@@ -384,23 +422,18 @@
             if (e.type == settings.thumbs.slideOn) {
                 moveSlide(slider.$thumbs.index(this));
             }
-            /*switch (e.type) {
-            case 'mouseenter':
-            break;
-            case 'mouseleave':
-            break;
-            case 'click':
-            break;
-            }*/
+
             slider.$container.trigger('thumb-' + e.type, [{ originalEvent: e, target: this}]);
         }
 
         //handles all events on Slides
         function slideEvent(e) {
+            var sets = checkOverrides();
+
             if (slider.timer) {
                 switch (e.type) {
                     case 'mouseenter':
-                        if (settings.hoverPause) pauseTimer();
+                        if (sets.hoverPause) pauseTimer();
                         break;
                     case 'mouseleave':
                         if (slider.timer.stopped) playTimer();
@@ -412,12 +445,14 @@
 
         //handles all events on Navigation
         function navEvent(e) {
+            var sets = checkOverrides();
+
             switch (e.type) {
                 case 'mouseenter':
-                    slider.$nav.stop().animate({ opacity: settings.navigation.opacity.focused });
+                    slider.$nav.stop().animate({ opacity: sets.navigation.opacity.focused });
                     break;
                 case 'mouseleave':
-                    slider.$nav.stop().animate({ opacity: settings.navigation.opacity.blurred });
+                    slider.$nav.stop().animate({ opacity: sets.navigation.opacity.blurred });
                     break;
                 case 'click':
                     var ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
@@ -513,7 +548,7 @@
             slider.$slider = $('<div class="slide-box"/>').css(css.box).appendTo(slider.$wrapper);
 
             //create navigation
-            slider.$nav = $('<div class="slide-nav"/>').css(css.nav).toggle(settings.navigation.enabled).appendTo(slider.$slider);
+            slider.$nav = $('<div class="slide-nav"/>').css(css.nav).toggle(settings.navigation.visible).appendTo(slider.$slider);
 
             slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
             slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
@@ -529,7 +564,8 @@
             //create slides and thumbs
             $.each(slides, function (i, slide) {
                 //create slide
-                var $slide = $('<div class="slide"/>').css(css.slide);
+                var $slide = $('<div class="slide"/>').css(css.slide),
+                    $thumb = $('<div class="slide-thumb"/>');
 
                 //add slide content
                 if (slide.image)
@@ -541,24 +577,20 @@
                 if (slide.overlay)
                     $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>').css(css.overlay));
 
-                slider.$slides = slider.$slides.add($slide.hide());
 
                 //add thumbnail
-                if (settings.thumbs.enabled) {
-                    var $thumb = $('<div class="slide-thumb"/>');
+                $thumb.append('<img class="slide-thumb-image" src="' + slide.thumb + '" alt=""/>');
+                $thumb.append('<span class="slide-thumb-title">' + slide.title + '</span>');
 
-                    $thumb.append('<img class="slide-thumb-image" src="' + slide.thumb + '" alt=""/>');
-                    $thumb.append('<span class="slide-thumb-title">' + slide.title + '</span>');
-
-                    slider.$thumbs = slider.$thumbs.add($thumb);
-                }
+                slider.$thumbs = slider.$thumbs.add($thumb);
+                slider.$slides = slider.$slides.add($slide.hide());
             });
             slider.$slides.appendTo(slider.$slider);
-            slider.$thumbs.toggle(settings.thumbs.enabled).appendTo($tWrap);
+            slider.$thumbs.toggle(settings.thumbs.visible).appendTo($tWrap);
         }
 
         //////////////////////////////////////
-        // Method Claling Logic
+        // Method Calling Logic
         //////////////////////////////////////
 
         if (methods[method]) {
@@ -632,6 +664,8 @@
         error: function () { $.OmniSlide._log('error', arguments); },
         warn: function () { $.OmniSlide._log('warn', arguments); },
         debug: function () { $.OmniSlide._log('info', arguments); },
+        XOR: function (a, b) { return a ? !b : b; },
+        XNOR: function (a, b) { return !($.OmniSlide.XOR(a, b)); },
         //generates a Guid that will identify a slider throughout its life.
         generateGuid: function () {
             var S4 = function () {
@@ -757,15 +791,28 @@
         },
 
         timer = {
-            setTimeLeft: function (time) {
+            timeLeft: function (time) {
+                if (time === undefined) return (animLen - timeEllapsed);
+
                 if (timer.locked || time > animLen || time < 0) return false;
 
                 timeEllapsed = (animLen - time);
                 return true;
             },
+            animLen: function (len) {
+                if (len === undefined) return animLen;
+
+                if (timer.locked || len < 0) return false;
+
+                timer.stop();
+                animLen = len;
+                timer.reset();
+                return true;
+            },
             start: function () {
                 if (timer.locked) return false;
 
+                bgPaint();
                 tickLoop = setInterval(tick, options.refreshRate);
                 timer.stopped = false;
             },
@@ -780,7 +827,7 @@
 
                 timer.unlock();
                 timer.stop();
-                bgPaint();
+                clearCanvas();
 
                 lastRad = 0;
                 timeEllapsed = 0;

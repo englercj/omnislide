@@ -15,31 +15,44 @@
                 $('#sliderUl').OmniSlide({
                     slides: '#slideInfo',
                     startSlide: 1,
-                    transition: {
-                        effect: 'random'
-                    },
+                    /*transition: {
+                    effect: 'evaporate'
+                    },*/
                     timer: {
                         height: 8,
                         width: 200,
                         type: 'bar'
                     },
-                    thumbs: {
-                        enabled: true,
-                        tooltip: false,
-                        triggerTooltip: 'hover',
-                        triggerSlide: 'dblclick'
+                    title: {
+                        visible:false
+                    },
+                    slideOverrides: {
+                        2: {
+                            transition: {
+                                effect: 'colFlyTop'
+                            },
+                            timer: {
+                                height: 40,
+                                width: 40,
+                                type: 'ring'
+                            }
+                        },
+                        3: {
+                            timer: { visible: false },
+                            navigation: { visible: false }
+                        }
                     }
                 });
             });
 
             function createXmlSlider() {
                 $.get('slides.xml', function (data) {
-                    $('#sliderXml').omnislide({ slides: data });
+                    $('#sliderXml').OmniSlide({ slides: data });
                 });
             }
 
             function destroyXmlSlider() {
-                $('#sliderXml').omnislide('destroy');
+                $('#sliderXml').OmniSlide('destroy');
             }
         </script>
         
@@ -54,29 +67,32 @@
         <div id="sliderUl"></div>
         
         <ul id="slideInfo">
-            <li title="Slide #1">
+            <li title="Slide #0">
                 <img class="slide-thumb" src="img/slides/1.jpg" alt="" />
                 <img class="slide-image" src="img/slides/1.jpg" alt="" />
                 <div class="slide-content"></div>
-                <div class="slide-overlay">Here is some overlay content that should be in the overlay box</div>
+                <div class="slide-overlay"></div>
             </li>
-            <li title="Slide #2">
+            <li title="Slide #1">
                 <img class="slide-thumb" src="img/slides/2.jpg" alt="" />
                 <img class="slide-image" src="img/slides/2.jpg" alt="" />
                 <div class="slide-content"></div>
                 <div class="slide-overlay"></div>
             </li>
-            <li title="Slide #3">
+            <li title="Slide #2">
                 <img class="slide-thumb" src="img/slides/3.jpg" alt="" />
                 <img class="slide-image" src="img/slides/3.jpg" alt="" />
                 <div class="slide-content"></div>
-                <div class="slide-overlay">Here is some overlay content that should be in the overlay box</div>
+                <div class="slide-overlay"></div>
             </li>
-            <li title="Slide #4">
+            <li title="Slide #3">
                 <img class="slide-thumb" src="img/slides/4.jpg" alt="" />
                 <img class="slide-image" src="img/slides/4.jpg" alt="" />
                 <div class="slide-content"></div>
-                <div class="slide-overlay"></div>
+                <div class="slide-overlay">
+                    Wondering where the timer and navigation is? I disabled it for this page. Another great feature of OmniSlide
+                    is the ability to set options specific to a single slide!
+                </div>
             </li>
             <!--<li>
                 <img class="slide-thumb" src="img/slides/5.jpg" alt="" />
@@ -84,7 +100,7 @@
                 <div class="slide-content"></div>
                 <div class="slide-overlay"></div>
             </li>-->
-            <li title="Slide #5">
+            <li title="Slide #4">
                 <img class="slide-thumb" src="img/slides/6.jpg" alt="" />
                 <img class="slide-image" src="img/slides/6.jpg" alt="" />
                 <div class="slide-content">TESTING THE CONTENT THINGY<br /><br />AGAIN HERE TOO<br /><br />AGAIN HERE TOO<br /><br />AGAIN HERE TOO</div>
