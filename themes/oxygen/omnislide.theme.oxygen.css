@@ -1,0 +1,55 @@
+/* THEMING CLASSES
+ * ---
+ * Please Modify these to change the theme of the slider
+ */
+div.slide-wrapper {
+    width:960px; 
+    height:512px;
+    
+    margin:0 auto;
+}
+div.slide-wrapper * { margin:0; padding:0; }
+div.slide-box { width:960px; height:512px; }
+
+div.slide { }
+div.slide.active { }
+
+div.slide-nav { top:0; left:0; height:100%; width:100%; }
+div.slide-nav-control {
+    background:left top url('sprite.png') no-repeat;
+    
+    width:64px; 
+    height:64px;
+    
+    cursor:pointer;
+    position:absolute;
+    top:224px;
+}
+div.slide-nav-back      { left:-65px; background-position:0 -192px; }
+div.slide-nav-forward   { left:961px; background-position:0 -128px; }
+div.slide-nav-pause     { left:448px; background-position:0 -64px; }
+div.slide-nav-play      { left:448px; background-position:0 0; }
+div.slide-nav-back:hover   { background-position:-64px -192px; }
+div.slide-nav-forward:hover{ background-position:-64px -128px; }
+div.slide-nav-pause:hover  { background-position:-64px -64px; }
+div.slide-nav-play:hover   { background-position:-64px 0; }
+
+/* Thumbnails are disabled in this theme */
+div.slide-thumbs-wrapper {}
+div.slide-thumb {}
+div.slide-thumb:hover {}
+div.slide-thumb.active {}
+img.slide-thumb-image {}
+span.slide-thumb-title {}
+
+/* Overlays and Titles are disabled in this theme */
+div.slide-overlay {}
+
+h1.slide-title {}
+
+div.slide-content {
+    height:100%;
+    width:100%;
+}
+
+canvas.slide-timer { top:10px; right:10px; }

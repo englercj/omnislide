@@ -3,7 +3,7 @@
     <head>
         <title>Slide Demo</title>
         
-        <link rel="stylesheet" type="text/css" href="themes/base/omnislide.theme.base.css"/>
+        <link rel="stylesheet" type="text/css" href="themes/oxygen/omnislide.theme.oxygen.css"/>
         
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
@@ -14,31 +14,10 @@
             $(function () {
                 $('#sliderUl').OmniSlide({
                     slides: '#slideInfo',
-                    startSlide: 1,
-                    timer: {
-                        height: 8,
-                        width: 200,
-                        type: 'bar'
-                    },
-                    title: {
-                        visible:false
-                    },
-                    slideOverrides: {
-                        2: {
-                            transition: {
-                                effect: 'colFlyTop'
-                            },
-                            timer: {
-                                height: 40,
-                                width: 40,
-                                type: 'ring'
-                            }
-                        },
-                        3: {
-                            timer: { visible: false },
-                            navigation: { visible: false }
-                        }
-                    }
+                    navigation: { opacity: { blurred: 0.05} },
+                    title: { visible: false },
+                    overlay: { visible: false },
+                    thumbs: { visible: false }
                 });
             });
 
@@ -65,24 +44,24 @@
         
         <ul id="slideInfo">
             <li title="Slide #0">
-                <img class="slide-thumb" src="img/1.jpg" alt="" />
-                <img class="slide-image" src="img/1.jpg" alt="" />
-                <div class="slide-content"></div>
+                <img class="slide-thumb" src="" alt="" />
+                <img class="slide-image" src="" alt="" />
+                <div class="slide-content"><div style="width:100%;height:100%;background-color:#F00;">&nbsp;</div></div>
                 <div class="slide-overlay"></div>
             </li>
             <li title="Slide #1">
-                <img class="slide-thumb" src="img/2.jpg" alt="" />
-                <img class="slide-image" src="img/2.jpg" alt="" />
-                <div class="slide-content"></div>
+                <img class="slide-thumb" src="" alt="" />
+                <img class="slide-image" src="" alt="" />
+                <div class="slide-content"><div style="width:100%;height:100%;background-color:#0F0;">&nbsp;</div></div>
                 <div class="slide-overlay"></div>
             </li>
             <li title="Slide #2">
-                <img class="slide-thumb" src="img/3.jpg" alt="" />
-                <img class="slide-image" src="img/3.jpg" alt="" />
-                <div class="slide-content"></div>
+                <img class="slide-thumb" src="" alt="" />
+                <img class="slide-image" src="" alt="" />
+                <div class="slide-content"><div style="width:100%;height:100%;background-color:#00F;">&nbsp;</div></div>
                 <div class="slide-overlay"></div>
             </li>
-            <li title="Slide #3">
+            <!--<li title="Slide #3">
                 <img class="slide-thumb" src="img/4.jpg" alt="" />
                 <img class="slide-image" src="img/4.jpg" alt="" />
                 <div class="slide-content"></div>
@@ -91,18 +70,18 @@
                     is the ability to set options specific to a single slide!
                 </div>
             </li>
-            <!--<li>
+            <li>
                 <img class="slide-thumb" src="img/5.jpg" alt="" />
                 <img class="slide-image" src="img/5.jpg" alt="" />
                 <div class="slide-content"></div>
                 <div class="slide-overlay"></div>
-            </li>-->
+            </li>
             <li title="Slide #4">
                 <img class="slide-thumb" src="img/6.jpg" alt="" />
                 <img class="slide-image" src="img/6.jpg" alt="" />
                 <div class="slide-content">TESTING THE CONTENT THINGY<br /><br />AGAIN HERE TOO<br /><br />AGAIN HERE TOO<br /><br />AGAIN HERE TOO</div>
                 <div class="slide-overlay"></div>
-            </li>
+            </li>-->
         </ul>
 
         <h2>From xml loaded through ajax (Using default Options)</h2>
