@@ -11,7 +11,7 @@ Here are some of the features that OmniSlide supports:
 * HTML Titles and Overlays
 * Canvas timer (bar, circle, or ring styles)
 * Slide Navigation Controls
-* Dynamic Thumbnails (__Coming Soon__)
+* Slide Thumbnails
 * XML input support
 * Extensible Advanced Transitions
 * Flexible Theming Classes
@@ -128,5 +128,8 @@ More information can be found in the [Theme API](https://github.com/englercj/Omn
 
 * [Later] Slide specific properties/transitions
 * [Later] More slide orders (spiral, checker, alternate) [alternate can combine with all others]
-* [Now] Thumbnails
 * [Now] Themes
+
+## Known Bugs
+* Setting slide overrides via the `$().OmniSlide('option')` interface doesn't work properly
+* I'm sure some combo of `animAsOverlay` and `visible` will break my overlay animation logic
