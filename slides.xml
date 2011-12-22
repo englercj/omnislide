@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <slides>
-  <slide title="Slide #0" image="img/1.jpg" thumb="">
+  <slide title="Slide #0" image="img/slides/1.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #1" image="img/2.jpg" thumb="">
+  <slide title="Slide #1" image="img/slides/2.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #2" image="img/3.jpg" thumb="">
+  <slide title="Slide #2" image="img/slides/3.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #3" image="img/4.jpg" thumb="">
+  <slide title="Slide #3" image="img/slides/4.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #4" image="img/5.jpg" thumb="">
+  <slide title="Slide #4" image="img/slides/5.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #5" image="img/6.jpg" thumb="">
+  <slide title="Slide #5" image="img/slides/6.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #6" image="img/7.jpg" thumb="">
+  <slide title="Slide #6" image="img/slides/7.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #7" image="img/8.jpg" thumb="">
+  <slide title="Slide #7" image="img/slides/8.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #8" image="img/9.jpg" thumb="">
+  <slide title="Slide #8" image="img/slides/9.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
-  <slide title="Slide #9" image="img/10.jpg" thumb="">
+  <slide title="Slide #9" image="img/slides/10.jpg" thumb="">
     <content></content>
     <overlay></overlay>
   </slide>
