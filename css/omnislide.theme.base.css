@@ -8,7 +8,7 @@ div.slide-wrapper {
     font-family: Arial,Helvetica,sans-serif;
     
     width:825px; 
-    height:425px;
+    height:480px;
     
     padding:5px;
     background:#FFF;
@@ -58,8 +58,12 @@ div.slide-nav-forward:hover{ background-position:-48px -96px; }
 div.slide-nav-pause:hover  { background-position:-48px -48px; }
 div.slide-nav-play:hover   { background-position:-48px 0; }
 
-div.slide-thumb {  }
-div.slide-thumb img {  }
+div.slide-thumbs-wrapper { height:50px; width:100%; position:absolute; top:435px; margin:0; padding:0; }
+div.slide-thumb { float:left; height:50px; width:165px; cursor:pointer; }
+div.slide-thumb:hover > span.slide-thumb-title { text-decoration:underline; }
+img.slide-thumb-image { float:left; height:50px; width:65px; border-radius:5px; }
+span.slide-thumb-title { float:left; font-size:0.8em; display:block; padding:20px 0 20px 3px; }
+
 div.slide-content {  }
 div.slide-overlay {
     color:#FFF;

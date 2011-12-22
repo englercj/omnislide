@@ -523,6 +523,9 @@
             slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).toggle(settings.timer.visible).appendTo(slider.$slider);
             slider.timer = new $.OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
 
+            //create thumbnail wrapper
+            var $tWrap = $('<div class="slide-thumbs-wrapper"/>').appendTo(slider.$wrapper);
+
             //create slides and thumbs
             $.each(slides, function (i, slide) {
                 //create slide
@@ -544,13 +547,14 @@
                 if (settings.thumbs.enabled) {
                     var $thumb = $('<div class="slide-thumb"/>');
 
-                    $thumb.append('<img class="slide-thumb-image" src="" alt=""/>').attr('src', slide.thumb);
+                    $thumb.append('<img class="slide-thumb-image" src="' + slide.thumb + '" alt=""/>');
                     $thumb.append('<span class="slide-thumb-title">' + slide.title + '</span>');
+
                     slider.$thumbs = slider.$thumbs.add($thumb);
                 }
             });
             slider.$slides.appendTo(slider.$slider);
-            slider.$thumbs.toggle(settings.thumbs.enabled).appendTo(slider.$wrapper);
+            slider.$thumbs.toggle(settings.thumbs.enabled).appendTo($tWrap);
         }
 
         //////////////////////////////////////
