@@ -238,7 +238,9 @@
             else
                 nextSlide = (slideIndex + 1) % slider.$slides.length;
 
-            slider.$container.trigger('transition-before', [{ index: slideIndex, next: nextSlide}]);
+            sets = checkOverrides(nextSlide);
+
+            slider.$container.trigger('transition-before', [{ index: slideIndex, next: nextSlide }]);
 
             if (slideIndex === -1) {
                 slider.$slides.eq(nextSlide).show();
@@ -247,8 +249,6 @@
                 transitionCallback(nextSlide);
                 return;
             }
-
-            sets = checkOverrides(nextSlide);
 
             //hide the overlays and do transition on callback
             hideOverlays(slideIndex, function () {
