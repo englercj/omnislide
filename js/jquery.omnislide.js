@@ -564,7 +564,7 @@
             slider.timer = new $.OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
 
             //create thumbnail wrapper
-            var $tWrap = $('<div class="slide-thumbs-wrapper"/>').appendTo(slider.$wrapper);
+            var $tWrap = $('<div class="slide-thumbs-wrapper"/>').toggle(settings.thumbs.visible).appendTo(slider.$wrapper);
 
             //create slides and thumbs
             $.each(slides, function (i, slide) {
@@ -591,7 +591,7 @@
                 slider.$slides = slider.$slides.add($slide.hide());
             });
             slider.$slides.appendTo(slider.$slider);
-            slider.$thumbs.toggle(settings.thumbs.visible).appendTo($tWrap);
+            slider.$thumbs.appendTo($tWrap);
         }
 
         //////////////////////////////////////
