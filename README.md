@@ -126,7 +126,6 @@ More information can be found in the [Theme API](https://github.com/englercj/Omn
 
 ## TODO
 
-* [Later] Slide specific properties/transitions
 * [Later] More slide orders (spiral, checker, alternate) [alternate can combine with all others]
 * [Now] Themes
 
