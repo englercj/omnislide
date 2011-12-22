@@ -116,7 +116,7 @@ More information can be found in the [Theme API](https://github.com/englercj/Omn
 ## Notes
 
 * To use custom transitions, or to extend the built-in transitions you must include `js/omnislide.transitions.js`
-* Slider has only been tested _minimally_ in FF 8.0 and Chrome 15.0
+* Slider has only been tested _minimally_ in FF8, Chrome 15, and IE9
 * For the theme API note the z-index levels:
     * The slide-box is at z-index 2
 	* A slide is at z-index 3
