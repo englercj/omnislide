@@ -438,13 +438,16 @@
                     slider.$nav.stop().animate({ opacity: sets.navigation.opacity.blurred });
                     break;
                 case 'click':
-                    var ctrl = $.trim(this.className.replace(/slide-nav-control|active/g, ''));
+                    var ctrl = $.trim(this.className);
 
-                    switch (ctrl) {
-                        case 'slide-nav-back': moveSlide(true); break;
-                        case 'slide-nav-forward': moveSlide(); break;
-                        case 'slide-nav-play': playTimer(true); break;
-                        case 'slide-nav-pause': pauseTimer(true); break;
+                    if (ctrl.indexOf('slide-nav-back')) {
+                        moveSlide(true);
+                    } else if (ctrl.indexOf('slide-nav-forward')) {
+                        moveSlide();
+                    } else if (ctrl.indexOf('slide-nav-play')) {
+                        playTimer(true);
+                    } else if (ctrl.indexOf('slide-nav-pause')) {
+                        pauseTime(true);
                     }
                     break;
             }
