@@ -817,7 +817,6 @@
             start: function () {
                 if (timer.locked) return false;
 
-                bgPaint();
                 tickLoop = setInterval(tick, options.refreshRate);
                 timer.stopped = false;
             },
