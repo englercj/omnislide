@@ -79,32 +79,6 @@
         },
         hoverPause: true            //pause when a user hovers into the current slide
     },
-    //This was in the CSS theme file as classes, but moved to inline
-    //to reduce chance of human error in and to reduce size of, the theme file.
-    css = {
-        wrapper: {
-            overflow: 'visible',
-            position: 'relative'
-        },
-        box: {
-            overflow: 'visible',
-            position: 'absolute',
-            zIndex: 2
-        },
-        slide: {
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            zIndex: 3,
-            background: '0 0 no-repeat'
-        },
-        activeSlide: { zIndex: 4 },
-        slideContent: {},
-        nav: { position: 'absolute', zIndex: 10 },
-        timer: { position: 'absolute', zIndex: 10 },
-        overlay: { position: 'absolute', zIndex: 10 },
-        title: { position: 'absolute', zIndex: 10 }
-    },
     storage = {
         settings: {},
         sliders: {},
@@ -290,9 +264,9 @@
                 //otherwise default to simple built in cut
                 else {
                     slider.$slides.eq(nextSlide).show();
-                    slider.$slides.eq(nextSlide).css(css.activeSlide).addClass('active');
+                    slider.$slides.eq(nextSlide).addClass('active');
                     slider.$slides.eq(slideIndex).hide();
-                    slider.$slides.eq(slideIndex).css(css.slide).removeClass('active');
+                    slider.$slides.eq(slideIndex).removeClass('active');
 
                     transitionCallback(nextSlide);
                 }
@@ -545,7 +519,7 @@
             slider.$container = $(container);
 
             //create wrapper
-            slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>').css(css.wrapper)
+            slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>')
                 .delegate('div.slide-box', 'hover', slideEvent)
                 .delegate('div.slide-nav', 'hover', navEvent)
                 .delegate('div.slide-nav-control', 'click', navEvent)
@@ -554,17 +528,17 @@
             if (settings.thumbs.slideOn) slider.$wrapper.delegate('div.slide-thumb', settings.thumbs.slideOn, thumbEvent);
 
             //create slider box
-            slider.$slider = $('<div class="slide-box"/>').css(css.box).appendTo(slider.$wrapper);
+            slider.$slider = $('<div class="slide-box"/>').appendTo(slider.$wrapper);
 
             //create navigation
-            slider.$nav = $('<div class="slide-nav"/>').css(css.nav).toggle(settings.navigation.visible).appendTo(slider.$slider);
+            slider.$nav = $('<div class="slide-nav"/>').toggle(settings.navigation.visible).appendTo(slider.$slider);
 
             slider.$nav.append('<div class="slide-nav-control slide-nav-back">&nbsp;</div>');
             slider.$nav.append('<div class="slide-nav-control slide-nav-pause">&nbsp;</div>');
             slider.$nav.append('<div class="slide-nav-control slide-nav-forward">&nbsp;</div>');
 
             //create timer
-            slider.$timer = $('<canvas class="slide-timer"/>').css(css.timer).toggle(settings.timer.visible).appendTo(slider.$slider);
+            slider.$timer = $('<canvas class="slide-timer"/>').toggle(settings.timer.visible).appendTo(slider.$slider);
             slider.timer = new $.OmniSlide.timer(settings.transition.wait, settings.timer, moveSlide, slider.$timer[0]);
 
             //create thumbnail wrapper
@@ -573,18 +547,18 @@
             //create slides and thumbs
             $.each(slides, function (i, slide) {
                 //create slide
-                var $slide = $('<div class="slide"/>').css(css.slide),
+                var $slide = $('<div class="slide"/>'),
                     $thumb = $('<div class="slide-thumb"/>');
 
                 //add slide content
                 if (slide.image)
                     $slide.css('background-image', 'url(' + slide.image + ')');
                 if (slide.content)
-                    $slide.append($('<div class="slide-content">' + slide.content + '</div>').css(css.slideContent));
+                    $slide.append($('<div class="slide-content">' + slide.content + '</div>'));
                 if (slide.title)
-                    $slide.append($('<h1 class="slide-title" style="display:none;">' + slide.title + '</h1>').css(css.title));
+                    $slide.append($('<h1 class="slide-title" style="display:none;">' + slide.title + '</h1>'));
                 if (slide.overlay)
-                    $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>').css(css.overlay));
+                    $slide.append($('<div class="slide-overlay" style="display:none;">' + slide.overlay + '</div>'));
 
 
                 //add thumbnail

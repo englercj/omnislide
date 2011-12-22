@@ -39,21 +39,6 @@
             //run the transition
             return api._doTransition($slides, index, next, options, callback);
         },
-        _css: {
-            box: {
-                overflow: 'hidden',
-                position: 'absolute'
-            },
-            boxWrap: {
-                overflow: 'hidden',
-                position: 'relative',
-                top: 0,
-                display: 'block',
-                zIndex: 7
-            },
-            slide: { zIndex: 3 },
-            activeSlide: { zIndex: 4 }
-        },
         _validKeys: {
             easing: $.easing,
             direction: ['left', 'topleft', 'top', 'topright', 'right', 'bottomright', 'bottom', 'bottomleft'],
@@ -61,10 +46,10 @@
             order: ['normal', 'reverse', 'randomize']//TODO: Implement spiral order
         },
         _activate: function ($slide) {
-            $slide.show().addClass('active').css($.OmniSlide.transitionAPI._css.activeSlide);
+            $slide.show().addClass('active');
         },
         _deactivate: function ($slide) {
-            $slide.hide().removeClass('active').css($.OmniSlide.transitionAPI._css.slide);
+            $slide.hide().removeClass('active');
         },
         _setRandomIfInvalid: function (obj, key, vals) {
             var api = $.OmniSlide.transitionAPI,
@@ -226,7 +211,6 @@
                             left: (w * x),
                             top: (h * y)
                         })
-                        .css(api._css.box)
                         .append($contents);
 
                     $boxes = $boxes.add($box);
@@ -237,7 +221,6 @@
                         height: slideH,
                         width: slideW
                     })
-                    .css(api._css.boxWrap)
                     .append($boxes);
 
             return [$boxes, $wrapper];

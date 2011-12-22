@@ -1,0 +1,42 @@
+﻿/* Slider Stuffs */
+div.slide-wrapper {
+    overflow:visible;
+    position:relative;
+}
+
+div.slide-box {
+    overflow:visible;
+    position:absolute;
+    z-index:2;
+}
+
+div.slide {
+    width:100%;
+    height:100%;
+    position:absolute;
+    z-index:3;
+    background:0 0 no-repeat;
+}
+div.slide.active { z-index:4; }
+
+div.slide-content {}
+
+div.slide-nav { position:absolute; z-index:10; }
+
+canvas.slide-timer { position:absolute; z-index:10; }
+
+div.slide-overlay { position:absolute; z-index: 10; }
+h1.slide-title { position:absolute; z-index: 10; }
+
+/* Transition Stuffs */
+div.slider-transition-box {
+    overflow:hidden;
+    position:absolute;
+}
+div.slide-transition-box-wrapper {
+    overflow:hidden;
+    position:relative;
+    top:0;
+    display:block;
+    z-index:7;
+}
