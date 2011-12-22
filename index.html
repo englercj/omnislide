@@ -4,6 +4,7 @@
         <title>Slide Demo</title>
         
         <link rel="stylesheet" type="text/css" href="themes/oxygen/omnislide.theme.oxygen.css"/>
+        <link rel="stylesheet" type="text/css" href="themes/simple/omnislide.theme.simple.css"/>
         
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
@@ -14,6 +15,7 @@
             $(function () {
                 $('#sliderUl').OmniSlide({
                     slides: '#slideInfo',
+                    theme: 'oxygen',
                     transition: { wait: 9000 },
                     navigation: { opacity: { blurred: 0.05} },
                     timer: { height: 48, width: 48 },

@@ -2,19 +2,19 @@
  * ---
  * Please Modify these to change the theme of the slider
  */
-div.slide-wrapper {
+div.slide-wrapper.oxygen {
     width:960px; 
     height:512px;
     
     margin:0 auto;
 }
-div.slide-box { width:960px; height:512px; }
+div.slide-box.oxygen { width:960px; height:512px; }
 
-div.slide { }
-div.slide.active { }
+div.slide.oxygen { }
+div.slide.active.oxygen { }
 
-div.slide-nav { top:0; left:0; height:100%; width:100%; }
-div.slide-nav-control {
+div.slide-nav.oxygen { top:0; left:0; height:100%; width:100%; }
+div.slide-nav-control.oxygen {
     background:left top url('sprite.png') no-repeat;
     
     width:64px; 
@@ -24,31 +24,31 @@ div.slide-nav-control {
     position:absolute;
     top:224px;
 }
-div.slide-nav-back      { left:-65px; background-position:0 -192px; }
-div.slide-nav-forward   { left:961px; background-position:0 -128px; }
-div.slide-nav-pause     { display:none; left:448px; background-position:0 -64px; }
-div.slide-nav-play      { display:none; left:448px; background-position:0 0; }
-div.slide-nav-back:hover   { background-position:-64px -192px; }
-div.slide-nav-forward:hover{ background-position:-64px -128px; }
-div.slide-nav-pause:hover  { background-position:-64px -64px; }
-div.slide-nav-play:hover   { background-position:-64px 0; }
+div.slide-nav-back.oxygen      { left:-65px; background-position:0 -192px; }
+div.slide-nav-forward.oxygen   { left:961px; background-position:0 -128px; }
+div.slide-nav-pause.oxygen     { display:none; left:448px; background-position:0 -64px; }
+div.slide-nav-play.oxygen      { display:none; left:448px; background-position:0 0; }
+div.slide-nav-back:hover.oxygen   { background-position:-64px -192px; }
+div.slide-nav-forward:hover.oxygen{ background-position:-64px -128px; }
+div.slide-nav-pause:hover.oxygen  { background-position:-64px -64px; }
+div.slide-nav-play:hover.oxygen   { background-position:-64px 0; }
 
 /* Thumbnails are disabled in this theme */
-div.slide-thumbs-wrapper {}
-div.slide-thumb {}
-div.slide-thumb:hover {}
-div.slide-thumb.active {}
-img.slide-thumb-image {}
-span.slide-thumb-title {}
+div.slide-thumbs-wrapper.oxygen {}
+div.slide-thumb.oxygen {}
+div.slide-thumb.oxygen:hover {}
+div.slide-thumb.active.oxygen {}
+img.slide-thumb-image.oxygen {}
+span.slide-thumb-title.oxygen {}
 
 /* Overlays and Titles are disabled in this theme */
-div.slide-overlay {}
+div.slide-overlay.oxygen {}
 
-h1.slide-title {}
+h1.slide-title.oxygen {}
 
-div.slide-content {
+div.slide-content.oxygen {
     height:100%;
     width:100%;
 }
 
-canvas.slide-timer { top:10px; right:10px; }
+canvas.slide-timer.oxygen { top:10px; right:10px; }

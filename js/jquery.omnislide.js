@@ -17,6 +17,7 @@
     var defaults = {
         slides: undefined,          //pass either xml string, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
         startSlide: 0,              //initial slide for the plugin to start displaying (0 based)
+        theme: '',                  //theme for this slider
         transition: {
             duration: 800,          //the duration of the animation for each box of the transition
             wait: 2000              //the wait time to show each slide 
@@ -189,8 +190,11 @@
 
                         if ($.isPlainObject(value))
                             $.extend(true, opt[key], value);
-                        else
+                        else {
+                            //if they update theme, we need to change classes
+                            if (key == 'theme') slider.$wrapper.find('*').andSelf().removeClass(settings.theme).addClass(value);
                             opt[key] = value;
+                        }
                     }
                 }
 
@@ -592,6 +596,9 @@
             });
             slider.$slides.appendTo(slider.$slider);
             slider.$thumbs.appendTo($tWrap);
+
+            //add theme class
+            slider.$wrapper.find('*').andSelf().addClass(settings.theme);
         }
 
         //////////////////////////////////////
@@ -693,7 +700,6 @@
         //init canvas
         canvas.height = options.height;
         canvas.width = options.width;
-        canvas.className = 'slide-timer';
 
         var ctx = canvas.getContext('2d'),
 
