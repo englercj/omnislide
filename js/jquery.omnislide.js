@@ -669,8 +669,8 @@
         error: function () { $.OmniSlide._log('error', arguments); },
         warn: function () { $.OmniSlide._log('warn', arguments); },
         debug: function () { $.OmniSlide._log('info', arguments); },
-        XOR: function (a, b) { return a ? !b : b; },
-        XNOR: function (a, b) { return !($.OmniSlide.XOR(a, b)); },
+        //XOR: function (a, b) { return a ? !b : b; },
+        //XNOR: function (a, b) { return !($.OmniSlide.XOR(a, b)); },
         //generates a Guid that will identify a slider throughout its life.
         generateGuid: function () {
             var S4 = function () {
