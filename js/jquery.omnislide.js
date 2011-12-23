@@ -167,9 +167,9 @@
                         if ($.isPlainObject(value))
                             $.extend(true, opt[key], value);
                         else {
+                            opt[key] = value;
                             //if they update theme, we need to change classes
                             if (key == 'theme') slider.$wrapper.find('*').andSelf().removeClass(settings.theme).addClass(value);
-                            opt[key] = value;
                         }
                     }
                 }
@@ -390,9 +390,6 @@
         //this will set overriden settings onto the timer
         function remakeTimer() {
             var sets = checkOverrides();
-
-            slider.timer.reset();
-            delete slider.timer;
 
             slider.timer = new $.OmniSlide.timer(sets.transition.wait, sets.timer, moveSlide, slider.$timer[0]);
         }
