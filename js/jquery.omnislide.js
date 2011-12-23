@@ -34,8 +34,7 @@
                 empty: 'rgba(30, 30, 30, 0.5)',     //color to show on unfilled time
                 filled: 'rgba(255, 255, 255, 0.8)'  //color to show as ellapsed time
             },
-            refreshRate: 10,        //time in ms between redraws (lower is smoother, reccommend <50)
-            ringWidth: 3,           //width of the timer ring (filled, so not including border)
+            ringThickness: 3,           //width of the timer ring (filled, so not including border)
             type: 'ring',           //type of the timer; circle, ring, bar
             animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
             animationIn: false,     //custom animation to use for animating the timer into the slide
@@ -242,7 +241,7 @@
 
             sets = checkOverrides(nextSlide);
 
-            slider.$container.trigger('transition-before', [{ index: slideIndex, next: nextSlide }]);
+            slider.$container.trigger('transition-before', [{ index: slideIndex, next: nextSlide}]);
 
             if (slideIndex === -1) {
                 slider.$slides.eq(nextSlide).show();
@@ -606,32 +605,40 @@
 
         var ctx = canvas.getContext('2d'),
 
-        midX = canvas.width / 2,
-        midY = canvas.height / 2,
+        cW = canvas.width,
+        cH = canvas.height,
+
+        midX = cW / 2,
+        midY = cH / 2,
 
         timeEllapsed = 0,
 
         //radianStart = Math.PI - 0.5,
         radianMax = Math.PI * 2,
-        radius = canvas.width / 2,
+        radius = cW / 2,
         lastRad = 0,
 
         border = options.border,
 
         tickLoop = null,
 
+        FPS_RATES = [90, 45, 30],
+        PAINT_TIME = 3,
+        fps_rate = 0,
+        framerate = 1E3 / FPS_RATES[fps_rate],
+
         //paint background
         bgPaint = function () {
             clearCanvas();
+            if (!options.visible) return;
+
             ctx.fillStyle = options.colors.empty;
             ctx.strokeStyle = options.colors.empty;
-
-            if (!options.visible) return;
 
             switch (options.type) {
                 case 'bar':
                     clearCanvas();
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    ctx.fillRect(0, 0, cW, cH);
                     break;
                 case 'circle':
                     ctx.beginPath();
@@ -640,8 +647,8 @@
                     break;
                 default: //ring
                     ctx.beginPath();
-                    ctx.arc(midX, midY, radius - options.ringWidth / 2 - border, 0, radianMax, false);
-                    ctx.lineWidth = options.ringWidth + (border * 2);
+                    ctx.arc(midX, midY, radius - options.ringThickness / 2 - border, 0, radianMax, false);
+                    ctx.lineWidth = options.ringThickness + (border * 2);
                     ctx.stroke();
                     break;
                     break;
@@ -658,11 +665,11 @@
 
             switch (options.type) {
                 case 'bar':
-                    var w = (canvas.width * prct) - (border * 2);
+                    var w = (cW * prct) - (border * 2);
 
                     w = (w < 0) ? 0 : w;
-                    ctx.clearRect(border, border, w, canvas.height - (border * 2));
-                    ctx.fillRect(border, border, w, canvas.height - (border * 2));
+                    ctx.clearRect(border, border, w, cH - (border * 2));
+                    ctx.fillRect(border, border, w, cH - (border * 2));
                     break;
                 case 'circle':
                     rads = (radianMax * prct) - lastRad;
@@ -678,8 +685,8 @@
                     rads = (radianMax * prct) - lastRad;
 
                     ctx.beginPath();
-                    ctx.arc(midX, midY, radius - (options.ringWidth / 2) - border, lastRad, lastRad + rads, false);
-                    ctx.lineWidth = options.ringWidth;
+                    ctx.arc(midX, midY, radius - (options.ringThickness / 2) - border, lastRad, lastRad + rads, false);
+                    ctx.lineWidth = options.ringThickness;
                     ctx.stroke();
 
                     lastRad = lastRad + rads;
@@ -689,10 +696,12 @@
 
         //clear canvas
         clearCanvas = function () {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.clearRect(0, 0, cW, cH);
         },
 
         tick = function () {
+            var st, end;
+
             if (timeEllapsed >= animLen) {
                 timer.stop();
                 callback();
@@ -700,8 +709,18 @@
                 return;
             }
 
-            timeEllapsed += options.refreshRate;
+            timeEllapsed += framerate;
+            st = (new Date()).getTime();
             fgPaint();
+            end = (new Date()).getTime();
+
+            //if we take too long to paint, then increase framerate
+            if ((end - st) > PAINT_TIME && fps_rate !== FPS_RATES.length - 1) {
+                fps_rate++;
+                framerate = 1E3 / FPS_RATES[fps_rate];
+                clearInterval(tickLoop);
+                tickLoop = setInterval(tick, framerate);
+            }
         },
 
         timer = {
@@ -726,7 +745,7 @@
             start: function () {
                 if (timer.locked) return false;
 
-                tickLoop = setInterval(tick, options.refreshRate);
+                tickLoop = setInterval(tick, framerate);
                 timer.stopped = false;
             },
             stop: function () {
