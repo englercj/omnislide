@@ -11,6 +11,9 @@
 // - slide-mouseenter   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
 // - slide-mouseleave   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
 (function ($, win, undefined) {
+    //monkey wrench to make older versions of jQuery compatible
+    $.isNumeric = $.isNumeric || function (n) { return !isNaN(parseFloat(n)) && isFinite(n); };
+
     //////////////////////////////////////
     // Vars global to ALL slider instances
     //////////////////////////////////////
@@ -221,7 +224,6 @@
         //////////////////////////////////////
         // Transition Handler
         //////////////////////////////////////
-
         function moveSlide(slide) {
             if (slider.sliding) return false;
 
