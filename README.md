@@ -122,12 +122,15 @@ More information can be found in the [Theme API Documentation](#).
 	* The active slide is at z-index 4
 	* If you are using the transitionapi, transition boxes are at z-index 7
 	* Overlays (navigation, title, overlay, timer, etc) are at z-index 10
+* Changing options on the timer (using 'option' method) will take effect next slide
 
 ## TODO
 
-* [After Release] More slide orders (spiral, checker, alternate) [alternate can combine with all others]
 * [Before Release] Themes
+* [Before Release] Run through code for gratuitious crap
 * [Before Release] More browser testing. FF 8, IE 9, and Chrome 15/16 are good.
+* [Future Release] More slide orders (spiral, checker, alternate) [alternate can combine with all others]
+* [Future Release] Better option change handling, timer is refreshed, others are not
 
 ## Known Bugs
 * Setting slide overrides via the `$().OmniSlide('option')` interface doesn't work properly
