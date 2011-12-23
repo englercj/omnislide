@@ -130,7 +130,7 @@ More information can be found in the [Theme API Documentation](#).
 * [Before Release] Run through code for gratuitious crap
 * [Before Release] More browser testing. FF 8, IE 9, and Chrome 15/16 are good.
 * [Future Release] More slide orders (spiral, checker, alternate) [alternate can combine with all others]
-* [Future Release] Better option change handling, timer is refreshed, others are not
+* [Future Release] Better option change handling, timer/theme is refreshed, others are not
 
 ## Known Bugs
 * Setting slide overrides via the `$().OmniSlide('option')` interface doesn't work properly
