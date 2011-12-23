@@ -1,4 +1,4 @@
-# OmniSlide (v0.6 BETA)
+# OmniSlide (v0.7 BETA)
 
 OmniSlide is an amazing new slider being built to be a one-stop-shop for your slider needs. This slider is meant to replace your need for any other slider by combining all the best features found in all sliders out there. It also adds some new features like theming and custom transitions to the mix as well.
 

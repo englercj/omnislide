@@ -792,7 +792,7 @@
     //////////////////////////////////////
     //build global object for use by plugins as utilities
     $.OmniSlide = {
-        version: 0.6,
+        version: 0.7,
         //general logging override to avoid errors
         _log: function (type, args) {
             if (console && console[type]) {
