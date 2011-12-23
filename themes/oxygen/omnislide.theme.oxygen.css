@@ -13,7 +13,7 @@ div.slide-box.oxygen { width:960px; height:512px; }
 div.slide.oxygen { background:rgb(25,25,25); }
 div.slide.active.oxygen { }
 
-div.slide-nav.oxygen { top:0; left:0; height:100%; width:100%; }
+div.slide-nav.oxygen { top:0; left:0; height:100%; width:100%; z-index:1 !important; }
 div.slide-nav-control.oxygen {
     background:left top url('sprite.png') no-repeat;
     
