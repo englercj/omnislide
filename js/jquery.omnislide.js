@@ -182,8 +182,8 @@
             },
             nextSlide: function () { return methods.gotoSlide(); },
             previousSlide: function () { return methods.gotoSlide(true); },
-            pause: function () { pauseTimer(true); return this; },
-            play: function () { playTimer(true); return this; },
+            pause: function () { if (loadStorage(this)) { pauseTimer(true); } return this; },
+            play: function () { if (loadStorage(this)) { playTimer(true); } return this; },
             //public wrapper for animating the overlays
             showOverlays: function () {
                 if (loadStorage(this)) { showOverlays(slideIndex); }
@@ -483,7 +483,7 @@
 
             //parse as ul data
             if ($data.is('ul')) {
-                $data.find('li').each(function (i, slide) {
+                $data.find('> li').each(function (i, slide) {
                     var $slide = $(slide);
                     slides.push({
                         title: $slide.attr('title'),
