@@ -3,25 +3,25 @@
     <head>
         <title>Slide Demo</title>
         
-        <link rel="stylesheet" type="text/css" href="themes/omnislide.base.css" />
-        <link rel="stylesheet" type="text/css" href="themes/oxygen/omnislide.theme.oxygen.css" />
-        <link rel="stylesheet" type="text/css" href="themes/simple/omnislide.theme.simple.css" />
+        <link rel="stylesheet" type="text/css" href="../themes/omnislide.base.css" />
+        <link rel="stylesheet" type="text/css" href="../themes/oxygen/omnislide.theme.oxygen.css" />
+        <link rel="stylesheet" type="text/css" href="../themes/simple/omnislide.theme.simple.css" />
         
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
-        <script src="src/jquery.omnislide.js"></script>
-        <script src="src/omnislide.transitionapi.js"></script>
-        <script src="src/omnislide.transitions.js"></script>
+        <script src="../src/jquery.omnislide.js"></script>
+        <script src="../src/omnislide.transitionapi.js"></script>
+        <script src="../src/omnislide.transitions.js"></script>
         <script>
             $(function () {
                 $('#sliderUl').OmniSlide({
                     slides: '#slideInfo',
-                    theme: 'oxygen',
+                    theme: 'simple',
                     transition: { wait: 9000 },
-                    timer: { height: 48, width: 48 },
-                    title: { visible: false },
-                    overlay: { visible: false },
-                    thumbs: { visible: false }
+                    timer: { height: 48, width: 48 }
+                    //title: { visible: false },
+                    //overlay: { visible: false },
+                    //thumbs: { visible: false }
                 });
             });
 
@@ -38,10 +38,6 @@
         
         <style>
             body { background:#FFF; }
-            
-            div.left { float:left; }
-            div.slider-text { color:#CCC; width:500px; margin:50px; }
-            div.slider-image { height:256px; width:256px; margin:50px 0; }
         </style>
     </head>
     <body>
@@ -52,69 +48,26 @@
         
         <ul id="slideInfo">
             <li title="Slide #0">
-                <img class="slide-thumb" src="" alt="" />
-                <img class="slide-image" src="" alt="" />
-                <div class="slide-content">
-                    <div class="slider-text left">
-                        <h1>The Best HTML</h1>
-                        <h2>No one else can compete.</h2>
-                        <p>
-                            Our software is the best, period. Anything we do is awesome
-                            if you don't believe me, then you are just wrong. If you want
-                            to read more about this obnoxious bit of text here make sure to
-                            click that more button down there.
-                        </p>
-                        <button>More</button>
-                    </div>
-                    <div class="slider-image left">
-                        <img src="img/HTML5_logo.png" alt="" />
-                    </div>
-                </div>
+                <img class="slide-thumb" src="img/slides/1.jpg" alt="" />
+                <img class="slide-image" src="img/slides/1.jpg" alt="" />
+                <div class="slide-content"></div>
                 <div class="slide-overlay"></div>
             </li>
             <li title="Slide #1">
-                <img class="slide-thumb" src="" alt="" />
-                <img class="slide-image" src="" alt="" />
-                <div class="slide-content">
-                    <div class="slider-text left">
-                        <h1>The Coolest jQuery</h1>
-                        <h2>Slipping and sliding around the page.</h2>
-                        <p>
-                            Everything we do is so sleek it may just roll of the page!
-                            Get it? Im so damn funny, you just can't handle how freaking funny I am!
-                        </p>
-                        <button>More</button>
-                    </div>
-                    <div class="slider-image left">
-                        <img src="img/jquery_logo.png" alt="" />
-                    </div>
-                </div>
+                <img class="slide-thumb" src="img/slides/2.jpg" alt="" />
+                <img class="slide-image" src="img/slides/2.jpg" alt="" />
+                <div class="slide-content"></div>
                 <div class="slide-overlay"></div>
             </li>
             <li title="Slide #2">
-                <img class="slide-thumb" src="" alt="" />
-                <img class="slide-image" src="" alt="" />
-                <div class="slide-content">
-                    <div class="slider-text left">
-                        <h1>Some CSS Stuff</h1>
-                        <h2>Yaye CSS3 etc etc etc</h2>
-                        <p>
-                            Look at that icon over there. Isn't that the most awesome
-                            reassuring icon you have ever seen? I feel better just being 
-                            typed on the same page as it. That's right, this is the
-                            text talking. MIND *bleep*!!!1
-                        </p>
-                        <button>More</button>
-                    </div>
-                    <div class="slider-image left">
-                        <img src="img/css-valid.png" alt="" />
-                    </div>
-                </div>
+                <img class="slide-thumb" src="img/slides/3.jpg" alt="" />
+                <img class="slide-image" src="img/slides/3.jpg" alt="" />
+                <div class="slide-content"></div>
                 <div class="slide-overlay"></div>
             </li>
-            <!--<li title="Slide #3">
-                <img class="slide-thumb" src="img/4.jpg" alt="" />
-                <img class="slide-image" src="img/4.jpg" alt="" />
+            <li title="Slide #3">
+                <img class="slide-thumb" src="img/slides/4.jpg" alt="" />
+                <img class="slide-image" src="img/slides/4.jpg" alt="" />
                 <div class="slide-content"></div>
                 <div class="slide-overlay">
                     Wondering where the timer and navigation is? I disabled it for this page. Another great feature of OmniSlide
@@ -122,17 +75,17 @@
                 </div>
             </li>
             <li>
-                <img class="slide-thumb" src="img/5.jpg" alt="" />
-                <img class="slide-image" src="img/5.jpg" alt="" />
+                <img class="slide-thumb" src="img/slides/5.jpg" alt="" />
+                <img class="slide-image" src="img/slides/5.jpg" alt="" />
                 <div class="slide-content"></div>
                 <div class="slide-overlay"></div>
             </li>
             <li title="Slide #4">
-                <img class="slide-thumb" src="img/6.jpg" alt="" />
-                <img class="slide-image" src="img/6.jpg" alt="" />
+                <img class="slide-thumb" src="img/slides/6.jpg" alt="" />
+                <img class="slide-image" src="img/slides/6.jpg" alt="" />
                 <div class="slide-content">TESTING THE CONTENT THINGY<br /><br />AGAIN HERE TOO<br /><br />AGAIN HERE TOO<br /><br />AGAIN HERE TOO</div>
                 <div class="slide-overlay"></div>
-            </li>-->
+            </li>
         </ul>
 
         <h2>From xml loaded through ajax (Using default Options)</h2>
