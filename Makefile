@@ -43,6 +43,7 @@ hint: combine
 	@@if test -e ${RHINO}; then \
 		echo "Checking OmniSlide against JSHint..."; \
 		${HINT} ${COMBINED}; \
+		echo "Passes JS Hint"; \
 	else \
 		echo "Rhino has not been downloaded, please run 'make setup'"; \
 	fi
@@ -86,7 +87,7 @@ ${MINIFIED}: combine
 
 size: combine minify
 	@@gzip -c ${MINIFIED} > ${MINIFIED}.gz;
-	@@wc -c ${COMBINED} ${MINIFIED} ${MINIFIED}.gz;
+	@@du -h ${DIST_DIR}/*
 	@@rm ${MINIFIED}.gz;
 
 clean:
