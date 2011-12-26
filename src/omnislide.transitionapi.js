@@ -143,16 +143,17 @@ $.OmniSlide.transitionAPI = {
                 $.each(opt.css, reverseCSS);
             }
 
-            if (i < len - 1) {
-                $box.data('animData', { opt: opt, toCss: toCss });
-            } else {
+            //if (i == len - 1) data.cb = transitionDone;
+            //} else {
                 //j = (opt.order == 'randomize') ? $boxes.eq(0) : $boxes.eq(i);
-                $box.data('animData', { opt: opt, toCss: toCss, cb: transitionDone });
+                //$box.data('animData', { opt: opt, toCss: toCss, cb: transitionDone });
                 //.delay((opt.delay * i), 'omnislide.transition')
                 //.queue('omnislide.transition', doAnim)
                 //.dequeue('omnislide.transition');
-            }
-            $box.delay((opt.delay * i), 'omnislide.transition')
+            //}
+            
+            $box.data('animData', { opt: opt, toCss: toCss: (i == len-1) ? transitionDone : undefined  });
+                .delay((opt.delay * i), 'omnislide.transition')
                 .queue('omnislide.transition', doAnim)
                 .dequeue('omnislide.transition');
         }
