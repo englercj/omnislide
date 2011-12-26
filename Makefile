@@ -20,17 +20,17 @@ COMPILER_GET = wget http://closure-compiler.googlecode.com/files/compiler-latest
 COMPILER = ${BUILD_DIR}/compiler.jar
 COMPILE = java -jar ${COMPILER} --js ${COMBINED} --js_output_file ${MINIFIED}
 
-RHINO_FILE = rhino
-RHINO_GET = wget ftp://ftp.mozilla.org/pub/mozilla.org/js/rhino1_7R3.zip -O ${RHINO_FILE}.zip && unzip ${RHINO}.zip ${RHINO_FILE}.jar -d ${BUILD_DIR}
-RHINO = ${BUILD_DIR}/${RHINO_FILE}.jar
-HINT = java -jar ${BUILD_DIR}/${RHINO_FILE}.jar ${BUILD_DIR}/jshint-rhino.js ${COMBINED}
+RHINO_FILE = ${BUILD_DIR}/rhino.zip
+RHINO_GET = wget ftp://ftp.mozilla.org/pub/mozilla.org/js/rhino1_7R3.zip -O ${RHINO_FILE} && unzip ${RHINO_FILE} rhino1_7R3/js.jar -d ${BUILD_DIR} && mv ${BUILD_DIR}/rhino1_7R3/js.jar ${BUILD_DIR}/rhino.jar && rm -rf ${BUILD_DIR}/rhino1_7R3/
+RHINO = ${BUILD_DIR}/rhino.jar
+HINT = java -jar ${RHINO} ${BUILD_DIR}/jshint-rhino.js ${COMBINED}
 
 #JQ_VER = $(shell cat version.txt)
 #VER = sed "s/@VERSION/${JQ_VER}/"
 
 #DATE=$(shell git log -1 --pretty=format:%ad)
 
-all: setup combine minify hint #size
+all: setup combine minify hint size
 	@@echo "OmniSlide build complete."
 
 setup: ${BUILD_DIR} ${DIST_DIR} ${COMPILER} ${RHINO}
@@ -39,10 +39,10 @@ combine: setup ${COMBINED}
 
 minify: setup combine ${MINIFIED}
 
-hint: setup combine
-	@@if test -e ${RHINO}; then
+hint: combine
+	@@if test -e ${RHINO}; then \
 		echo "Checking OmniSlide against JSHint..."; \
-		${HINT} \
+		${HINT}; \
 	else \
 		echo "Rhino has not been downloaded, please run 'make setup'"; \
 	fi
@@ -74,7 +74,7 @@ ${COMBINED}: ${MODULES} | ${DIST_DIR}
 #sed 's/@DATE/'"${DATE}"'/' | \
 #${VER} > ${JQ};
 
-${MINIFIED}: ${COMBINED}
+${MINIFIED}: combine
 	@@if test -e ${COMPILER}; then \
 		echo "Minifying to: " ${MINIFIED}; \
 		${COMPILE}; \
@@ -82,17 +82,15 @@ ${MINIFIED}: ${COMBINED}
 		echo "Compiler not downloaded, please run 'make setup'"; \
 	fi
 
-#size: jquery min
-#	@@if test ! -z ${JS_ENGINE}; then \
-		gzip -c ${JQ_MIN} > ${JQ_MIN}.gz; \
-		wc -c ${JQ} ${JQ_MIN} ${JQ_MIN}.gz | ${JS_ENGINE} ${BUILD_DIR}/sizer.js; \
-		rm ${JQ_MIN}.gz; \
-	else \
-		echo "You must have NodeJS installed in order to size jQuery."; \
-	fi
+size: combine minify
+	@@gzip -c ${MINIFIED} > ${MINIFIED}.gz;
+	@@wc -c ${COMBINED} ${MINIFIED} ${MINIFIED}.gz;
+	@@rm ${MINIFIED}.gz;
 
 clean:
 	@@echo "Removing Distribution directory:" ${DIST_DIR}
 	@@rm -rf ${DIST_DIR}
+
+clean-all: clean
 	@@echo "Removing downloaded tools"
-	@@rm -rf ${BUILD_DIR}/compiler.* ${BUILD_DIR}/${RHINO_FILE}.*
+	@@rm -rf ${BUILD_DIR}/compiler.* ${BUILD_DIR}/rhino.*
