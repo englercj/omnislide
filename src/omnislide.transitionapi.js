@@ -152,7 +152,7 @@ $.OmniSlide.transitionAPI = {
                 //.dequeue('omnislide.transition');
             //}
             
-            $box.data('animData', { opt: opt, toCss: toCss, cb: (i == len-1) ? transitionDone : undefined });
+            $box.data('animData', { opt: opt, toCss: toCss, cb: (i == len-1) ? transitionDone : undefined })
                 .delay((opt.delay * i), 'omnislide.transition')
                 .queue('omnislide.transition', doAnim)
                 .dequeue('omnislide.transition');
