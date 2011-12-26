@@ -437,13 +437,13 @@ function electricSlide(method) {
         case 'click':
             var ctrl = $.trim(this.className);
 
-            if (ctrl.indexOf('slide-nav-back')) {
+            if (ctrl.indexOf('slide-nav-back') > -1) {
                 moveSlide(true);
-            } else if (ctrl.indexOf('slide-nav-forward')) {
+            } else if (ctrl.indexOf('slide-nav-forward') > -1) {
                 moveSlide();
-            } else if (ctrl.indexOf('slide-nav-play')) {
+            } else if (ctrl.indexOf('slide-nav-play') > -1) {
                 playTimer(true);
-            } else if (ctrl.indexOf('slide-nav-pause')) {
+            } else if (ctrl.indexOf('slide-nav-pause') > -1) {
                 pauseTime(true);
             }
             break;
