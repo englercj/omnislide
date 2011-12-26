@@ -1,1 +1,1 @@
-(function($, win, undefined) {
+﻿(function($, win, undefined) {
