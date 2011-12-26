@@ -33,7 +33,7 @@ HINT = java -jar ${RHINO} ${BUILD_DIR}/jshint-rhino.js
 all: setup combine minify hint size
 	@@echo "OmniSlide build complete."
 
-setup: ${BUILD_DIR} ${DIST_DIR} ${COMPILER} ${RHINO}
+setup: ${DIST_DIR} ${COMPILER} ${RHINO}
 
 combine: ${COMBINED}
 
@@ -47,9 +47,6 @@ hint: combine
 	else \
 		echo "Rhino has not been downloaded, please run 'make setup'"; \
 	fi
-
-${BUILD_DIR}:
-	@@mkdir -p ${BUILD_DIR}
 
 ${DIST_DIR}:
 	@@mkdir -p ${DIST_DIR}
