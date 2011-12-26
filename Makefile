@@ -16,14 +16,14 @@ COMBINED = ${DIST_DIR}/jquery.omnislide.js
 MINIFIED = ${DIST_DIR}/jquery.omnislide.min.js
 
 COMPILER_FILE = ${BUILD_DIR}/compiler.zip
-COMPILER_GET = wget http://closure-compiler.googlecode.com/files/compiler-latest.zip -O ${COMPILER_FILE} && unzip ${COMPILER_FILE} compiler.jar -d ${BUILD_DIR}
+COMPILER_GET = wget -q http://closure-compiler.googlecode.com/files/compiler-latest.zip -O ${COMPILER_FILE} && unzip ${COMPILER_FILE} compiler.jar -d ${BUILD_DIR}
 COMPILER = ${BUILD_DIR}/compiler.jar
 COMPILE = java -jar ${COMPILER} --js ${COMBINED} --js_output_file ${MINIFIED}
 
 RHINO_FILE = ${BUILD_DIR}/rhino.zip
-RHINO_GET = wget ftp://ftp.mozilla.org/pub/mozilla.org/js/rhino1_7R3.zip -O ${RHINO_FILE} && unzip ${RHINO_FILE} rhino1_7R3/js.jar -d ${BUILD_DIR} && mv ${BUILD_DIR}/rhino1_7R3/js.jar ${BUILD_DIR}/rhino.jar && rm -rf ${BUILD_DIR}/rhino1_7R3/
+RHINO_GET = wget -q ftp://ftp.mozilla.org/pub/mozilla.org/js/rhino1_7R3.zip -O ${RHINO_FILE} && unzip ${RHINO_FILE} rhino1_7R3/js.jar -d ${BUILD_DIR} && mv ${BUILD_DIR}/rhino1_7R3/js.jar ${BUILD_DIR}/rhino.jar && rm -rf ${BUILD_DIR}/rhino1_7R3/
 RHINO = ${BUILD_DIR}/rhino.jar
-HINT = java -jar ${RHINO} ${BUILD_DIR}/jshint-rhino.js ${COMBINED}
+HINT = java -jar ${RHINO} ${BUILD_DIR}/jshint-rhino.js
 
 #JQ_VER = $(shell cat version.txt)
 #VER = sed "s/@VERSION/${JQ_VER}/"
@@ -35,14 +35,14 @@ all: setup combine minify hint size
 
 setup: ${BUILD_DIR} ${DIST_DIR} ${COMPILER} ${RHINO}
 
-combine: setup ${COMBINED}
+combine: ${COMBINED}
 
-minify: setup combine ${MINIFIED}
+minify: combine ${MINIFIED}
 
 hint: combine
 	@@if test -e ${RHINO}; then \
 		echo "Checking OmniSlide against JSHint..."; \
-		${HINT}; \
+		${HINT} ${COMBINED}; \
 	else \
 		echo "Rhino has not been downloaded, please run 'make setup'"; \
 	fi
@@ -55,14 +55,16 @@ ${DIST_DIR}:
 
 ${RHINO}:
 	@@if test ! -e ${RHINO}; then \
-		echo "Downloading rhino..."; \
+		echo "Setting up Rhino..."; \
 		${RHINO_GET}; \
+		echo "Done!"; \
 	fi
 
 ${COMPILER}:
 	@@if test ! -e ${COMPILER}; then \
-		echo "Downloading compiler..."; \
+		echo "Setting up Google Closue Compiler..."; \
 		${COMPILER_GET}; \
+		echo "Done!"; \
 	fi
 
 ${COMBINED}: ${MODULES} | ${DIST_DIR}
@@ -91,6 +93,6 @@ clean:
 	@@echo "Removing Distribution directory:" ${DIST_DIR}
 	@@rm -rf ${DIST_DIR}
 
-clean-all: clean
+clean-tools:
 	@@echo "Removing downloaded tools"
 	@@rm -rf ${BUILD_DIR}/compiler.* ${BUILD_DIR}/rhino.*
