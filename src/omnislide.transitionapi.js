@@ -1,4 +1,4 @@
-﻿ /*
+ /*
  * Each transition has its own options, but they follow the format:
  * OmniSlide.transition(options);
  * WHERE options contains ATLEAST

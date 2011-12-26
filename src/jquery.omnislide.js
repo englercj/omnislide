@@ -1,4 +1,4 @@
-﻿////
+////
 //Events:
 // - transition-before  - Data Passed: { index: 'current slide index', next: 'index of next slide' }
 // - transition-after   - Data Passed: { index: 'current slide index' }
