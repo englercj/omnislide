@@ -1,4 +1,4 @@
-﻿/*
+﻿ /*
  * Each transition has its own options, but they follow the format:
  * OmniSlide.transition(options);
  * WHERE options contains ATLEAST
@@ -32,7 +32,7 @@ $.OmniSlide.transitionAPI = {
         options = $.extend(true, {}, api.transitions[options.effect], options);
 
         //This randomizes values if its an array, its 'random', or its undefined
-        for (key in api._validKeys) api._setRandomIfInvalid(options, key);
+        for (var key in api._validKeys) api._setRandomIfInvalid(options, key);
 
         //run the transition
         return api._doTransition($slides, index, next, options, callback);
@@ -113,6 +113,15 @@ $.OmniSlide.transitionAPI = {
             }
         });
 
+        function reverseCSS(key, val) {
+            if ($.type(val) === 'string') {
+                if (val.indexOf('-=') > -1)
+                    toCss[key] = val.replace('-=', '+=');
+                else if (val.indexOf('+=') > -1)
+                    toCss[key] = val.replace('+=', '-=');
+            }
+        }
+
         for (var i = 0; i < len; ++i) {
             var $box, toCss = opt.css, j = i;
             if (opt.order == 'randomize') {
@@ -131,14 +140,7 @@ $.OmniSlide.transitionAPI = {
                 $box.css(opt.css);
                 //special case where we apply a '-=' or '+=' css
                 //we need to reverse that in the toCss
-                $.each(opt.css, function (key, val) {
-                    if ($.type(val) === 'string') {
-                        if (val.indexOf('-=') > -1)
-                            toCss[key] = val.replace('-=', '+=');
-                        else if (val.indexOf('+=') > -1)
-                            toCss[key] = val.replace('+=', '-=');
-                    }
-                });
+                $.each(opt.css, reverseCSS);
             }
 
             if (i < len - 1) {
@@ -291,9 +293,9 @@ $.OmniSlide.transitionAPI.transitions = {
         direction: 'random'
     }
 };
-$.OmniSlide.transitionAPI.transitions['colShrinkOut'] = $.extend(true, {}, $.OmniSlide.transitionAPI.transitions.rowShrinkOut);
-$.OmniSlide.transitionAPI.transitions['colShrinkOut'].cols = 8;
-$.OmniSlide.transitionAPI.transitions['colShrinkOut'].rows = 1;
+$.OmniSlide.transitionAPI.transitions.colShrinkOut = $.extend(true, {}, $.OmniSlide.transitionAPI.transitions.rowShrinkOut);
+$.OmniSlide.transitionAPI.transitions.colShrinkOut.cols = 8;
+$.OmniSlide.transitionAPI.transitions.colShrinkOut.rows = 1;
 
 //    //Transition extension example
 //    (function($, window, undefined) {

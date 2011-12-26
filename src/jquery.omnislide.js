@@ -339,7 +339,7 @@ function electricSlide(method) {
 
         doAnimOverlay(sets.timer, slider.$timer);
         doAnimOverlay(sets.navigation, slider.$nav);
-        doAnimOverlay(sets.thumbs, slider.$thumbs)
+        doAnimOverlay(sets.thumbs, slider.$thumbs);
         doAnimOverlay(sets.title, $title);
         doAnimOverlay(sets.overlay, $overlay);
 
@@ -646,7 +646,6 @@ function electricTimer(animLen, options, callback, canvas) {
             ctx.arc(midX, midY, radius - options.ringThickness / 2 - border, 0, radianMax, false);
             ctx.lineWidth = options.ringThickness + (border * 2);
             ctx.stroke();
-            break;
             break;
         }
     },
