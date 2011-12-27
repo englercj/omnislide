@@ -280,6 +280,7 @@ function electricSlide(method) {
             showOverlays(slideIndex, function () {
                 slider.sliding = false;
                 slider.$timer.data('skip-anim', false);
+                slider.$nav.data('skip-anim', false);
                 if (sets.navigation.fadeOnHover && !slider.$slider.data('hovered')) slider.$nav.fadeOut();
                 playTimer();
                 slider.$container.trigger('transition-after', [{ index: slideIndex}]);
@@ -437,7 +438,7 @@ function electricSlide(method) {
     function navEvent(e) {
         var sets = checkOverrides();
 
-        if (e.type == click) {
+        if (e.type == 'click') {
             //case 'click':
             var ctrl = $.trim(this.className);
 
