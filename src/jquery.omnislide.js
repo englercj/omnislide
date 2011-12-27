@@ -437,20 +437,20 @@ function electricSlide(method) {
     function navEvent(e) {
         var sets = checkOverrides();
 
-        switch (e.type) {
-            case 'click':
-                var ctrl = $.trim(this.className);
+        if (e.type == click) {
+            //case 'click':
+            var ctrl = $.trim(this.className);
 
-                if (ctrl.indexOf('slide-nav-back') > -1) {
-                    moveSlide(true);
-                } else if (ctrl.indexOf('slide-nav-forward') > -1) {
-                    moveSlide();
-                } else if (ctrl.indexOf('slide-nav-play') > -1) {
-                    playTimer(true);
-                } else if (ctrl.indexOf('slide-nav-pause') > -1) {
-                    pauseTimer(true);
-                }
-                break;
+            if (ctrl.indexOf('slide-nav-back') > -1) {
+                moveSlide(true);
+            } else if (ctrl.indexOf('slide-nav-forward') > -1) {
+                moveSlide();
+            } else if (ctrl.indexOf('slide-nav-play') > -1) {
+                playTimer(true);
+            } else if (ctrl.indexOf('slide-nav-pause') > -1) {
+                pauseTimer(true);
+            }
+            //break;
         }
         slider.$container.trigger('nav-' + e.type, [{ originalEvent: e, target: this}]);
     }
