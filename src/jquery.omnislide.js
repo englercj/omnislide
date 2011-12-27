@@ -74,6 +74,7 @@ var defaults = {
         //Can't Override:
         // - slides
         // - startSlide
+        // - theme
     },
     hoverPause: true            //pause when a user hovers into the current slide
 },
@@ -137,7 +138,7 @@ function electricSlide(method) {
                 moveSlide(settings.startSlide);
 
                 //fade out the navigation
-                if(settings.navigation.fadeOnHover) slider.$nav.stop().fadeOut();
+                if(settings.navigation.fadeOnHover) slider.$nav.hide();
 
                 //store for retreival by methods
                 $(this).data('guid', guid);
@@ -274,8 +275,10 @@ function electricSlide(method) {
             storage.slideIndexes[guid] = slideIndex;
             remakeTimer();
 
+            slider.$timer.data('skip-anim', slider.timer.locked && slider.timer.stopped());
             showOverlays(slideIndex, function () {
                 slider.sliding = false;
+                slider.$timer.data('skip-anim', false);
                 playTimer();
                 slider.$container.trigger('transition-after', [{ index: slideIndex}]);
             });
@@ -341,9 +344,9 @@ function electricSlide(method) {
         doAnimOverlay(sets.overlay, $overlay);
 
         function doAnimOverlay(obj, $obj) {
-            if (obj.visible && obj.animAsOverlay && $obj.length) {
+            if (obj.visible && obj.animAsOverlay && $obj.length && !$obj.data('skip-anim')) {
                 if (obj[extFunc] && $.isFunction(obj[extFunc])) obj[extFunc].call($obj);
-                else $obj[intFunc]();
+                else $obj[intFunc]('slow');
             }
         }
 
@@ -369,6 +372,7 @@ function electricSlide(method) {
 
         if (slider.timer.stop() !== false && hard) {
             slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
+            slider.$timer.fadeOut('slow');
             slider.timer.lock();
         }
     }
@@ -378,15 +382,19 @@ function electricSlide(method) {
         if (slider.sliding) return false;
         if (hard) slider.timer.unlock();
 
-        if (slider.timer.start() !== false && hard)
+        if (slider.timer.start() !== false && hard) {
             slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
+            slider.$timer.fadeIn('slow');
+        }
     }
 
     //this will set overriden settings onto the timer
     function remakeTimer() {
-        var sets = checkOverrides();
+        var sets = checkOverrides(),
+            state = slider.timer.state();
 
         slider.timer = new $.OmniSlide.timer(sets.transition.wait, sets.timer, moveSlide, slider.$timer[0]);
+        slider.timer.state(state);
     }
 
     //////////////////////////////////////
@@ -409,11 +417,11 @@ function electricSlide(method) {
         switch (e.type) {
             case 'mouseenter':
                 if (sets.hoverPause) pauseTimer();
-                slider.$nav.stop().fadeIn();
+                slider.$nav.fadeIn('slow');
                 break;
             case 'mouseleave':
                 playTimer();
-                slider.$nav.stop().fadeOut();
+                slider.$nav.fadeOut('slow');
                 break;
         }
         slider.$container.trigger('slide-' + e.type, [{ originalEvent: e, target: this}]);
@@ -708,6 +716,16 @@ function electricTimer(animLen, options, callback, canvas) {
     },
 
     timer = {
+        state: function (st) {
+            if (st === undefined)
+                return {
+                    locked: timer.locked,
+                    stopped: timer.stopped()
+                };
+
+            if (st.locked) timer.lock();
+            if (st.stopped) timer.stop();
+        },
         timeLeft: function (time) {
             if (time === undefined) return (animLen - timeEllapsed);
 
