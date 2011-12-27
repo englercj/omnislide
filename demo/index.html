@@ -27,7 +27,7 @@
 
             function createXmlSlider() {
                 $.get('slides.xml', function (data) {
-                    $('#sliderXml').OmniSlide({ slides: data });
+                    $('#sliderXml').OmniSlide({ slides: data, theme: 'simple' });
                 });
             }
 
@@ -38,6 +38,8 @@
         
         <style>
             body { background:#FFF; }
+            
+            #sliderUl { margin:25px 0; }
         </style>
     </head>
     <body>
@@ -80,7 +82,7 @@
         </ul>
 
         <div id="sliderXml"></div>
-        <button onclick="createXmlSlider();">Create new Slider from XML</button>
+        <button onclick="createXmlSlider();">Create new slider from XML</button>
         <button onclick="destroyXmlSlider();">Destroy XML Slider</button>
     </body>
 </html>
