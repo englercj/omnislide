@@ -41,10 +41,7 @@ var defaults = {
     },
     navigation: {
         visible: true,          //enable navigation?
-        opacity: {
-            focused: 1,         //the opacity to set on controls when focused
-            blurred: 0.1        //the opacity to set on controls when blurred
-        },
+        fadeOnHover: true,      //fade out nav when hovered out
         animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
         animationIn: false,     //custom animation to use for animating the navigation into the slide
         animationOut: false     //custom animation to use for animating the navigation out of the slide
@@ -140,7 +137,7 @@ function electricSlide(method) {
                 moveSlide(settings.startSlide);
 
                 //fade out the navigation
-                slider.$nav.animate({ opacity: settings.navigation.opacity.blurred });
+                if(settings.navigation.fadeOnHover) slider.$nav.stop().fadeOut();
 
                 //store for retreival by methods
                 $(this).data('guid', guid);
@@ -379,7 +376,6 @@ function electricSlide(method) {
     //plays the timer optionaly a hard break of the lock
     function playTimer(hard) {
         if (slider.sliding) return false;
-
         if (hard) slider.timer.unlock();
 
         if (slider.timer.start() !== false && hard)
@@ -410,15 +406,15 @@ function electricSlide(method) {
     function slideEvent(e) {
         var sets = checkOverrides();
 
-        if (slider.timer) {
-            switch (e.type) {
+        switch (e.type) {
             case 'mouseenter':
                 if (sets.hoverPause) pauseTimer();
+                slider.$nav.stop().fadeIn();
                 break;
             case 'mouseleave':
-                if (slider.timer.stopped) playTimer();
+                playTimer();
+                slider.$nav.stop().fadeOut();
                 break;
-            }
         }
         slider.$container.trigger('slide-' + e.type, [{ originalEvent: e, target: this}]);
     }
@@ -428,25 +424,19 @@ function electricSlide(method) {
         var sets = checkOverrides();
 
         switch (e.type) {
-        case 'mouseenter':
-            slider.$nav.stop().animate({ opacity: sets.navigation.opacity.focused });
-            break;
-        case 'mouseleave':
-            slider.$nav.stop().animate({ opacity: sets.navigation.opacity.blurred });
-            break;
-        case 'click':
-            var ctrl = $.trim(this.className);
+            case 'click':
+                var ctrl = $.trim(this.className);
 
-            if (ctrl.indexOf('slide-nav-back') > -1) {
-                moveSlide(true);
-            } else if (ctrl.indexOf('slide-nav-forward') > -1) {
-                moveSlide();
-            } else if (ctrl.indexOf('slide-nav-play') > -1) {
-                playTimer(true);
-            } else if (ctrl.indexOf('slide-nav-pause') > -1) {
-                pauseTime(true);
-            }
-            break;
+                if (ctrl.indexOf('slide-nav-back') > -1) {
+                    moveSlide(true);
+                } else if (ctrl.indexOf('slide-nav-forward') > -1) {
+                    moveSlide();
+                } else if (ctrl.indexOf('slide-nav-play') > -1) {
+                    playTimer(true);
+                } else if (ctrl.indexOf('slide-nav-pause') > -1) {
+                    pauseTimer(true);
+                }
+                break;
         }
         slider.$container.trigger('nav-' + e.type, [{ originalEvent: e, target: this}]);
     }
@@ -521,7 +511,6 @@ function electricSlide(method) {
         //create wrapper
         slider.$wrapper = $('<div id="' + guid + '" class="slide-wrapper"/>')
             .delegate('div.slide-box', 'hover', slideEvent)
-            .delegate('div.slide-nav', 'hover', navEvent)
             .delegate('div.slide-nav-control', 'click', navEvent)
             .appendTo(slider.$container);
 
@@ -738,16 +727,15 @@ function electricTimer(animLen, options, callback, canvas) {
             return true;
         },
         start: function () {
-            if (timer.locked) return false;
+            if (timer.locked || tickLoop !== null) return false;
 
             tickLoop = setInterval(tick, framerate);
-            timer.stopped = false;
         },
         stop: function () {
             if (timer.locked) return false;
 
             clearInterval(tickLoop);
-            timer.stopped = true;
+            tickLoop = null;
         },
         reset: function () {
             var bLock = timer.locked;
@@ -765,7 +753,7 @@ function electricTimer(animLen, options, callback, canvas) {
         lock: function () { timer.locked = true; },
         unlock: function () { timer.locked = false; },
         visible: function (v) { options.visible = v; if (v) bgPaint(); },
-        stopped: true,
+        stopped: function () { return tickLoop === null; },
         locked: false,
         canvas: canvas
     };
