@@ -43,7 +43,7 @@ hint: combine
 	@@if test -e ${RHINO}; then \
 		echo "Checking OmniSlide against JSHint..."; \
 		${HINT} ${COMBINED}; \
-		echo "Passes JS Hint"; \
+		echo "JS Hint Done"; \
 	else \
 		echo "Rhino has not been downloaded, please run 'make setup'"; \
 	fi
