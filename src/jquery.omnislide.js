@@ -33,7 +33,7 @@ var defaults = {
             empty: 'rgba(30, 30, 30, 0.5)',     //color to show on unfilled time
             filled: 'rgba(255, 255, 255, 0.8)'  //color to show as ellapsed time
         },
-        ringThickness: 3,           //width of the timer ring (filled, so not including border)
+        ringThickness: 4,       //width of the timer ring (filled, so not including border)
         type: 'ring',           //type of the timer; circle, ring, bar
         animAsOverlay: true,    //animate as overlay on slide (hide on transition, show on return)
         animationIn: false,     //custom animation to use for animating the timer into the slide
