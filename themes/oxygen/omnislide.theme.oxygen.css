@@ -24,8 +24,8 @@ div.slide-nav-control.oxygen {
     position:absolute;
     top:224px;
 }
-div.slide-nav-back.oxygen      { left:-65px; background-position:0 -192px; }
-div.slide-nav-forward.oxygen   { left:961px; background-position:0 -128px; }
+div.slide-nav-back.oxygen      { left:-60px; background-position:0 -192px; }
+div.slide-nav-forward.oxygen   { left:956px; background-position:0 -128px; }
 div.slide-nav-pause.oxygen     { display:none; left:448px; background-position:0 -64px; }
 div.slide-nav-play.oxygen      { display:none; left:448px; background-position:0 0; }
 div.slide-nav-back:hover.oxygen   { background-position:-64px -192px; }
