@@ -276,11 +276,9 @@ function electricSlide(method) {
             remakeTimer();
 
             slider.$timer.data('skip-anim', slider.timer.locked && slider.timer.stopped());
-            slider.$nav.data('skip-anim', slider.$nav.data('hidden'));
             showOverlays(slideIndex, function () {
                 slider.sliding = false;
                 slider.$timer.data('skip-anim', false);
-                slider.$nav.data('skip-anim', false);
                 if (sets.navigation.fadeOnHover && !slider.$slider.data('hovered')) slider.$nav.fadeOut();
                 playTimer();
                 slider.$container.trigger('transition-after', [{ index: slideIndex}]);
@@ -420,15 +418,13 @@ function electricSlide(method) {
         switch (e.type) {
             case 'mouseenter':
                 if (sets.hoverPause) pauseTimer();
-                slider.$nav.fadeIn('slow');
-                slider.$nav.data('hidden', false);
                 slider.$slider.data('hovered', true);
+                slider.$nav.fadeIn('slow');
                 break;
             case 'mouseleave':
                 playTimer();
-                slider.$nav.fadeOut('slow');
-                slider.$nav.data('hidden', true);
                 slider.$slider.data('hovered', false);
+                slider.$nav.fadeOut('slow');
                 break;
         }
         slider.$container.trigger('slide-' + e.type, [{ originalEvent: e, target: this}]);
