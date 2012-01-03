@@ -61,7 +61,7 @@ $.OmniSlide.transitionAPI = {
             api._setToRandom(obj, key, obj[key]);
         }
         //if its 'random', randomize it
-        else if (obj[key] === 'random' || obj[key] === undefined) {
+        else if (obj[key] == 'random' || obj[key] === undefined) {
             api._setToRandom(obj, key, vals);
         }
         //if its private, randomize it, and warn them
@@ -114,7 +114,7 @@ $.OmniSlide.transitionAPI = {
         });
 
         function reverseCSS(key, val) {
-            if ($.type(val) === 'string') {
+            if ($.type(val) == 'string') {
                 if (val.indexOf('-=') > -1)
                     toCss[key] = val.replace('-=', '+=');
                 else if (val.indexOf('+=') > -1)

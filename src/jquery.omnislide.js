@@ -150,7 +150,7 @@ function electricSlide(method) {
         //and/or returns value given by that option
         option: function (option, value) {
             if (loadStorage(this)) {
-                if ($.type(option) === 'string') {
+                if ($.type(option) == 'string') {
                     var levels = option.split('.'),
                     opt = settings,
                     i = levels.length - 1,
@@ -462,7 +462,7 @@ function electricSlide(method) {
 
         if (!data) return 'settings.slides is not defined!';
 
-        if ($.type(data) === 'string') {
+        if ($.type(data) == 'string') {
             //if its a string it must be either a selector
             //or xml data, lets try to parse the xml and if
             //we fail lets assume its a selector
@@ -471,7 +471,7 @@ function electricSlide(method) {
             } catch (error) {
                 $data = $(data);
             }
-        } else if ($.type(data) === 'object') {
+        } else if ($.type(data) == 'object') {
             //if its an object then it is either a DOM object,
             //an xmlDocument, or a jQuery object. In any of these
             //cases we need to just wrap it in a jQuery object
@@ -581,7 +581,7 @@ function electricSlide(method) {
 
     if (methods[method]) {
         return methods[method].apply(this, [].slice.call(arguments, 1));
-    } else if (!method || $.type(method) === 'object') {
+    } else if (!method || $.type(method) == 'object') {
         return methods.init.apply(this, arguments);
     } else {
         $.error('Method "' + method + '" does not exist in jQuery.slide');
