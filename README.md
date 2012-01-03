@@ -129,8 +129,13 @@ More information can be found in the [Theme API Documentation](#).
 * [Before Release] Themes
 * [Before Release] Run through code for gratuitious crap
 * [Before Release] More browser testing. FF 8, IE 9, and Chrome 15/16 are good.
+* [Before Release] Video Support
 * [Future Release] More slide orders (spiral, checker, alternate) [alternate can combine with all others]
 * [Future Release] Better option change handling, timer/theme is refreshed, others are not
+* [Future Release] Parallax Support
+* [Future Release] Carousel mode
+* [Future Release] Lightbox support
+* [Future Release] Ken Burns effect
 
 ## Known Bugs
 * Setting slide overrides via the `$().OmniSlide('option')` interface doesn't work properly
