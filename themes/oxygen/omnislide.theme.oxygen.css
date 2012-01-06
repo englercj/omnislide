@@ -50,11 +50,11 @@
     width:310px;
     padding:5px;
     
-    border:solid 1px #000;
+    border:solid 2px #000;
     background:rgba(10, 10, 10, 0.7);
  }
 
-.oxygene.slide-title {
+.oxygen.slide-title {
     color:#FFF;
     left:0; 
     top:0;
@@ -62,7 +62,7 @@
     width:300px;
     padding:10px;
     
-    border:solid 1px #000;
+    border:solid 2px #000;
     background:rgba(10, 10, 10, 0.7);
 }
 
