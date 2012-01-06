@@ -2,19 +2,19 @@
  * ---
  * Please Modify these to change the theme of the slider
  */
-div.slide-wrapper.oxygen {
+.oxygen.slide-wrapper {
     width:960px; 
     height:512px;
     
     margin:0 auto;
 }
-div.slide-box.oxygen { width:960px; height:512px; }
+.oxygen.slide-box { width:960px; height:512px; }
 
-div.slide.oxygen { background:rgb(25,25,25); }
-div.slide.active.oxygen { }
+.oxygen.slide { background:rgb(25,25,25); }
+.oxygen.slide.active {}
 
-div.slide-nav.oxygen { top:0; left:0; height:100%; width:100%; z-index:1 !important; }
-div.slide-nav-control.oxygen {
+.oxygen.slide-nav { top:0; left:0; height:100%; width:100%; z-index:1 !important; }
+.oxygen.slide-nav-control {
     background:left top url('sprite.png') no-repeat;
     
     width:64px; 
@@ -24,31 +24,31 @@ div.slide-nav-control.oxygen {
     position:absolute;
     top:224px;
 }
-div.slide-nav-back.oxygen      { left:-60px; background-position:0 -192px; }
-div.slide-nav-forward.oxygen   { left:956px; background-position:0 -128px; }
-div.slide-nav-pause.oxygen     { display:none; left:448px; background-position:0 -64px; }
-div.slide-nav-play.oxygen      { display:none; left:448px; background-position:0 0; }
-div.slide-nav-back:hover.oxygen   { background-position:-64px -192px; }
-div.slide-nav-forward:hover.oxygen{ background-position:-64px -128px; }
-div.slide-nav-pause:hover.oxygen  { background-position:-64px -64px; }
-div.slide-nav-play:hover.oxygen   { background-position:-64px 0; }
+.oxygen.slide-nav-back      { left:-60px; background-position:0 -192px; }
+.oxygen.slide-nav-forward   { left:956px; background-position:0 -128px; }
+.oxygen.slide-nav-pause     { display:none; left:448px; background-position:0 -64px; }
+.oxygen.slide-nav-play      { display:none; left:448px; background-position:0 0; }
+.oxygen.slide-nav-back:hover   { background-position:-64px -192px; }
+.oxygen.slide-nav-forward:hover{ background-position:-64px -128px; }
+.oxygen.slide-nav-pause:hover  { background-position:-64px -64px; }
+.oxygen.slide-nav-play:hover   { background-position:-64px 0; }
 
 /* Thumbnails are disabled in this theme */
-div.slide-thumbs-wrapper.oxygen {}
-div.slide-thumb.oxygen {}
-div.slide-thumb.oxygen:hover {}
-div.slide-thumb.active.oxygen {}
-img.slide-thumb-image.oxygen {}
-span.slide-thumb-title.oxygen {}
+.oxygen.slide-thumbs-wrapper {}
+.oxygen.slide-thumb {}
+.oxygen.slide-thumb.oxygen:hover {}
+.oxygen.slide-thumb.active {}
+.oxygen.slide-thumb-image {}
+.oxygen.slide-thumb-title {}
 
 /* Overlays and Titles are disabled in this theme */
-div.slide-overlay.oxygen {}
+.oxygen.slide-overlay {}
 
-h1.slide-title.oxygen {}
+h1.slide-title {}
 
-div.slide-content.oxygen {
+.oxygen.slide-content {
     height:100%;
     width:100%;
 }
 
-canvas.slide-timer.oxygen { top:10px; right:10px; }
+.oxygen.slide-timer { top:10px; right:10px; }
