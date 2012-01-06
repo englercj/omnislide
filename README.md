@@ -127,7 +127,6 @@ More information can be found in the [Theme API Documentation](#).
 ## TODO
 
 * [Before Release] Themes
-* [Before Release] Run through code for gratuitious crap
 * [Before Release] More browser testing. FF 8, IE 9, and Chrome 15/16 are good.
 * [Before Release] Video Support
 * [Future Release] More slide orders (spiral, checker, alternate) [alternate can combine with all others]

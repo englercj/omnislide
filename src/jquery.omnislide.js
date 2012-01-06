@@ -30,8 +30,8 @@ var defaults = {
         width: 40,              //width of the timer
         border: 2,              //space between filled and empty colors on the timer
         colors: {
-            empty: 'rgba(30, 30, 30, 0.5)',     //color to show on unfilled time
-            filled: 'rgba(255, 255, 255, 0.8)'  //color to show as ellapsed time
+            empty: 'rgba(30, 30, 30, 0.8)',     //color to show on unfilled time
+            filled: 'rgb(255, 255, 255)'  //color to show as ellapsed time
         },
         ringThickness: 4,       //width of the timer ring (filled, so not including border)
         type: 'ring',           //type of the timer; circle, ring, bar
