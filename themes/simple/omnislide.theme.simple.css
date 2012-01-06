@@ -24,17 +24,7 @@ div.slide-nav.simple {
     left: 288px;
     height:65px;
     
-    border-radius:20px;
     padding:0 35px;
-    
-    background: rgb(81,81,81);
-    background: -moz-linear-gradient(top,  rgba(81,81,81,0.75) 0%, rgba(13,13,13,0.75) 45%, rgba(1,1,1,0.75) 50%, rgba(10,10,10,0.75) 55%, rgba(27,27,27,0.75) 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(81,81,81,0.75)), color-stop(45%,rgba(13,13,13,0.75)), color-stop(50%,rgba(1,1,1,0.75)), color-stop(55%,rgba(10,10,10,0.75)), color-stop(100%,rgba(27,27,27,0.75))); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(top,  rgba(81,81,81,0.75) 0%,rgba(13,13,13,0.75) 45%,rgba(1,1,1,0.75) 50%,rgba(10,10,10,0.75) 55%,rgba(27,27,27,0.75) 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(top,  rgba(81,81,81,0.75) 0%,rgba(13,13,13,0.75) 45%,rgba(1,1,1,0.75) 50%,rgba(10,10,10,0.75) 55%,rgba(27,27,27,0.75) 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(top,  rgba(81,81,81,0.75) 0%,rgba(13,13,13,0.75) 45%,rgba(1,1,1,0.75) 50%,rgba(10,10,10,0.75) 55%,rgba(27,27,27,0.75) 100%); /* IE10+ */
-    background: linear-gradient(top,  rgba(81,81,81,0.75) 0%,rgba(13,13,13,0.75) 45%,rgba(1,1,1,0.75) 50%,rgba(10,10,10,0.75) 55%,rgba(27,27,27,0.75) 100%); /* W3C */
-    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#bf515151', endColorstr='#bf1b1b1b',GradientType=0 ); /* IE6-9 */
 }
 div.slide-nav-control.simple {
     background:left top url('sprite.png') no-repeat;
