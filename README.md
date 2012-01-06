@@ -139,6 +139,7 @@ More information can be found in the [Theme API Documentation](#).
 * [Future Release] Ken Burns effect
 
 ## Known Bugs
+* If you hover in while transitioning, the nav shows. Need to lock it while transitioning
 * iFrames, and flash as content are wonky
 * Setting slide overrides via the `$().OmniSlide('option')` interface doesn't work
 * I'm sure some combo of `animAsOverlay` and `visible` will break my overlay animation logic
