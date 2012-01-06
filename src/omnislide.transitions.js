@@ -1,7 +1,7 @@
 (function ($, window, undefined) {
     var trans = $.OmniSlide.transitionAPI.transitions;
 
-    jQuery.extend(trans, {
+    $.extend(trans, {
         flyLeft: {
             duration: 1100,
             delay: 80,
