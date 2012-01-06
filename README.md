@@ -123,12 +123,14 @@ More information can be found in the [Theme API Documentation](#).
 	* If you are using the transitionapi, transition boxes are at z-index 7
 	* Overlays (navigation, title, overlay, timer, etc) are at z-index 10
 * Changing options on the timer (using 'option' method) will take effect next slide
+* Compatible with jQuery 1.4.3+
+* Works well in: FF 8, IE 9, Chrome 15/16
 
 ## TODO
 
 * [Before Release] Themes
 * [Before Release] More browser testing. FF 8, IE 9, and Chrome 15/16 are good.
-* [Before Release] Video Support
+* [Future Release] Video Support
 * [Future Release] More slide orders (spiral, checker, alternate) [alternate can combine with all others]
 * [Future Release] Better option change handling, timer/theme is refreshed, others are not
 * [Future Release] Parallax Support
@@ -137,5 +139,6 @@ More information can be found in the [Theme API Documentation](#).
 * [Future Release] Ken Burns effect
 
 ## Known Bugs
-* Setting slide overrides via the `$().OmniSlide('option')` interface doesn't work properly
+* iFrames, and flash as content are wonky
+* Setting slide overrides via the `$().OmniSlide('option')` interface doesn't work
 * I'm sure some combo of `animAsOverlay` and `visible` will break my overlay animation logic
