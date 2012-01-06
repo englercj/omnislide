@@ -25,28 +25,46 @@ RHINO_GET = wget -q ftp://ftp.mozilla.org/pub/mozilla.org/js/rhino1_7R3.zip -O $
 RHINO = ${BUILD_DIR}/rhino.jar
 HINT = java -jar ${RHINO} ${BUILD_DIR}/jshint-rhino.js
 
+DEMO_DIR = demo/
+THEME_DIR = themes/
+PACK_DIR = omnislide
+PACK_FILE = omnislide.zip
+PACKAGE = zip -rqb ${BUILD_DIR} ${DIST_DIR}/${PACK_FILE} ${PACK_DIR}
+
 #JQ_VER = $(shell cat version.txt)
 #VER = sed "s/@VERSION/${JQ_VER}/"
 
 #DATE=$(shell git log -1 --pretty=format:%ad)
 
-all: setup combine minify hint size
+all: setup combine minify hint package size
 	@@echo "OmniSlide build complete."
 
 setup: ${DIST_DIR} ${COMPILER} ${RHINO}
 
-combine: ${COMBINED}
+combine: setup ${COMBINED}
 
-minify: combine ${MINIFIED}
+minify: setup combine ${MINIFIED}
 
-hint: combine
+hint: setup combine
 	@@if test -e ${RHINO}; then \
 		echo "Checking OmniSlide against JSHint..."; \
 		${HINT} ${COMBINED}; \
-		echo "JS Hint Done"; \
 	else \
 		echo "Rhino has not been downloaded, please run 'make setup'"; \
 	fi
+
+package: minify
+	@@echo "Packaging omnislide..."
+	@@if test ! -e ${PACK_DIR}; then \
+		mkdir ${PACK_DIR}; \
+	else \
+		rm -rf ${PACK_DIR}; \
+	fi
+	@@cp -r ${MINIFIED} ${PACK_DIR}
+	@@cp -r ${DEMO_DIR} ${PACK_DIR}
+	@@cp -r ${THEME_DIR} ${PACK_DIR}
+	@@${PACKAGE}
+	@@rm -rf ${PACK_DIR}
 
 ${DIST_DIR}:
 	@@mkdir -p ${DIST_DIR}
@@ -55,14 +73,12 @@ ${RHINO}:
 	@@if test ! -e ${RHINO}; then \
 		echo "Setting up Rhino..."; \
 		${RHINO_GET}; \
-		echo "Done!"; \
 	fi
 
 ${COMPILER}:
 	@@if test ! -e ${COMPILER}; then \
-		echo "Setting up Google Closue Compiler..."; \
+		echo "Setting up Google Closure Compiler..."; \
 		${COMPILER_GET}; \
-		echo "Done!"; \
 	fi
 
 ${COMBINED}: ${MODULES} | ${DIST_DIR}
@@ -82,7 +98,8 @@ ${MINIFIED}: combine
 		echo "Compiler not downloaded, please run 'make setup'"; \
 	fi
 
-size: combine minify
+size: setup combine minify
+	@@echo "File Sizes:";
 	@@gzip -c ${MINIFIED} > ${MINIFIED}.gz;
 	@@du -h ${DIST_DIR}/*
 	@@rm ${MINIFIED}.gz;
