@@ -13,7 +13,9 @@ MODULES = ${SRC_DIR}/intro.js\
 	${SRC_DIR}/outro.js
 
 COMBINED = ${DIST_DIR}/jquery.omnislide.js
-MINIFIED = ${DIST_DIR}/jquery.omnislide.min.js
+MINIFILE = jquery.omnislide.min.js
+MINIFIED = ${DIST_DIR}/${MINIFILE}
+TRANSITIONS = ${SRC_DIR}/omnislide.transitions.js
 
 COMPILER_FILE = ${BUILD_DIR}/compiler.zip
 COMPILER_GET = wget -q http://closure-compiler.googlecode.com/files/compiler-latest.zip -O ${COMPILER_FILE} && unzip ${COMPILER_FILE} compiler.jar -d ${BUILD_DIR}
@@ -30,6 +32,8 @@ THEME_DIR = themes/
 PACK_DIR = omnislide
 PACK_FILE = omnislide.zip
 PACKAGE = rm -f ${DIST_DIR}/${PACK_FILE} && zip -rqb ${BUILD_DIR} ${DIST_DIR}/${PACK_FILE} ${PACK_DIR}
+
+REPLACE = src\/jquery.omnislide.js"><\/script>.+<script src="..\/src\/omnislide.transitionapi.js
 
 #JQ_VER = $(shell cat version.txt)
 #VER = sed "s/@VERSION/${JQ_VER}/"
@@ -61,9 +65,13 @@ package: minify
 		rm -rf ${PACK_DIR}; \
 		mkdir ${PACK_DIR}; \
 	fi
-	@@cp -r ${MINIFIED} ${PACK_DIR}
+	@@mkdir ${PACK_DIR}/js
+	@@cp -r ${MINIFIED} ${PACK_DIR}/js
+	@@cp -r ${TRANSITIONS} ${PACK_DIR}/js
 	@@cp -r ${DEMO_DIR} ${PACK_DIR}
 	@@cp -r ${THEME_DIR} ${PACK_DIR}
+	@@cat ${PACK_DIR}/demo/index.html | sed 's/src\/jquery.omnislide.js/js\/jquery.omnislide.min.js/' | sed 's/<script src="..\/src\/omnislide.transitionapi.js"><\/script>//' | sed 's/..\/src\//..\/js\//' > ${PACK_DIR}/demo/index2.html
+	@@mv ${PACK_DIR}/demo/index2.html ${PACK_DIR}/demo/index.html
 	@@${PACKAGE}
 	@@rm -rf ${PACK_DIR}
 
