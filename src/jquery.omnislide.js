@@ -253,21 +253,9 @@ function electricSlide(method) {
             slider.$thumbs.eq(slideIndex).removeClass('active');
             slider.$thumbs.eq(nextSlide).addClass('active');
 
-            //attempt to use advanced transitions
-            if ($.OmniSlide.transitionAPI) {
-                //activate the transition and show overlays on callback
-                $.OmniSlide.transitionAPI.transition(sets.transition, slider.$slides,
+            //activate the transition and show overlays on callback
+            $.OmniSlide.transitionAPI.transition(sets.transition, slider.$slides,
                                                      slideIndex, nextSlide, function () { transitionCallback(nextSlide); });
-            }
-            //otherwise default to simple built in cut
-            else {
-                slider.$slides.eq(nextSlide).show();
-                slider.$slides.eq(nextSlide).addClass('active');
-                slider.$slides.eq(slideIndex).hide();
-                slider.$slides.eq(slideIndex).removeClass('active');
-
-                transitionCallback(nextSlide);
-            }
         });
 
         function transitionCallback(nextSlide) {
@@ -417,11 +405,13 @@ function electricSlide(method) {
 
         switch (e.type) {
             case 'mouseenter':
+                if (slider.sliding) break;
                 if (sets.hoverPause) pauseTimer();
                 slider.$slider.data('hovered', true);
                 slider.$nav.fadeIn('slow');
                 break;
             case 'mouseleave':
+                if (slider.sliding) break;
                 playTimer();
                 slider.$slider.data('hovered', false);
                 slider.$nav.fadeOut('slow');
