@@ -361,7 +361,7 @@ function electricSlide(method) {
 
         if (slider.timer.stop() !== false && hard) {
             slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
-            slider.$timer.fadeOut('slow');
+            slider.$timer.stop(true).fadeTo('slow', 0);
             slider.timer.lock();
         }
     }
@@ -373,7 +373,7 @@ function electricSlide(method) {
 
         if (slider.timer.start() !== false && hard) {
             slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
-            slider.$timer.fadeIn('slow');
+            slider.$timer.stop(true).fadeTo('slow', 1);
         }
     }
 
@@ -408,13 +408,13 @@ function electricSlide(method) {
                 if (slider.sliding) break;
                 if (sets.hoverPause) pauseTimer();
                 slider.$slider.data('hovered', true);
-                slider.$nav.fadeIn('slow');
+                slider.$nav.stop(true).fadeTo('slow', 1);
                 break;
             case 'mouseleave':
                 if (slider.sliding) break;
                 playTimer();
                 slider.$slider.data('hovered', false);
-                slider.$nav.fadeOut('slow');
+                slider.$nav.stop(true).fadeTo('slow', 0);
                 break;
         }
         slider.$container.trigger('slide-' + e.type, [{ originalEvent: e, target: this}]);
