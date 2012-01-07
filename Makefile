@@ -29,7 +29,7 @@ DEMO_DIR = demo/
 THEME_DIR = themes/
 PACK_DIR = omnislide
 PACK_FILE = omnislide.zip
-PACKAGE = zip -rqb ${BUILD_DIR} ${DIST_DIR}/${PACK_FILE} ${PACK_DIR}
+PACKAGE = rm -f ${DIST_DIR}/${PACK_FILE} && zip -rqb ${BUILD_DIR} ${DIST_DIR}/${PACK_FILE} ${PACK_DIR}
 
 #JQ_VER = $(shell cat version.txt)
 #VER = sed "s/@VERSION/${JQ_VER}/"
@@ -59,6 +59,7 @@ package: minify
 		mkdir ${PACK_DIR}; \
 	else \
 		rm -rf ${PACK_DIR}; \
+		mkdir ${PACK_DIR}; \
 	fi
 	@@cp -r ${MINIFIED} ${PACK_DIR}
 	@@cp -r ${DEMO_DIR} ${PACK_DIR}
