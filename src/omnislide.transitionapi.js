@@ -1,24 +1,3 @@
- /*
- * Each transition has its own options, but they follow the format:
- * OmniSlide.transition(options);
- * WHERE options contains ATLEAST
- {
- effect: 'fade',     //the name of the transition to use
- easing: 'linear',   //the type of easing to use on animations (empty chooses random)
-
- wait: 5000,         //the wait time to show each slide
- duration: 1000,     //how long the transition animates
- delay: 100,         //the delay between the start of each box animation
-
- rows: 3,            //the number of rows of boxes to use for animations
- cols: 6,            //the number of cols of boxes to use for animations
- order: 'normal',    //order to animate the boxes (normal, reverse, or random)
- slide: 'this',      //slide to operate on, either 'this' slide or the 'next' slide (next reverses animation)
-
- css: {},            //the css to use as an ending point of the box animation
- animations: false   //an animation function to use INSTEAD of $.animate (for complex animations)
- }
-*/
 $.OmniSlide.transitionAPI = {
     transition: function (opts, $slides, index, next, callback) {
         //store vars locally for easier access and to lose references
@@ -61,7 +40,7 @@ $.OmniSlide.transitionAPI = {
             api._setToRandom(obj, key, obj[key]);
         }
         //if its 'random', randomize it
-        else if (obj[key] === 'random' || obj[key] === undefined) {
+        else if (obj[key] == 'random' || obj[key] === undefined) {
             api._setToRandom(obj, key, vals);
         }
         //if its private, randomize it, and warn them
@@ -109,12 +88,12 @@ $.OmniSlide.transitionAPI = {
         //check if any css functions need to be evaluated
         $.each(opt.css, function (key, val) {
             if ($.isFunction(val)) {
-                opt.css[key] = val.call($box, j, opt);
+                opt.css[key] = val.call($box, opt);
             }
         });
 
         function reverseCSS(key, val) {
-            if ($.type(val) === 'string') {
+            if ($.type(val) == 'string') {
                 if (val.indexOf('-=') > -1)
                     toCss[key] = val.replace('-=', '+=');
                 else if (val.indexOf('+=') > -1)
@@ -269,7 +248,7 @@ $.OmniSlide.transitionAPI.transitions = {
     },
     flyIn: {
         css: {
-            left: function (i, opt) {
+            left: function (opt) {
                 var p;
                 if (opt.direction.indexOf('left') > -1) p = '-=';
                 else if (opt.direction.indexOf('right') > -1) p = '+=';
@@ -277,7 +256,7 @@ $.OmniSlide.transitionAPI.transitions = {
 
                 return (p + ($(this).parent().width() + $(this).width() + 1) + 'px');
             },
-            top: function (i, opt) {
+            top: function (opt) {
                 var p;
                 if (opt.direction.indexOf('top') > -1) p = '-=';
                 else if (opt.direction.indexOf('bottom') > -1) p = '+=';
@@ -308,14 +287,50 @@ $.OmniSlide.transitionAPI.transitions.colShrinkOut.rows = 1;
 //            cut: {
 //                //values here are overriden by values input to
 //                //the plugin so the values you put here are defaults
-//                css: { opacity: 0 },
-//                delay: 1,
-//                duration: 1,
-//                rows: 1,
-//                cols: 1,
-//                order: 'normal',
-//                easing: 'linear',
-//                slide: 'this'
+//                duration: 1,         //time it takes for each box to animate (in ms)
+//                delay: 1,            //delay between each box's animation sequence (in ms)
+//                css: { opacity: 0 }, //the CSS to apply as the animation
+//                cols: 1,             //cols of boxes the slide is cut into
+//                rows: 1,             //rows of boxes the slide is cur into
+//                order: 'normal',     //the order to iterate through the slides when animating
+//                easing: 'linear',    //the easing to use for the animation
+//                slide: 'this'        //the slide the animation operates on if
+//                //NOTE: if slide is set to 'this' then the animation engine will animate using your css
+//                //variable as an ending point. If slide is set to 'next' then the animation engine reverses
+//                //that process; that is the boxes start at your specified css and work towards what
+//                //they were before your css is applied
+//            },
+//            advancedCss: {
+//                //sometimes simple values for css isn't enough, you can specify a
+//                //function for any CSS property and it will be evaluated for each box
+//                css: {
+//                    //here 'this' is the DOM element refering to the box, and opt is the full
+//                    //options variable for this transition (after user settings are applied)
+//                    left: function (opt) {
+//                        var p;
+//                        if (opt.direction.indexOf('left') > -1) p = '-=';
+//                        else if (opt.direction.indexOf('right') > -1) p = '+=';
+//                        else { return '-=0'; }
+//
+//                        return (p + ($(this).parent().width() + $(this).width() + 1) + 'px');
+//                    },
+//                    top: function (opt) {
+//                        var p;
+//                        if (opt.direction.indexOf('top') > -1) p = '-=';
+//                        else if (opt.direction.indexOf('bottom') > -1) p = '+=';
+//                        else { return '-=0'; }
+//
+//                        return (p + ($(this).parent().height() + $(this).height() + 1) + 'px');
+//                    }
+//                },
+//                delay: 100,
+//                duration: 1500,
+//                rows: 3,
+//                cols: 8,
+//                order: 'random',
+//                easing: 'easeInOutBack',
+//                slide: 'next',
+//                direction: 'random'      //direction is an optional variable that is not used by the animations engine
 //            },
 //            advanced: {
 //                //if your transition is more advanced than simple css
