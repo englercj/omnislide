@@ -595,14 +595,18 @@ function electricSlide(method) {
 // OmniSlide canvas timer
 //////////////////////////////////////
 function electricTimer(animLen, options, callback, canvas) {
-    if (!canvas)
-        canvas = document.createElement('canvas');
+    if (!canvas) canvas = document.createElement('canvas');
+    
+    if (!canvas.getContext) {
+        $.OmniSlide.error('Canvas timer disabled, your browser is not supported.');
+        options.visible = false;
+    }
 
     //init canvas
     canvas.height = options.height;
     canvas.width = options.width;
 
-    var ctx = canvas.getContext('2d'),
+    var ctx = (options.visible) ? canvas.getContext('2d') : false,
 
     cW = canvas.width,
     cH = canvas.height,
@@ -628,8 +632,8 @@ function electricTimer(animLen, options, callback, canvas) {
 
     //paint background
     bgPaint = function () {
+        if (!ctx) return;
         clearCanvas();
-        if (!options.visible) return;
 
         ctx.fillStyle = options.colors.empty;
         ctx.strokeStyle = options.colors.empty;
@@ -655,7 +659,7 @@ function electricTimer(animLen, options, callback, canvas) {
 
     //paint forground based on % done
     fgPaint = function () {
-        if (!options.visible) return;
+        if (!ctx) return;
 
         var prct = timeEllapsed / animLen, rads;
         ctx.fillStyle = options.colors.filled;
@@ -694,6 +698,7 @@ function electricTimer(animLen, options, callback, canvas) {
 
     //clear canvas
     clearCanvas = function () {
+        if(!ctx) return;
         ctx.clearRect(0, 0, cW, cH);
     },
 
