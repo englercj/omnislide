@@ -318,14 +318,16 @@ function electricSlide(method) {
     function animateOverlays(i, show, cb) {
         var $overlay = slider.$slides.eq(i).find('div.slide-overlay'),
         $title = slider.$slides.eq(i).find('h1.slide-title'),
-        extFunc, intFunc, overlayWait, sets = checkOverrides(i);
+        extFunc, intFunc, opac, overlayWait, sets = checkOverrides(i);
 
         if (show) {
             extFunc = 'animationIn';
-            intFunc = 'fadeIn';
+            intFunc = 'fadeTo';
+            opac = 1;
         } else {
             extFunc = 'animationOut';
-            intFunc = 'fadeOut';
+            intFunc = 'fadeTo';
+            opac = 0;
         }
 
         slider.timer.stop();
@@ -339,7 +341,7 @@ function electricSlide(method) {
         function doAnimOverlay(obj, $obj) {
             if (obj.visible && obj.animAsOverlay && $obj.length && !$obj.data('skip-anim')) {
                 if (obj[extFunc] && $.isFunction(obj[extFunc])) obj[extFunc].call($obj);
-                else $obj[intFunc]('slow');
+                else $obj[intFunc]('slow', opac);
             }
         }
 
@@ -419,13 +421,13 @@ function electricSlide(method) {
             case 'mouseenter':
                 if (slider.sliding) break;
                 if (sets.hoverPause) pauseTimer();
-                slider.$slider.data('hovered', true);
+                slider.$slider.data('hovered', 1);
                 slider.$nav.stop(true).fadeTo('slow', 1);
                 break;
             case 'mouseleave':
                 if (slider.sliding) break;
                 playTimer();
-                slider.$slider.data('hovered', false);
+                slider.$slider.data('hovered', 0);
                 slider.$nav.stop(true).fadeTo('slow', 0);
                 break;
         }
