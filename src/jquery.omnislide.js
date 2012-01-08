@@ -10,10 +10,12 @@
 // - nav-click          - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
 // - slide-mouseenter   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
 // - slide-mouseleave   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
-//monkey wrench to make older versions of jQuery compatible
 ////
 //Animation Functions
 // - animationIn/Out    - Data Passed: jQueryObj, show[true/false]
+////
+
+//monkey wrench to make older versions of jQuery compatible
 $.isNumeric = function (n) { return !isNaN(parseFloat(n)) && isFinite(n); };
 
 //////////////////////////////////////
