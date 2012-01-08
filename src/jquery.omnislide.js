@@ -11,6 +11,9 @@
 // - slide-mouseenter   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
 // - slide-mouseleave   - Data Passed: { originalEvent: 'original event var', target: 'DOM target' }
 //monkey wrench to make older versions of jQuery compatible
+////
+//Animation Functions
+// - animationIn/Out    - Data Passed: jQueryObj, show[true/false]
 $.isNumeric = function (n) { return !isNaN(parseFloat(n)) && isFinite(n); };
 
 //////////////////////////////////////
@@ -340,7 +343,7 @@ function electricSlide(method) {
 
         function doAnimOverlay(obj, $obj) {
             if (obj.visible && obj.animAsOverlay && $obj.length && !$obj.data('skip-anim')) {
-                if (obj[extFunc] && $.isFunction(obj[extFunc])) obj[extFunc].call($obj);
+                if (obj[extFunc] && $.isFunction(obj[extFunc])) obj[extFunc].call($obj, show);
                 else $obj[intFunc]('slow', opac);
             }
         }
