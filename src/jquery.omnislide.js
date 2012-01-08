@@ -106,7 +106,7 @@ function electricSlide(method) {
         timer: false
     },
 
-    slideIndex, sliding,
+    slideIndex,
 
     //////////////////////////////////////
     // Public Plugin Methods
@@ -144,6 +144,8 @@ function electricSlide(method) {
                 $(this).data('guid', guid);
                 storage.settings[guid] = settings;
                 storage.sliders[guid] = slider;
+                
+                return true;
             });
         },
         //changes an option to the given value
@@ -245,7 +247,7 @@ function electricSlide(method) {
             slider.$thumbs.eq(nextSlide).addClass('active');
 
             transitionCallback(nextSlide);
-            return;
+            return true;
         }
 
         //hide the overlays and do transition on callback
@@ -272,6 +274,8 @@ function electricSlide(method) {
                 slider.$container.trigger('transition-after', [{ index: slideIndex}]);
             });
         }
+        
+        return true;
     }
 
     //////////////////////////////////////
@@ -363,7 +367,11 @@ function electricSlide(method) {
             slider.$nav.find('.slide-nav-pause').removeClass('slide-nav-pause').addClass('slide-nav-play');
             slider.$timer.stop(true).fadeTo('slow', 0);
             slider.timer.lock();
+            
+            return true;
         }
+        
+        return false;
     }
 
     //plays the timer optionaly a hard break of the lock
@@ -374,7 +382,11 @@ function electricSlide(method) {
         if (slider.timer.start() !== false && hard) {
             slider.$nav.find('.slide-nav-play').removeClass('slide-nav-play').addClass('slide-nav-pause');
             slider.$timer.stop(true).fadeTo('slow', 1);
+            
+            return true;
         }
+        
+        return false;
     }
 
     //this will set overriden settings onto the timer
@@ -575,6 +587,7 @@ function electricSlide(method) {
         return methods.init.apply(this, arguments);
     } else {
         $.error('Method "' + method + '" does not exist in jQuery.slide');
+        return this;
     }
 }
 
@@ -718,6 +731,8 @@ function electricTimer(animLen, options, callback, canvas) {
 
             if (st.locked) timer.lock();
             if (st.stopped) timer.stop();
+            
+            return timer;
         },
         timeLeft: function (time) {
             if (time === undefined) return (animLen - timeEllapsed);
@@ -741,12 +756,14 @@ function electricTimer(animLen, options, callback, canvas) {
             if (timer.locked || tickLoop !== null) return false;
 
             tickLoop = setInterval(tick, framerate);
+            return true;
         },
         stop: function () {
             if (timer.locked) return false;
 
             clearInterval(tickLoop);
             tickLoop = null;
+            return true;
         },
         reset: function () {
             var bLock = timer.locked;

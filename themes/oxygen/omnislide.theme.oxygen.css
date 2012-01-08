@@ -26,8 +26,8 @@
 }
 .oxygen.slide-nav-back      { left:0; background-position:0 -192px; }
 .oxygen.slide-nav-forward   { left:897px; background-position:0 -128px; }
-.oxygen.slide-nav-pause     { display:none; left:448px; background-position:0 -64px; }
-.oxygen.slide-nav-play      { display:none; left:448px; background-position:0 0; }
+.oxygen.slide-nav-pause     { left:448px; background-position:0 -64px; }
+.oxygen.slide-nav-play      { left:448px; background-position:0 0; }
 .oxygen.slide-nav-back:hover   { background-position:-64px -192px; }
 .oxygen.slide-nav-forward:hover{ background-position:-64px -128px; }
 .oxygen.slide-nav-pause:hover  { background-position:-64px -64px; }
