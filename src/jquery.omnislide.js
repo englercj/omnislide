@@ -169,9 +169,9 @@ function electricSlide(method) {
                     if ($.isPlainObject(value))
                         $.extend(true, opt[key], value);
                     else {
-                        opt[key] = value;
                         //if they update theme, we need to change classes
                         if (key == 'theme') slider.$wrapper.find('*').andSelf().removeClass(settings.theme).addClass(value);
+                        opt[key] = value;
                     }
                 }
             }
@@ -264,15 +264,18 @@ function electricSlide(method) {
         });
 
         function transitionCallback(nextSlide) {
+            //loadStorage(guid);
             slideIndex = nextSlide;
+            sets = checkOverrides();
             storage.slideIndexes[guid] = slideIndex;
             remakeTimer();
 
             slider.$timer.data('skip-anim', slider.timer.locked && slider.timer.stopped());
+            slider.$nav.data('skip-anim', sets.navigation.fadeOnHover && !slider.$slider.data('hovered'));
             showOverlays(slideIndex, function () {
                 slider.sliding = false;
                 slider.$timer.data('skip-anim', false);
-                if (sets.navigation.fadeOnHover && !slider.$slider.data('hovered')) slider.$nav.fadeOut();
+                slider.$nav.data('skip-anim', false);
                 playTimer();
                 slider.$container.trigger('transition-after', [{ index: slideIndex}]);
             });
@@ -303,7 +306,8 @@ function electricSlide(method) {
     //load up the stored values for the slider we are operating on
     // (methods called with $().OmniSlide('...') aren't in closure scope)
     function loadStorage($elm) {
-        guid = $elm.data('guid');
+        if($elm.jquery) guid = $elm.data('guid');
+        else guid = $elm;
 
         if (!guid) {
             $.OmniSlide.error('Unable to load from storage, element is not a slider: ', this);
@@ -422,15 +426,17 @@ function electricSlide(method) {
 
         switch (e.type) {
             case 'mouseenter':
+                slider.$slider.data('hovered', true);
                 if (slider.sliding) break;
+                
                 if (sets.hoverPause) pauseTimer();
-                slider.$slider.data('hovered', 1);
                 slider.$nav.stop(true).fadeTo('slow', 1);
                 break;
             case 'mouseleave':
+                slider.$slider.data('hovered', false);
                 if (slider.sliding) break;
+                
                 playTimer();
-                slider.$slider.data('hovered', 0);
                 slider.$nav.stop(true).fadeTo('slow', 0);
                 break;
         }
