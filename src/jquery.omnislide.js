@@ -115,7 +115,6 @@ function electricSlide(method) {
     var settings = {},
     /**
      * This instance's assigned guid value
-     * @const
      * @type {string}
      */
     guid = $.OmniSlide.generateGuid(),
