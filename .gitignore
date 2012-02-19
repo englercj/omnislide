@@ -1,3 +1,4 @@
 dist/
 build/
 !build/jshint-rhino.js
+/nbproject/

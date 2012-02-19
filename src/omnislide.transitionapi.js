@@ -158,7 +158,7 @@ $.OmniSlide.transitionAPI = {
             }
             $wrapper.remove();
 
-            if (callback) callback();
+            if (callback) callback(next);
         }
     },
     _boxifySlide: function ($slide, rows, cols, guid) {

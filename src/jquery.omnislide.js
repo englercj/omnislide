@@ -21,6 +21,11 @@ $.isNumeric = function (n) { return !isNaN(parseFloat(n)) && isFinite(n); };
 //////////////////////////////////////
 // Vars global to ALL slider instances
 //////////////////////////////////////
+/**
+ * Defaults for all settings that can be
+ * passed to OmniSlide
+ * @type {object}
+ */
 var defaults = {
     slides: undefined,          //pass either xml string, xmlDocument, ul (DOM), ul (jQuery), ul (string jQuery selector)
     startSlide: 0,              //initial slide for the plugin to start displaying (0 based)
@@ -83,20 +88,49 @@ var defaults = {
     },
     hoverPause: true            //pause when a user hovers into the current slide
 },
+/**
+ * Local Storage container to hold information
+ * about multiple OmniSlide instances using
+ * their guid as a key
+ * @type {object}
+ */
 storage = {
     settings: {},
     sliders: {},
     slideIndexes: {}
 };
 
-//time to do the electric slide....
+/**
+ * Main constructor method for creating new
+ * OmniSlide instances through the jQuery API
+ */
 function electricSlide(method) {
     //////////////////////////////////////
     // Variables used throughout plugin
     //////////////////////////////////////
+    /**
+     * This instance's settings variable
+     * @type {object}
+     */
     var settings = {},
+    /**
+     * This instance's assigned guid value
+     * @const
+     * @type {string}
+     */
     guid = $.OmniSlide.generateGuid(),
+    /**
+     * The array of parsed slide information for creating
+     * the slide DOM elements
+     * @type {array}
+     */
     slides = [],
+    /**
+     * The slider object contains all information about
+     * a slider isntance and is the main container
+     * that will be accessed to controll the slider
+     * @type {object}
+     */
     slider = {
         $container: $(),
         $wrapper: $(),
@@ -110,14 +144,24 @@ function electricSlide(method) {
         sliding: false,
         timer: false
     },
-
+    /**
+     * The current slide index we are viewing
+     * @type {number}
+     */
     slideIndex,
 
     //////////////////////////////////////
     // Public Plugin Methods
     //////////////////////////////////////
+    /**
+     * All methods of the OmniSlide functionality
+     */
     methods = {
-        //initialize the slider plugin
+        /**
+         * Initializes the slider plugin
+         * @param {object} options Custom options that
+         *      will override default settings
+         */
         init: function (options) {
             return this.each(function () { //ensures chainability
                 if (options) $.extend(true, settings, defaults, options);
@@ -153,8 +197,12 @@ function electricSlide(method) {
                 return true;
             });
         },
-        //changes an option to the given value
-        //and/or returns value given by that option
+        /**
+         * changes an option to the given value and/or 
+         * returns value given by that option
+         * @param {string} option The option to update/get
+         * @param {*} value The value to update option to
+         */
         option: function (option, value) {
             if (loadStorage(this)) {
                 if ($.type(option) == 'string') {
@@ -180,30 +228,53 @@ function electricSlide(method) {
 
             return this;
         },
-        //public wrapper around private moveSlide function
+        /**
+         * Forces the slider to go to the slide specified (0 based)
+         * @param {number} slide Zero based slide index to go to
+         */
         gotoSlide: function (slide) {
             if (loadStorage(this)) { moveSlide(slide); }
 
             return this;
         },
+        /**
+         * Forces slider to go to the next slide
+         */
         nextSlide: function () { return methods.gotoSlide(); },
+        /**
+         * Forces slider to go to the previous slide
+         */
         previousSlide: function () { return methods.gotoSlide(true); },
+        /**
+         * Forces slider to pause timer and wait to be played
+         */
         pause: function () { if (loadStorage(this)) { pauseTimer(true); } return this; },
+        /**
+         * Forces slider to play timer and continue normal operation
+         */
         play: function () { if (loadStorage(this)) { playTimer(true); } return this; },
-        //public wrapper for animating the overlays
+        /**
+         * Forces slider to animate in all the overlays associated with
+         * an instance
+         */
         showOverlays: function () {
             if (loadStorage(this)) { showOverlays(slideIndex); }
 
             return this;
         },
+        /**
+         * Forces slider to animate out all the overlays associated with
+         * an instance
+         */
         hideOverlays: function () {
             if (loadStorage(this)) { hideOverlays(slideIndex); }
 
             return this;
         },
-        //reverses everything the initialization did
-        //should put a user back to the state they were in
-        //before calling this plugin
+        /**
+         * Completely removes the slider instance, and restores the
+         * DOM to its original state
+         */
         destroy: function () {
             if (loadStorage(this)) {
                 //remove slider and show the dataElment if it was visible before
@@ -227,6 +298,11 @@ function electricSlide(method) {
     //////////////////////////////////////
     // Transition Handler
     //////////////////////////////////////
+    /**
+     * Handles slide transitioning
+     * @param {(number|boolean)=} slide The slide to move to, 
+     *      true for next, or false for previous
+     */
     function moveSlide(slide) {
         if (slider.sliding) return false;
 
@@ -261,8 +337,13 @@ function electricSlide(method) {
             slider.$thumbs.eq(nextSlide).addClass('active');
 
             //activate the transition and show overlays on callback
-            $.OmniSlide.transitionAPI.transition(sets.transition, slider.$slides,
-                                                     slideIndex, nextSlide, function () { transitionCallback(nextSlide); });
+            $.OmniSlide.transitionAPI.transition(
+                sets.transition, 
+                slider.$slides, 
+                slideIndex, 
+                nextSlide, 
+                transitionCallback
+            );
         });
 
         function transitionCallback(nextSlide) {
